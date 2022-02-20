@@ -5,6 +5,7 @@ export function adduser(data){
      SET
        firstname='${data.firstname}',
        lastname='${data.lastname}',
+       gender='${data.gender}'
        phonenumber='${data.phonenumber}'
        currency='10'
     `
@@ -14,9 +15,11 @@ export function edituser(data){
     UPDATE
         Users
     SET
-    firstname='${data.firstname}',
-    lastname='${data.lastname}',
-    phonenumber='${data.phonenumber}'
+        firstname='${data.firstname}',
+        lastname='${data.lastname}',
+        phonenumber='${data.phonenumber}'
+    WHERE
+       userid='${data.userid}'
     ` 
 }
    
@@ -28,14 +31,33 @@ export function getuser(userid){
             WHERE userid = '${userid}'
     `
 }
+export function getallDriver(){
+    return`
+     SELECT *   
+     FROM 
+        Driver,Active
+     Where
+     activeid=1 AND status = 'approved'   
+    `
+}
 export function requestDriver(data){
     return `
     SELECT 
-    firstname,
-    lastname,
-    phonenumber,
-    photo
-    From Driver,Active
+        firstname,
+        lastname,
+        photo,
+        phonenumber,
+        lattitude as lat,
+        longtuide as lng,
+        (6371 * acos(cos(radians(${data.lat})) * cos(radians(Driver.lattitude)) * cos(radians(Driver.longitude) - radians(${data.lng})) + sin(radians(${data.lat})) * sin(radians(Driver.lattitude)))) AS distance    
+    From 
+        Driver,Service,Active
+    Where
+        serviceid='${data.service}' And activeid='1'
+    Having Distance < 38
+    OrderBy Distance
+    Limit 10;
+          
     `
 } 
    
@@ -47,9 +69,10 @@ return `
     price,
     distance,
 From 
-    History,User,Booking
+    History,User,Booking,Payment
 Where
     userid=${userid} 
+GroupBy Payment.date    
 `
 }
 
@@ -112,6 +135,20 @@ export function payment(data){
         rating='${data.rating}'
 
     `
+}
+
+export function driverfound(data){
+return `
+INSERT INTO  
+   Booking
+ SET
+   startinglocation='${data.origin}',
+   arrivinglocation='${data.destination},
+   driverid=${data.driverid},
+   userid=${data.userid},
+   status='Driver on the Way'
+   ;
+`
 }
 
    
