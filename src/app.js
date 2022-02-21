@@ -1,6 +1,5 @@
 import express from "express";
 import { connect } from "mongoose";
-import gui from "./routes/gui";
 
 const app = express();
 
@@ -14,8 +13,6 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("hello world");
 });
-
-app.use("/gui", gui);
 
 app.listen(3000, () => {
   console.log("Listening on port 3000");
