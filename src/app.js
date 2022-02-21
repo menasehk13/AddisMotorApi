@@ -1,29 +1,37 @@
 import express from "express";
-import { connect } from "mongoose";
+import connectDB from "./helpers/connection";
+import { apiV1Prefix, port } from "./helpers/constants";
+import { appConfig } from "./helpers/utils";
+import routes from "./routes";
 
 const app = express();
 
-app.set("views", __dirname + "/views");
-app.set("view engine", "ejs");
+// process.env.NODE_ENV = "development";
+process.env.NODE_ENV = "production";
 
-app.use("/static", express.static("public"));
+process.on("unhandledRejection", (err) => {
+  console.log(err.name, err.message);
+  console.log("UNHANDLED REJECTION! 🚫 downing server... ");
+  server.close(() => {
+    process.exit(1);
+  });
+});
 
+process.on("uncaughtException", (err) => {
+  console.log(err.name, err.message);
+  console.log("UNHANDLED EXCEPTION! 🚫 downing server... ");
+  process.exit(1);
+});
+
+// configuring app
+appConfig(app);
+
+// connect to db
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
+// all routes
+routes(app, apiV1Prefix);
 
-app.listen(3000, () => {
-  console.log("Listening on port 3000");
+const server = app.listen(port, () => {
+  console.log("Listening on port " + port);
 });
-
-function connectDB() {
-  try {
-    connect("mongodb://localhost:27017/ridy-test", () => {
-      console.log("db connected 🔥");
-    });
-  } catch (err) {
-    console.log(err.message);
-  }
-}

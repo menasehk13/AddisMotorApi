@@ -1,4 +1,4 @@
-export function login(data){
+export function login(data) {
   return `
   SELECT 
     *
@@ -9,8 +9,8 @@ export function login(data){
    password = '${data.password}' 
   `;
 }
-export function adduser(data){
-    return `
+export function adduser(data) {
+  return `
      INSERT INTO
         Admin
       SET
@@ -18,29 +18,30 @@ export function adduser(data){
        password='${data.password}',
        role='${data.role}'  
     ;
-    `
+    `;
 }
-export function dashboard(data){
-    return `
+export function dashboard(data) {
+  return `
     SELECT *
     FROM
          Driver; 
     orderby ${data} ASC      
-    `
+    `;
 }
 
-export function dashboardicons(data){
-return `
+export function dashboardicons(data) {
+  return `
  SELECT 
   COUNT(driverid) as drivers,
   COUNT (userid) as riders,
  FROM 
    Journey;
 
-`}
+`;
+}
 
-export function drivers(){
-    return `
+export function drivers() {
+  return `
      SELECT 
         photo,
         CONCAT(firstname," ",lastname) as name,
@@ -48,10 +49,10 @@ export function drivers(){
         status,
      FROM
         Driver;
-    `
+    `;
 }
-export function addnewdriver(data){
-    return `
+export function addnewdriver(data) {
+  return `
     INSERT INTO
         CarDetail
     Set
@@ -75,10 +76,10 @@ export function addnewdriver(data){
         status='missing'
         cardetailid=scope_identity()
       ;
-    `
+    `;
 }
-export function addnewdocument(data){
-    return `
+export function addnewdocument(data) {
+  return `
       UPDATE
        Driver
       SET
@@ -86,11 +87,11 @@ export function addnewdocument(data){
        cardocuments='${data.cardocument}'
       WHERE
        driverid=${data.driverid}  
-    `
+    `;
 }
 
-export function driverdetail(data){
-    return`
+export function driverdetail(data) {
+  return `
      SELECT *
      FROM 
         Driver,CarDetail,Service
@@ -102,10 +103,10 @@ export function driverdetail(data){
        RatingAndReview
      Where
          driverid=${data.driverid}
-    `
+    `;
 }
-export function driverdetailorder(data){
-    return `
+export function driverdetailorder(data) {
+  return `
     SELECT 
      CONCAT(driver.firstname," ",drive.lastname) as name,
      startinglocation as startpoint ,
@@ -113,10 +114,10 @@ export function driverdetailorder(data){
      date ,
      price 
     FROM History,Driver,Payment,Booking;
-    `
+    `;
 }
-export function driverdetailreview(data){
-    return `
+export function driverdetailreview(data) {
+  return `
       SELECT
         CONCAT(User.firstname," ",User.lastname) as name,
         rating,
@@ -127,11 +128,11 @@ export function driverdetailreview(data){
         driverid=${data.driverid}
 
       OrderBy date ASC;
-    `
+    `;
 }
 
-export function driverdetaildocument(data){
-    return `
+export function driverdetaildocument(data) {
+  return `
     SELECT 
       userdocuments,
       cardocuments,
@@ -139,26 +140,26 @@ export function driverdetaildocument(data){
       Driver
     WHERE
       driverid=${data.driverid}  
-    `
+    `;
 }
 
-export function dispatcher(data){
-    return `
+export function dispatcher(data) {
+  return `
      SELECT *
      FROM
         Driver
      WHERE
        status='avaliable' AND activeid=1;
-    `
+    `;
 }
-// sending driver a dispatch information with phone 
-export function sendDriver(data){
-    return `
+// sending driver a dispatch information with phone
+export function sendDriver(data) {
+  return `
 
-    `
+    `;
 }
-export function accounting(){
-    return `
+export function accounting() {
+  return `
      SELECT
       Count(driverid) as drivers
       FROM
@@ -169,63 +170,63 @@ export function accounting(){
     FROM
      User
      OrderBy date;   
-    `
+    `;
 }
-export function accountingdrivers(){
-    return `
+export function accountingdrivers() {
+  return `
     SELECT *
     FROM
       Driver
     OrderBy addeddate;  
-    `
+    `;
 }
-export function accountingriders(){
-    return`
+export function accountingriders() {
+  return `
     SELECT *
     FROM
      User
     OrderBy date; 
-    `
+    `;
 }
-// testing must be done and need modification 
-export function accountingservice(){
-    return `
+// testing must be done and need modification
+export function accountingservice() {
+  return `
      SELECT *
       FROM 
      Service,Price,SearchRadious
 
       
-    `
+    `;
 }
-// need some modification 
-export function accountingaddservice(data){
-    return `
+// need some modification
+export function accountingaddservice(data) {
+  return `
      INSERT INTO 
       Service
-     SET
-    `
+     SET 
+    `;
 }
-export function marketingcoupon(){
-    return `
+export function marketingcoupon() {
+  return `
     SELECT 
      *
     FROM 
      Marketing
-    `
+    `;
 }
 
-export function addmarketing(data){
-    return `
+export function addmarketing(data) {
+  return `
         INSERT INTO
          title='${data.title}',
          discription='${data.discription}',
          dateadded='${Date.now()}',
          status='active',
          adminid='${data.adminid}'
-    `
+    `;
 }
-export function complaints(){
-    return `
+export function complaints() {
+  return `
     SELECT 
      date,
      subject,
@@ -234,11 +235,10 @@ export function complaints(){
     FROM 
      Complaints
     OrderBy date ASC ;
-    `
+    `;
 }
-export function complaintsdetail(data){
-
-    return `
+export function complaintsdetail(data) {
+  return `
     SELECT
      CONCAT(firstname," ", lastname) as name,
      subject,
@@ -249,15 +249,15 @@ export function complaintsdetail(data){
      Complaints
     WHERE
      complaintid = ${data.id} 
-    `
+    `;
 }
-export function updateComplaints(data){
-    return `
+export function updateComplaints(data) {
+  return `
      UPDATE
       Complaints
      SET
       status='${data.status}'
      WHERE
       complaintsid=${data.id}  
-    `
+    `;
 }
