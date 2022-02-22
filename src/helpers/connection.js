@@ -1,17 +1,24 @@
-import { db_uri } from "./constants";
+import { DB_HOST, DB_NAME, DB_PWD, db_uri, DB_USER } from "./constants";
 import mysql from "mysql2";
-import dotenv from "dotenv";
 
 export default function connectDB() {
-  dotenv.config();
+  // const db = mysql.createPool({
+  //   host: DB_HOST,
+  //   user: DB_USER,
+  //   password: DB_PWD,
+  //   database: DB_NAME,
+  // });
 
-  // FIXME:
-  //sotenv not working
   const db = mysql.createConnection({
-    host: "192.168.5.8",
-    user: "Wedetadmin",
-    password: "p@55w0rd",
-    database: "Driver",
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PWD,
+    database: DB_NAME,
+  });
+
+  db.connect(function (err) {
+    if (err) return console.log(err, err.message);
+    console.log("db connected 🔥🔥🔥");
   });
 
   return db;
