@@ -1,5 +1,5 @@
-export function adduser(data){
-    return`
+export function adduser(data) {
+  return `
      INSERT INTO
      Users
      SET
@@ -8,10 +8,10 @@ export function adduser(data){
        gender='${data.gender}'
        phonenumber='${data.phonenumber}'
        currency='10'
-    `
+    `;
 }
-export function edituser(data){
-    return `
+export function edituser(data) {
+  return `
     UPDATE
         Users
     SET
@@ -20,28 +20,37 @@ export function edituser(data){
         phonenumber='${data.phonenumber}'
     WHERE
        userid='${data.userid}'
-    ` 
+    `;
 }
-   
-export function getuser(userid){
-    return`
+
+export function getusers() {
+  return `
+        SELECT *
+            FROM
+        User 
+    `;
+}
+
+export function getuser(userid) {
+  return `
         SELECT *
             FROM
         User 
             WHERE userid = '${userid}'
-    `
+    `;
 }
-export function getallDriver(){
-    return`
+
+export function getallDriver() {
+  return `
      SELECT *   
      FROM 
         Driver,Active
      Where
      activeid=1 AND status = 'approved'   
-    `
+    `;
 }
-export function requestDriver(data){
-    return `
+export function requestDriver(data) {
+  return `
     SELECT 
         firstname,
         lastname,
@@ -58,11 +67,11 @@ export function requestDriver(data){
     OrderBy Distance
     Limit 10;
           
-    `
-} 
-   
-export function history(userid){
-return `
+    `;
+}
+
+export function history(userid) {
+  return `
     SELECT 
     startinglocation,
     arrivinglocation,
@@ -73,11 +82,11 @@ From
 Where
     userid=${userid} 
 GroupBy Payment.date    
-`
+`;
 }
 
-export function booking(data){
-return `
+export function booking(data) {
+  return `
     INSERT INTO
         Booking
         SET
@@ -86,11 +95,11 @@ return `
         userid='${data.userid}',
         driverid='${data.driverid}',
         status='driver on the way'
-`
+`;
 }
 
-export function journeystarted(data){
-    return `
+export function journeystarted(data) {
+  return `
     INSERT INTO
         Booking
         SET
@@ -103,20 +112,20 @@ export function journeystarted(data){
         bookingid='${data.bookingid}',
         userid='${data.userid}',
         driverid='${data.driverid}'
-    `
+    `;
 }
 
-export function journeylocation(data){
-return `
+export function journeylocation(data) {
+  return `
 UPDATE 
     Journey
 SET
 lattitude='${data.lattitude}',
 longittude='${data.longittude}',
-`
+`;
 }
-export function payment(data){
-    return`
+export function payment(data) {
+  return `
     INSERT INTO
         Payment
     SET 
@@ -134,11 +143,11 @@ export function payment(data){
         review='${data.review},
         rating='${data.rating}'
 
-    `
+    `;
 }
 
-export function driverfound(data){
-return `
+export function driverfound(data) {
+  return `
 INSERT INTO  
    Booking
  SET
@@ -148,7 +157,20 @@ INSERT INTO
    userid=${data.userid},
    status='Driver on the Way'
    ;
-`
+`;
 }
 
-   
+export default {
+  adduser,
+  edituser,
+  getusers,
+  getuser,
+  getallDriver,
+  requestDriver,
+  history,
+  booking,
+  journeylocation,
+  journeystarted,
+  payment,
+  driverfound,
+};

@@ -15,11 +15,13 @@ function sendErrorProd(err, res) {
       status: err.status,
       message: err.message,
     });
-  else
+  else {
+    console.log(err);
     res.status(err.statusCode).json({
       status: err.status,
       message: "something went wrong",
     });
+  }
 }
 
 export function catchGlobalError(err, req, res, next) {
