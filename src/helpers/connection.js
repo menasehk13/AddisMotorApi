@@ -13,10 +13,8 @@ export default function connectDB() {
     password: "p@55w0rd",
     database: "Driver",
   });
-  db.connect((err) => {
-    if (err) return err;
-    console.log("db connected 🔥");
-  });
 
   return db;
 }
+
+export const DB = connectDB();

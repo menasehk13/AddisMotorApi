@@ -8,3 +8,7 @@ export function appConfig(app) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 }
+
+export const signToken = function (id) {
+  return jwt.sign({ id }, JWTSecretKey);
+};

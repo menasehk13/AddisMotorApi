@@ -40,6 +40,15 @@ export function getuser(userid) {
     `;
 }
 
+export function getuserbyphone(number) {
+  return `
+        SELECT *
+            FROM
+        User 
+            WHERE phonenumber = '${number}'
+    `;
+}
+
 export function getallDriver() {
   return `
      SELECT *   
@@ -165,6 +174,7 @@ export default {
   edituser,
   getusers,
   getuser,
+  getuserbyphone,
   getallDriver,
   requestDriver,
   history,
