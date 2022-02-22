@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import connectDB from "./helpers/connection";
 import { apiV1Prefix, port } from "./helpers/constants";
