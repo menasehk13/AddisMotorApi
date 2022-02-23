@@ -20,7 +20,8 @@ const getDrivers = catchAsync(async function (req, res, next) {
 const getDriver = catchAsync(async function (req, res, next) {
   DB.query(
     driverQuery.getdriver(req.params.id),
-    function (err, driver, fields) {
+    function (err, result, fields) {
+      const driver = result[0];
       if (err) return next(new AppError(err.message, 400));
 
       return res.json({

@@ -1,4 +1,6 @@
 import express from "express";
+import jwt from "jsonwebtoken";
+import { JWTExpiresIn, JWTSecretKey } from "./constants";
 
 export function appConfig(app) {
   app.set("views", __dirname + "/views");
@@ -10,8 +12,8 @@ export function appConfig(app) {
 }
 
 export const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+  return jwt.sign({ id }, JWTSecretKey, {
+    expiresIn: JWTExpiresIn,
   });
 };
 
@@ -40,6 +42,6 @@ export const createSendToken = (user, statusCode, res) => {
 };
 
 export function simpleGetUser(req, value) {
-  const type = req.params.type || "user";
-  return `SELECT * FROM ${type} WHERE id=${value}`;
+  const type = req.params.type || "driver";
+  return `SELECT * FROM ${type} WHERE id='${value}'`;
 }

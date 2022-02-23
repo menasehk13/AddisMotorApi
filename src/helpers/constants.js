@@ -8,7 +8,7 @@ export const {
   DB_PWD,
   DB_USER,
   JWTSecretKey,
-  JWTEpiresIn,
+  JWTExpiresIn,
   PORT,
 } = process.env;
 

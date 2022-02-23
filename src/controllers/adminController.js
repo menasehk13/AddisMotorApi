@@ -5,17 +5,29 @@ import AppError from "../helpers/appError";
 
 const DB = connectDB();
 
+// get admins [just if needed]
+const getAdmins = catchAsync(async (req, res, next) => {
+  DB.query(adminQuery.getadmins(), function (err, admins) {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json({
+      status: "success",
+      admins,
+    });
+  });
+});
 // get admin by email [just if needed]
 const getAdmin = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.getadmin(req.body.email), function (err, admin) {
+  DB.query(adminQuery.getadmin(req.params.email), function (err, admin) {
     if (err) return next(new AppError(err.message, 400));
+
+    if (!admin) return next(new AppError("No admin found", 404));
     return res.json(results);
   });
 });
 
 // dashboard overview
 const dashboard = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.dashboard(req.body), (err, results) => {
+  DB.query(adminQuery.dashboard(req.body.orderby), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
@@ -143,6 +155,7 @@ const updateComplaints = catchAsync(async (req, res, next) => {
 export default {
   dashboard,
   getAdmin,
+  getAdmins,
   //   getDriver,
   //   getDrivers,
   driverDocument,

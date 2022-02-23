@@ -1,11 +1,15 @@
 import { Router } from "express";
 import adminController from "../controllers/adminController";
+import authController from "../controllers/authController";
 
 const router = Router();
 
-router.route("/").get(adminController.getAdmin);
+router.route("/").get(adminController.getAdmins);
+router.route("/admin/:email").get(adminController.getAdmin);
 
-router.route("/dashboard").get(adminController.dashboard);
+router
+  .route("/dashboard")
+  .get(authController.protect, adminController.dashboard);
 router.route("/driver/:id").get(adminController.driverDocument);
 router.route("/driver/:id/order").get(adminController.driverOrder);
 

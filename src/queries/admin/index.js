@@ -1,3 +1,9 @@
+export function getadmins() {
+  return `
+    SELECT * FROM Admin 
+  `;
+}
+
 export function getadmin(email) {
   return `
     SELECT * FROM Admin WHERE email=${email}
@@ -30,16 +36,16 @@ export function dashboard(data) {
   return `
     SELECT *
     FROM
-         Driver; 
-    orderby ${data} ASC;
-    SELECT 
-      COUNT(driverid) as drivers,
-      COUNT (userid) as riders,
-    FROM 
-      Journey 
-    WHERE
-       status = 'started'  ;      
-    `;
+         Driver
+         `;
+  // orderby ${data} ASC
+  // SELECT
+  //   COUNT(driverid) as drivers,
+  //   COUNT (userid) as riders,
+  // FROM
+  //   Journey
+  // WHERE
+  //    status = 'started'  ;
 }
 // dulpacate data
 // export function dashboardicons(data) {
@@ -276,6 +282,7 @@ export function updateComplaints(data) {
 
 export default {
   getadmin,
+  getadmins,
   login,
   adduser,
   dashboard,
