@@ -27,8 +27,8 @@ export function dashboard(data) {
          Driver; 
     orderby ${data} ASC;
     SELECT 
-      COUNT(driverid) as drivers,
-      COUNT (userid) as riders,
+      COUNT(id) as drivers,
+      COUNT (id) as riders,
     FROM 
       Journey 
     WHERE
@@ -145,7 +145,7 @@ export function driverdetaildocument(data) {
     FROM
       Driver
     WHERE
-      driverid=${data.driverid}  
+      driverid=${data.id}  
     `;
 }
 
@@ -167,12 +167,12 @@ export function sendDriver(data) {
 export function accounting() {
   return `
      SELECT
-      Count(driverid) as drivers
+      Count(id) as drivers
       FROM
        Driver
       OrderBy addeddate;
     SELECT
-     Count(userid) as users
+     Count(id) as users
     FROM
      User
      OrderBy date;   
@@ -228,7 +228,7 @@ export function addmarketing(data) {
          discription='${data.discription}',
          dateadded='${Date.now()}',
          status='active',
-         adminid='${data.adminid}'
+         adminid='${data.id}'
     `;
 }
 export function complaints() {

@@ -20,7 +20,7 @@ export function edituser(data) {
         lastname='${data.lastname}',
         phonenumber='${data.phonenumber}'
     WHERE
-       userid='${data.userid}'
+       id='${data.id}'
     `;
 }
 
@@ -32,12 +32,12 @@ export function getusers() {
     `;
 }
 
-export function getuser(userid) {
+export function getuser(id) {
   return `
         SELECT *
             FROM
         User 
-            WHERE userid = '${userid}'
+            WHERE id = '${id}'
     `;
 }
 
@@ -148,8 +148,8 @@ export function payment(data) {
     INSERT INTO 
             RattingAndReview
     SET
-        driverid='${data.driverid}',
-        userid='${data.userid}',
+        driverid='${data.userid}',
+        userid='${data.driverid}',
         review='${data.review},
         rating='${data.rating}'
 
@@ -163,8 +163,8 @@ INSERT INTO
  SET
    startinglocation='${data.origin}',
    arrivinglocation='${data.destination},
-   driverid=${data.driverid},
-   userid=${data.userid},
+   driverid=${data.id},
+   userid=${data.id},
    status='Driver on the Way'
    ;
 `;
