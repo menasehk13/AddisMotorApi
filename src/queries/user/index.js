@@ -10,6 +10,7 @@ export function adduser(data) {
        currency='10'
     `;
 }
+
 export function edituser(data) {
   return `
     UPDATE

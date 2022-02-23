@@ -1,5 +1,17 @@
-export function add_driver(data){
-    return`
+function getdrivers() {
+  return `
+    SELECT * FROM Driver
+  `;
+}
+
+function getdriver(id) {
+  return `
+    SELECT * FROM Driver WHERE driverid='${id}'
+  `;
+}
+
+function add_driver(data) {
+  return `
         INSERT INTO
             Driver
         SET
@@ -12,10 +24,10 @@ export function add_driver(data){
           photo='${data.photo}',
           status='missing',
           addedDate'${Date.now()}'
-    `
+    `;
 }
-export function updatecurrentlocation(data){
-    return `
+function updatecurrentlocation(data) {
+  return `
      UPDATE
         Driver
       SET
@@ -23,17 +35,17 @@ export function updatecurrentlocation(data){
        longtuide=${data.lng}
       WHERE
         driverid=${data.driverid} 
-`}
- // on testing we will see the result of our need
-// export function notifydriver(data){
+`;
+}
+// on testing we will see the result of our need
+// function notifydriver(data){
 //     return`
-     
-    
+
 //     `
 // }
 
-export function history(data){
- return`
+function history(driverid) {
+  return `
  SELECT 
  startinglocation,
  arrivinglocation,
@@ -42,13 +54,13 @@ export function history(data){
 From 
  History,User,Booking,Payment
 Where
- driver=${data.driverid} 
+ driver=${driverid} 
 GroupBy Payment.date 
- `
+ `;
 }
 
-export function displaystatus(data){
-    return`
+function displaystatus(driverid) {
+  return `
     SELECT
        Sum(distance) as Km,
        Sum(price) as Price ,
@@ -56,9 +68,16 @@ export function displaystatus(data){
     From
       Payment
     Where
-      driverid = ${data.driverid}
+      driverid = ${driverid}
     GroupBy date      
-    `
+    `;
 }
 
-
+export default {
+  getdriver,
+  getdrivers,
+  add_driver,
+  updatecurrentlocation,
+  displaystatus,
+  history,
+};
