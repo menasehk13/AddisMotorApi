@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import connectDB from "./helpers/connection";
-import { apiV1Prefix, PORT, port } from "./helpers/constants";
+import { apiV1Prefix, PORT } from "./helpers/constants";
 import { appConfig } from "./helpers/utils";
 import routes from "./routes";
 
@@ -30,6 +30,6 @@ appConfig(app);
 // all routes
 routes(app, apiV1Prefix);
 
-const server = app.listen(port, () => {
+const server = app.listen(PORT, () => {
   console.log("Listening on port " + PORT || 5000);
 });
