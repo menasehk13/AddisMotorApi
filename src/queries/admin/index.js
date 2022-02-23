@@ -5,7 +5,7 @@ export function login(data) {
   FROM
    Admin
   Where
-   username = '${data.username}',
+   email = '${data.email}',
    password = '${data.password}' 
   `;
 }
@@ -14,7 +14,7 @@ export function adduser(data) {
      INSERT INTO
         Admin
       SET
-       username='${data.username}',
+       email='${data.username}',
        password='${data.password}',
        role='${data.role}'  
     ;
@@ -25,20 +25,26 @@ export function dashboard(data) {
     SELECT *
     FROM
          Driver; 
-    orderby ${data} ASC      
+    orderby ${data} ASC;
+    SELECT 
+      COUNT(driverid) as drivers,
+      COUNT (userid) as riders,
+    FROM 
+      Journey 
+    WHERE
+       status = 'started'  ;      
     `;
 }
-
-export function dashboardicons(data) {
-  return `
- SELECT 
-  COUNT(driverid) as drivers,
-  COUNT (userid) as riders,
- FROM 
-   Journey;
-
-`;
-}
+       // dulpacate data
+// export function dashboardicons(data) {
+//   return `
+//  SELECT 
+//   COUNT(driverid) as drivers,
+//   COUNT (userid) as riders,
+//  FROM 
+//    Journey;
+// `;
+// }
 
 export function drivers() {
   return `
@@ -260,4 +266,30 @@ export function updateComplaints(data) {
      WHERE
       complaintsid=${data.id}  
     `;
+}
+
+export default {
+  login,
+  adduser,
+  dashboard,
+  drivers,
+  addnewdriver,
+  addnewdocument,
+  driverdetail,
+  driverdetailorder,
+  driverdetaildocument,
+  driverdetailreview,
+  dispatcher,
+  sendDriver,
+  accounting,
+  accountingdrivers,
+  accountingservice,
+  accountingaddservice,
+  accountingriders,
+  marketingcoupon,
+  addmarketing,
+  complaints,
+  complaintsdetail,
+  updateComplaints
+
 }

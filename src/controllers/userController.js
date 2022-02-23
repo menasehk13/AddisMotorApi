@@ -48,7 +48,7 @@ const nearbyDriver = catchAsync(async (req, res, next) => {
 })
 // online driver view
 const onlineDriver = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.getallDriver,(err,results)=>{
+  DB.query(userQuery.getallDriver(),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
     return res.json({divers:results})
   })
@@ -60,7 +60,7 @@ const foundDriver = catchAsync (async (req, res, next) => {
    listen to the message recived from the driver  message = accept
    then add id of user and driver to the database
   */  
-  DB.query(userQuery.driverfound,(err,results) => {
+  DB.query(userQuery.driverfound(),(err,results) => {
     
   })
 
@@ -79,7 +79,7 @@ const journeyLocation = catchAsync (async (req, res, next) =>{
 // cancel drive
 
 const journeyStarted = catchAsync (async (req, res, next) => {
-  DB.query(userQuery.journeystarted,(err,results)=>{
+  DB.query(userQuery.journeystarted(),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
     return res.json(results)
   })  
