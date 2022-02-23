@@ -3,6 +3,8 @@ import adminController from "../controllers/adminController";
 
 const router = Router();
 
+router.route("/").get(adminController.getAdmin);
+
 router.route("/dashboard").get(adminController.dashboard);
 router.route("/driver/:id").get(adminController.driverDocument);
 router.route("/driver/:id/order").get(adminController.driverOrder);

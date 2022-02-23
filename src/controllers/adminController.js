@@ -5,6 +5,14 @@ import AppError from "../helpers/appError";
 
 const DB = connectDB();
 
+// get admin by email [just if needed]
+const getAdmin = catchAsync(async (req, res, next) => {
+  DB.query(adminQuery.getadmin(req.body.email), function (err, admin) {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json(results);
+  });
+});
+
 // dashboard overview
 const dashboard = catchAsync(async (req, res, next) => {
   DB.query(adminQuery.dashboard(req.body), (err, results) => {
@@ -134,6 +142,7 @@ const updateComplaints = catchAsync(async (req, res, next) => {
 
 export default {
   dashboard,
+  getAdmin,
   //   getDriver,
   //   getDrivers,
   driverDocument,

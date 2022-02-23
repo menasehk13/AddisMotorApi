@@ -1,3 +1,9 @@
+export function getadmin(email) {
+  return `
+    SELECT * FROM Admin WHERE email=${email}
+  `;
+}
+
 export function login(data) {
   return `
   SELECT 
@@ -269,6 +275,7 @@ export function updateComplaints(data) {
 }
 
 export default {
+  getadmin,
   login,
   adduser,
   dashboard,
