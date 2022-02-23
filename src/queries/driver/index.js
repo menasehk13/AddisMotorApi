@@ -6,7 +6,7 @@ function getdrivers() {
 
 function getdriver(id) {
   return `
-    SELECT * FROM Driver WHERE driverid='${id}'
+    SELECT * FROM Driver WHERE id='${id}'
   `;
 }
 
@@ -73,6 +73,16 @@ function displaystatus(driverid) {
     `;
 }
 
+export function getOnlineDrivers() {
+  return `
+     SELECT *   
+     FROM 
+        Driver,Active
+     Where
+     activeid=1 AND status = 'approved'   
+    `;
+}
+
 export default {
   getdriver,
   getdrivers,
@@ -80,4 +90,5 @@ export default {
   updatecurrentlocation,
   displaystatus,
   history,
+  getOnlineDrivers,
 };
