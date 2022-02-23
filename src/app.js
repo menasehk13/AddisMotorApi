@@ -7,6 +7,11 @@ import routes from "./routes";
 
 const app = express();
 
+connectDB().connect(function (err) {
+  if (err) return console.log(err, err.message);
+  console.log("db connected 🔥🔥🔥");
+});
+
 // process.env.NODE_ENV = "development";
 process.env.NODE_ENV = "production";
 
