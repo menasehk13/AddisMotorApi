@@ -1,11 +1,12 @@
 // import bcrypt from "bcryptjs";
 // import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import AppError from "../helpers/appError";
 import { DB } from "../helpers/connection";
 import { JWTSecretKey } from "../helpers/constants";
-import { signToken } from "../helpers/utils";
+import { signToken, createSendToken, simpleGetUser } from "../helpers/utils";
 import { catchAsync } from "../middlewares/error";
-import User from "../models/User";
+import jwt from "jsonwebtoken";
 import userQuery from "../queries/user";
 
 const register = catchAsync(async (req, res, next) => {
@@ -16,7 +17,7 @@ const register = catchAsync(async (req, res, next) => {
     userQuery.adduser(data, function (err, results, fields) {
       if (err) return next(new AppError(err.message, 400));
 
-      const token = signToken(results.userid);
+      createSendToken(data, 200, res);
 
       res.json({
         status: "success",
@@ -31,47 +32,74 @@ const register = catchAsync(async (req, res, next) => {
 });
 
 const login = catchAsync(async (req, res, next) => {
-  const { phone } = req.body;
+  // get user credentials from req.body
+  const { email, password } = req.body;
 
-  DB.query(userQuery.getuserbyphone(phone), function (err, user) {
-    // const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    // check if there is a user or the password is correct
-    // if (!user || !isPasswordCorrect)
-    //   return next(new AppError("Invalid credential"));
+  // check that auth is for admin or driver
+  const query = simpleGetUser(req, email);
 
-    // generating jwt token
-    const token = jwt.sign({ id: user.userid }, JWTSecretKey);
+  // check if fields are not empty
+  if (!email || !password)
+    return next(new AppError("Please provide email and password", 404));
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        user,
-        token,
-      },
-    });
+  DB.query(query(email), async function (err, data, fields) {
+    const user = data[0];
+    if (err) return next(new AppError(err.message, 400));
+
+    // check if email is in the db
+    if (!user || user.length == 0)
+      return next(new AppError("sorry, unregistered email"));
+
+    // compare the password associated with the email and password from request
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect)
+      return next(new AppError("incorrect password", 400));
+    // If everything ok, send token to client
+
+    createSendToken(user, 200, res);
   });
 });
 
 const protect = catchAsync(async (req, res, next) => {
-  // get token and check if theres a token
-  const { authorization } = req.headers;
+  // 1) Getting token and check of it's there
   let token;
-
-  if (authorization && authorization.startsWith("Bearer")) {
-    token = authorization.split(" ")[1];
-    console.log(token);
-
-    // verificating the token
-    const decoded = await promisify(jwt.verify)(token, JWTSecretKey);
-
-    console.log(decoded);
-
-    // check if user still exists
-    DB.query(userQuery.getuser(decoded.id), function (err, user) {
-      if (user) return next();
-      else return next(new AppError("Please provide a token"));
-    });
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
   }
+
+  if (!token) {
+    return next(
+      new AppError("You are not logged in! Please log in to get access.", 401)
+    );
+  }
+
+  // 2) Verification token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const query = simpleGetUser(req, decoded.id);
+
+  // 3) Check if user still exists
+  DB.query(query, function (err, data, fields) {
+    if (err) return next(new AppError(err.message, 400));
+
+    const currentUser = data[0];
+
+    if (!currentUser) {
+      return next(
+        new AppError(
+          "The user belonging to this token does no longer exist.",
+          401
+        )
+      );
+    }
+
+    // GRANT ACCESS TO PROTECTED ROUTE
+    req.user = currentUser;
+    next();
+  });
 });
 
 export default {
