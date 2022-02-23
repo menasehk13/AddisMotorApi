@@ -16,11 +16,6 @@ export default function connectDB() {
     database: DB_NAME,
   });
 
-  db.connect(function (err) {
-    if (err) return console.log(err, err.message);
-    console.log("db connected 🔥🔥🔥");
-  });
-
   return db;
 }
 

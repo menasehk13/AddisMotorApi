@@ -103,6 +103,16 @@ const displayStatus = catchAsync(async function (req, res, next) {
   );
 });
 
+// MIGRATED FROM USER
+
+// online driver view
+const onlineDriver = catchAsync(async (req, res, next) => {
+  DB.query(driverQuery.getOnlineDrivers(), (err, results) => {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json({ divers: results });
+  });
+});
+
 export default {
   getDrivers,
   getDriver,
@@ -110,4 +120,6 @@ export default {
   displayStatus,
   history,
   updateCurrentLocation,
+
+  onlineDriver,
 };

@@ -14,7 +14,7 @@ export function adduser(data) {
 export function edituser(data) {
   return `
     UPDATE
-        Users
+        User
     SET
         firstname='${data.firstname}',
         lastname='${data.lastname}',
@@ -50,15 +50,6 @@ export function getuserbyphone(number) {
     `;
 }
 
-export function getallDriver() {
-  return `
-     SELECT *   
-     FROM 
-        Driver,Active
-     Where
-     activeid=1 AND status = 'approved'   
-    `;
-}
 export function requestDriver(data) {
   return `
     SELECT 
@@ -176,7 +167,6 @@ export default {
   getusers,
   getuser,
   getuserbyphone,
-  getallDriver,
   requestDriver,
   history,
   booking,

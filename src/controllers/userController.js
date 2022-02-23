@@ -30,26 +30,24 @@ const createUser = catchAsync(async (req, res, next) => {
 });
 // update user
 const updateUser = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.edituser(req.params.id), (err, results) => {
-    if (err) return next(new AppError(err.message, 400));
-    return res.json({ message: Success, user: results });
-  });
+  DB.query(
+    userQuery.edituser({ ...req.body, ...req.params.id }),
+    (err, results) => {
+      console.log(err);
+      if (err) return next(new AppError(err.message, 400));
+      return res.json({ message: "Success", user: results });
+    }
+  );
 });
-// nearby driver
+
+// nearby driver -> NOT DONE
 const nearbyDriver = catchAsync(async (req, res, next) => {
   DB.query(userQuery.nearbyDriver(req.body), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json({ drivers: results });
   });
 });
-// online driver view
-const onlineDriver = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.getallDriver, (err, results) => {
-    if (err) return next(new AppError(err.message, 400));
-    return res.json({ divers: results });
-  });
-});
-//
+
 // found driver
 const foundDriver = catchAsync(async (req, res, next) => {
   /* TODO:
@@ -58,6 +56,7 @@ const foundDriver = catchAsync(async (req, res, next) => {
   */
   DB.query(userQuery.driverfound, (err, results) => {});
 });
+
 const journeyLocation = catchAsync(async (req, res, next) => {
   /* 
    TODO:
@@ -91,8 +90,7 @@ export default {
   getUser,
   createUser,
   updateUser,
-  nearbyDriver,
-  onlineDriver,
+  // nearbyDriver,
   foundDriver,
   journeyLocation,
   journeyStarted,

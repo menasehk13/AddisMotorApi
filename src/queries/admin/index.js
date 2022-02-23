@@ -1,3 +1,9 @@
+export function getadmin(email) {
+  return `
+    SELECT * FROM Admin WHERE email=${email}
+  `;
+}
+
 export function login(data) {
   return `
   SELECT 
@@ -35,13 +41,13 @@ export function dashboard(data) {
        status = 'started'  ;      
     `;
 }
-       // dulpacate data
+// dulpacate data
 // export function dashboardicons(data) {
 //   return `
-//  SELECT 
+//  SELECT
 //   COUNT(driverid) as drivers,
 //   COUNT (userid) as riders,
-//  FROM 
+//  FROM
 //    Journey;
 // `;
 // }
@@ -114,7 +120,7 @@ export function driverdetail(data) {
 export function driverdetailorder(data) {
   return `
     SELECT 
-     CONCAT(driver.firstname," ",drive.lastname) as name,
+     CONCAT(driver.firstname," ",driver.lastname) as name,
      startinglocation as startpoint ,
      arrivinglocation as destination,
      date ,
@@ -131,7 +137,7 @@ export function driverdetailreview(data) {
       FROM 
         Rating,Users
       where 
-        driverid=${data.driverid}
+        driverid=${data.id}
 
       OrderBy date ASC;
     `;
@@ -269,6 +275,7 @@ export function updateComplaints(data) {
 }
 
 export default {
+  getadmin,
   login,
   adduser,
   dashboard,
@@ -290,6 +297,5 @@ export default {
   addmarketing,
   complaints,
   complaintsdetail,
-  updateComplaints
-
-}
+  updateComplaints,
+};
