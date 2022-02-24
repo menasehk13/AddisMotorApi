@@ -27,9 +27,14 @@ const getAdmin = catchAsync(async (req, res, next) => {
 
 // dashboard overview
 const dashboard = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.dashboard(req.body.orderby), (err, results) => {
+  DB.query(adminQuery.dashboard(req.body.orderby), (err, drivers) => {
     if (err) return next(new AppError(err.message, 400));
-    return res.json(results);
+    return res.json({
+      status: "success",
+      data: {
+        drivers,
+      },
+    });
   });
 });
 
