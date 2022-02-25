@@ -1,13 +1,14 @@
 export function adduser(data) {
   return `
      INSERT INTO
-     Users
+     User
      SET
        firstname='${data.firstname}',
        lastname='${data.lastname}',
-       gender='${data.gender}'
-       phonenumber='${data.phonenumber}'
-       currency='10'
+       gender='${data.gender}',
+       phonenumber='${data.phonenumber}',
+       profile='https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png',
+       currency='${10}'
     `;
 }
 

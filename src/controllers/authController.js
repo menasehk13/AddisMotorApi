@@ -8,28 +8,24 @@ import { signToken, createSendToken, simpleGetUser } from "../helpers/utils";
 import { catchAsync } from "../middlewares/error";
 import jwt from "jsonwebtoken";
 import userQuery from "../queries/user";
+import driverQuery from "../queries/driver";
 import { promisify } from "util";
 
 const register = catchAsync(async (req, res, next) => {
   const data = req.body;
-  data.password = await bcrypt.hash(data.password, 12);
+  const type = req.query.type || "user";
 
-  DB.query(
-    userQuery.adduser(data, function (err, results, fields) {
-      if (err) return next(new AppError(err.message, 400));
+  if (type != "user") data.password = await bcrypt.hash(data.password, 12);
 
-      createSendToken(data, 200, res);
+  let query;
+  if (type == "driver") query = driverQuery.add_driver(data);
+  else query = userQuery.adduser(data);
 
-      res.json({
-        status: "success",
-        message: "user registered successfully",
-        data: {
-          user: results,
-        },
-        token,
-      });
-    })
-  );
+  DB.query(query, function (err, results, fields) {
+    if (err) return next(new AppError(err.message, 400));
+
+    createSendToken(data, 200, res);
+  });
 });
 
 const login = catchAsync(async (req, res, next) => {
