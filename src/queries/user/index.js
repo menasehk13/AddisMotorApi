@@ -1,15 +1,9 @@
-export function adduser(data) {
+export function adduser() {
   return `
      INSERT INTO
      User
-     SET
-       firstname='${data.firstname}',
-       lastname='${data.lastname}',
-       gender='${data.gender}',
-       phonenumber='${data.phonenumber}',
-       profile='https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png',
-       currency='${10}'
-    `;
+     SET ?
+     `;
 }
 
 export function edituser(data) {

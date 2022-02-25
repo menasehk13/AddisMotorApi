@@ -18,10 +18,10 @@ const register = catchAsync(async (req, res, next) => {
   if (type != "user") data.password = await bcrypt.hash(data.password, 12);
 
   let query;
-  if (type == "driver") query = driverQuery.add_driver(data);
-  else query = userQuery.adduser(data);
+  if (type == "driver") query = driverQuery.add_driver();
+  else query = userQuery.adduser();
 
-  DB.query(query, function (err, results, fields) {
+  DB.query(query, data, function (err, results, fields) {
     if (err) return next(new AppError(err.message, 400));
 
     createSendToken(data, 200, res);

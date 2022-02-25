@@ -10,21 +10,12 @@ function getdriver(id) {
   `;
 }
 
-function add_driver(data) {
+function add_driver() {
   return `
         INSERT INTO
             Driver
-        SET
-          firstname='${data.firstname}',
-          lastname='${data.lastname}',
-          gender='${data.gender}',
-          email='${data.email}',
-          phonenumber='${data.phonenumber}',
-          password='${data.password}',
-          photo='${data.photo}',
-          status='missing',
-          addedDate'${Date.now()}'
-    `;
+        SET ?
+        `;
 }
 function updatecurrentlocation(data) {
   return `
