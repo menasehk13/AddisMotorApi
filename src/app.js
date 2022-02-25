@@ -1,7 +1,8 @@
 import "dotenv/config";
 import express from "express";
+import AppError from "./helpers/appError";
 import connectDB from "./helpers/connection";
-import { apiV1Prefix, PORT } from "./helpers/constants";
+import { apiV1Prefix, API_KEY, PORT } from "./helpers/constants";
 import { appConfig } from "./helpers/utils";
 import routes from "./routes";
 
@@ -32,8 +33,18 @@ process.on("uncaughtException", (err) => {
 // configuring app
 appConfig(app);
 
+let apiprefix = apiV1Prefix + API_KEY;
+// check if the api key is valid
+app.use((req, res, next) => {
+  const valid = req.originalUrl.search(API_KEY);
+  if (valid < 0) return next(new AppError("please provide a valid api key"));
+  next();
+});
+
+console.log(apiprefix);
+
 // all routes
-routes(app, apiV1Prefix);
+routes(app, apiprefix);
 
 const server = app.listen(PORT, () => {
   console.log("Listening on port " + PORT || 5000);

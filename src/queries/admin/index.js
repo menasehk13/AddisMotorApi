@@ -44,6 +44,7 @@ export function dashboard(data) {
   // WHERE
   //    status = 'started'  ;
 }
+
 // dulpacate data
 // export function dashboardicons(data) {
 //   return `
@@ -66,6 +67,7 @@ export function drivers() {
         Driver;
     `;
 }
+
 export function addnewdriver(data) {
   return `
     INSERT INTO
