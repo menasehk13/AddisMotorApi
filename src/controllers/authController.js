@@ -34,9 +34,10 @@ const login = catchAsync(async (req, res, next) => {
   // get user credentials from req.body
   const { email, password } = req.body;
 
+  let type = req.query.type;
+
   // check that auth is for admin or driver
-  const query = `SELECT * FROM ${req.params.type} WHERE email='${email}'`;
-  console.log(query);
+  const query = `SELECT * FROM ${type} WHERE email='${email}'`;
 
   // check if fields are not empty
   if (!email || !password)
@@ -51,7 +52,7 @@ const login = catchAsync(async (req, res, next) => {
     if (!user) return next(new AppError("sorry, unregistered email"));
 
     // compare the password associated with the email and password from request
-    const isPasswordCorrect = password == user.password;
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
     // await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect)
