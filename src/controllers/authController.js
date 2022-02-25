@@ -9,6 +9,7 @@ import { catchAsync } from "../middlewares/error";
 import jwt from "jsonwebtoken";
 import userQuery from "../queries/user";
 import driverQuery from "../queries/driver";
+import adminQuery from "../queries/admin";
 import { promisify } from "util";
 
 const register = catchAsync(async (req, res, next) => {
@@ -19,6 +20,7 @@ const register = catchAsync(async (req, res, next) => {
 
   let query;
   if (type == "driver") query = driverQuery.add_driver();
+  if (type == "admin") query = adminQuery.addadmin();
   else query = userQuery.adduser();
 
   DB.query(query, data, function (err, results, fields) {

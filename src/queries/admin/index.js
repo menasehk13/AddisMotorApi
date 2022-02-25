@@ -21,14 +21,11 @@ export function login(data) {
    password = '${data.password}' 
   `;
 }
-export function adduser(data) {
+export function addadmin() {
   return `
      INSERT INTO
         Admin
-      SET
-       email='${data.username}',
-       password='${data.password}',
-       role='${data.role}'  
+      SET ?
     ;
     `;
 }
@@ -284,7 +281,7 @@ export default {
   getadmin,
   getadmins,
   login,
-  adduser,
+  addadmin,
   dashboard,
   drivers,
   addnewdriver,
