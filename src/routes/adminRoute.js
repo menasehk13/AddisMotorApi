@@ -10,6 +10,7 @@ router.route("/admin/:email").get(adminController.getAdmin);
 router
   .route("/dashboard")
   .get(authController.protect, adminController.dashboard);
+  
 router.route("/driver/:id").get(adminController.driverDocument);
 router.route("/driver/:id/order").get(adminController.driverOrder);
 

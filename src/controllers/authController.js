@@ -14,16 +14,17 @@ import { promisify } from "util";
 
 const register = catchAsync(async (req, res, next) => {
   const data = req.body;
-  const type = req.query.type || "user";
+  const type = req.query.type || "driver";
 
   if (type != "user") data.password = await bcrypt.hash(data.password, 12);
 
   let query;
   if (type == "driver") query = driverQuery.add_driver();
-  if (type == "admin") query = adminQuery.addadmin();
+  else if (type == "admin") query = adminQuery.addadmin();
   else query = userQuery.adduser();
 
   DB.query(query, data, function (err, results, fields) {
+    console.log(err, data, query);
     if (err) return next(new AppError(err.message, 400));
 
     createSendToken(data, 200, res);
