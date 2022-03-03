@@ -10,9 +10,7 @@ const getDrivers = catchAsync(async function (req, res, next) {
 
     return res.json({
       status: "success",
-      data: {
-        drivers,
-      },
+        users:drivers,
     });
   });
 });
@@ -21,14 +19,12 @@ const getDriver = catchAsync(async function (req, res, next) {
   DB.query(
     driverQuery.getdriver(req.params.id),
     function (err, result, fields) {
-      const driver = result[0];
       if (err) return next(new AppError(err.message, 400));
+      const driver = result[0];
 
       return res.json({
         status: "success",
-        data: {
-          driver,
-        },
+          user:driver,
       });
     }
   );
@@ -44,9 +40,7 @@ const addDriver = catchAsync(async (req, res, next) => {
     return res.json({
       status: "success",
       message: "Driver registered successfully",
-      data: {
-        driver: result,
-      },
+        user: result,
     });
   });
 });
@@ -63,9 +57,7 @@ const updateCurrentLocation = catchAsync(async (req, res, next) => {
       return res.json({
         status: "success",
         message: "Driver location updated successfully",
-        data: {
-          driver: result,
-        },
+          user: result,
       });
     }
   );
@@ -80,9 +72,7 @@ const history = catchAsync(async function (req, res, next) {
       return res.json({
         status: "success",
         message: "driver history loaded successfully",
-        data: {
           history: result,
-        },
       });
     }
   );
@@ -96,9 +86,7 @@ const displayStatus = catchAsync(async function (req, res, next) {
 
       return res.json({
         status: "success",
-        data: {
           status: result,
-        },
       });
     }
   );

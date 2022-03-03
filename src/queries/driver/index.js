@@ -55,7 +55,7 @@ function displaystatus(driverid) {
     SELECT
        Sum(distance) as Km,
        Sum(price) as Price ,
-       count(driverid) ad Job
+       count(driverid) as Job
     From
       Payment
     Where

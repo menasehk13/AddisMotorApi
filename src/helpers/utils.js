@@ -17,8 +17,9 @@ export const signToken = (id) => {
   });
 };
 
-export const createSendToken = (user, statusCode, res) => {
+export const createSendToken = (user,results, statusCode, res) => {
   const token = signToken(user.id);
+  const id = results.insertId
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -27,7 +28,7 @@ export const createSendToken = (user, statusCode, res) => {
   };
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
-  res.cookie("jwt", token, cookieOptions);
+  //res.cookie("jwt", token, cookieOptions);
 
   // Remove password from output
   user.password = undefined;
@@ -35,10 +36,9 @@ export const createSendToken = (user, statusCode, res) => {
   return res.status(statusCode).json({
     status: "success",
     message: "user registered successfully",
+    id,
     token,
-    data: {
-      user,
-    },
+    user
   });
 };
 

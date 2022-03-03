@@ -16,7 +16,7 @@ const register = catchAsync(async (req, res, next) => {
   const data = req.body;
   const type = req.query.type || "driver";
 
-  if (type != "user") data.password = await bcrypt.hash(data.password, 12);
+   data.password = await bcrypt.hash(data.password, 12);
 
   let query;
   if (type == "driver") query = driverQuery.add_driver();
@@ -24,10 +24,10 @@ const register = catchAsync(async (req, res, next) => {
   else query = userQuery.adduser();
 
   DB.query(query, data, function (err, results, fields) {
-    console.log(err, data, query);
+    console.log(err, data,fields);
+    
     if (err) return next(new AppError(err.message, 400));
-
-    createSendToken(data, 200, res);
+    createSendToken(data,results, 200, res);
   });
 });
 
@@ -50,7 +50,7 @@ const login = catchAsync(async (req, res, next) => {
     const user = data[0];
 
     // check if email is in the db
-    if (!user) return next(new AppError("sorry, unregistered email"));
+    if (!data[0]) return next(new AppError("sorry, unregistered email"));
 
     // compare the password associated with the email and password from request
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -60,7 +60,7 @@ const login = catchAsync(async (req, res, next) => {
       return next(new AppError("incorrect password", 400));
     // If everything ok, send token to client
 
-    createSendToken(user, 200, res);
+    createSendToken(user,data, 200, res);
   });
 });
 
