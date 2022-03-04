@@ -1,9 +1,16 @@
+import multer from "multer";
 import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
 import userQuery from "../queries/user";
 import AppError from "../helpers/appError";
 
 const DB = connectDB();
+
+const checkMulter = catchAsync(async (req, res, next) => {
+  const { profile } = req.file;
+
+  res.json(req.file);
+});
 
 // get users
 const getUsers = catchAsync(async (req, res, next) => {
@@ -95,4 +102,5 @@ export default {
   journeyLocation,
   journeyStarted,
   payment,
+  checkMulter,
 };
