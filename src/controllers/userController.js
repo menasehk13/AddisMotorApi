@@ -32,13 +32,16 @@ const getUser = catchAsync(async (req, res, next) => {
 // create/register user [implemented on authController.js]
 const createUser = catchAsync(async (req, res, next) => {
   const data = req.body;
-  data.profile = staticFilePath(req.file.filename);
 
-  console.log(data.profile);
+  if(data.profile) data.profile = staticFilePath(req.file.filename);
 
-  DB.query(userQuery.adduser(), req.body, (err, results) => {
+  DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
     if (err) return next(new AppError(err.message, 400));
-    return res.json({ message: "Success", user: results });
+
+    return res.json({ 
+      message: "Success", 
+    // user: results,
+     id:results.insertId });
   });
 });
 // update user
