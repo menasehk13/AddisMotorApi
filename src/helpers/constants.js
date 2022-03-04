@@ -11,6 +11,7 @@ export const {
   JWTSecretKey,
   JWTExpiresIn,
   PORT,
+  STATIC_FILES_URL,
 } = process.env;
 
 export const roles = ["user", "admin", "driver", "operator"];

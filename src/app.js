@@ -7,8 +7,15 @@ import { appConfig } from "./helpers/utils";
 import routes from "./routes";
 import http from "http";
 import socketIO from "socket.io";
+import path from "path";
 
 const app = express();
+
+app.use(
+  "/static",
+  express.static(path.join(__dirname.replace("\\src", ""), "public"))
+);
+
 const server = http.createServer(app);
 
 const io = socketIO(server, {

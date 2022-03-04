@@ -1,6 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { JWTExpiresIn, JWTSecretKey } from "./constants";
+import { JWTExpiresIn, JWTSecretKey, STATIC_FILES_URL } from "./constants";
 
 export function appConfig(app) {
   app.set("views", __dirname + "/views");
@@ -17,9 +17,9 @@ export const signToken = (id) => {
   });
 };
 
-export const createSendToken = (user,results, statusCode, res) => {
+export const createSendToken = (user, results, statusCode, res) => {
   const token = signToken(user.id);
-  const id = results.insertId
+  const id = results.insertId;
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
@@ -38,11 +38,15 @@ export const createSendToken = (user,results, statusCode, res) => {
     message: "user registered successfully",
     id,
     token,
-    user
+    user,
   });
 };
 
 export function simpleGetUser(req, value) {
   const type = req.params.type || "driver";
   return `SELECT * FROM ${type} WHERE id='${value}'`;
+}
+
+export function staticFilePath(filename) {
+  return STATIC_FILES_URL + filename.replace(" ", "%20");
 }

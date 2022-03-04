@@ -3,6 +3,7 @@ import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
 import userQuery from "../queries/user";
 import AppError from "../helpers/appError";
+import { staticFilePath } from "../helpers/utils";
 
 const DB = connectDB();
 
@@ -30,9 +31,14 @@ const getUser = catchAsync(async (req, res, next) => {
 
 // create/register user [implemented on authController.js]
 const createUser = catchAsync(async (req, res, next) => {
+  const data = req.body;
+  data.profile = staticFilePath(req.file.filename);
+
+  console.log(data.profile);
+
   DB.query(userQuery.adduser(), req.body, (err, results) => {
     if (err) return next(new AppError(err.message, 400));
-    return res.json({ message: Succsess, user: results });
+    return res.json({ message: "Success", user: results });
   });
 });
 // update user
