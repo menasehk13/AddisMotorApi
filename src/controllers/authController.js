@@ -16,7 +16,7 @@ const register = catchAsync(async (req, res, next) => {
   const data = req.body;
   const type = req.query.type || "driver";
 
-   data.password = await bcrypt.hash(data.password, 12);
+  data.password = await bcrypt.hash(data.password, 12);
 
   let query;
   if (type == "driver") query = driverQuery.add_driver();
@@ -24,10 +24,10 @@ const register = catchAsync(async (req, res, next) => {
   else query = userQuery.adduser();
 
   DB.query(query, data, function (err, results, fields) {
-    console.log(err, data,fields);
-    
+    console.log(err, data, fields);
+
     if (err) return next(new AppError(err.message, 400));
-    createSendToken(data,results, 200, res);
+    createSendToken(data, results, 200, res);
   });
 });
 
@@ -60,7 +60,7 @@ const login = catchAsync(async (req, res, next) => {
       return next(new AppError("incorrect password", 400));
     // If everything ok, send token to client
 
-    createSendToken(user,data, 200, res);
+    createSendToken(user, data, 200, res);
   });
 });
 

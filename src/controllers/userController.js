@@ -23,7 +23,7 @@ const getUser = catchAsync(async (req, res, next) => {
 
 // create/register user [implemented on authController.js]
 const createUser = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.adduser(req.body), (err, results) => {
+  DB.query(userQuery.adduser(), req.body, (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json({ message: Succsess, user: results });
   });
