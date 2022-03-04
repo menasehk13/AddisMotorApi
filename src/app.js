@@ -5,8 +5,35 @@ import connectDB from "./helpers/connection";
 import { apiV1Prefix, API_KEY, PORT } from "./helpers/constants";
 import { appConfig } from "./helpers/utils";
 import routes from "./routes";
+import http from "http"
+import socketIO from 'socket.io';
+import cors from "cors"
 
 const app = express();
+const server = http.createServer(app)
+
+const io = socketIO(server, {
+  transports:['polling'],
+  cors:{
+    cors: {
+      origin:"http://localhost:3000"
+    }
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log('A user is connected');
+
+  socket.on('message', (message) => {
+    console.log(`message from ${socket.id} : ${message}`);
+  })
+
+  socket.on('disconnect', () => {
+    console.log(`socket ${socket.id} disconnected`);
+  })
+})
+
+export {io};
 
 connectDB().connect(function (err) {
   if (err) return console.log(err, err.message);
@@ -46,6 +73,6 @@ console.log(apiprefix);
 // all routes
 routes(app, apiprefix);
 
-const server = app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("Listening on port " + PORT || 5000);
 });

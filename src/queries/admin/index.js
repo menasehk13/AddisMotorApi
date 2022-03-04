@@ -18,9 +18,10 @@ export function login(data) {
    Admin
   Where
    email = '${data.email}',
-   password = '${data.password}' 
+   password = '${data.password}'
   `;
 }
+
 export function addadmin() {
   return `
      INSERT INTO
