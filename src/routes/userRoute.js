@@ -9,7 +9,7 @@ router.post("/profile", upload.single("profile"), userController.checkMulter);
 router
   .route("/")
   .get(userController.getUsers)
-  .post(upload.single("profile"), userController.createUser);
+  .post(upload.single("userprofile"), userController.createUser);
 router.route("/:id").get(userController.getUser).patch(
   // authController.protect,
   // authController.restrictTo("admin"),

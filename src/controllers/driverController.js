@@ -4,16 +4,16 @@ import { catchAsync } from "../middlewares/error";
 import bcrypt from "bcryptjs";
 import AppError from "../helpers/appError";
 import { io } from "../app";
+import { staticFilePath } from "../helpers/utils";
 
 const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
     if (err) return next(new AppError(err.message, 400));
 
-
-    io.emit("drivers", drivers)
+    io.emit("drivers", drivers);
     return res.json({
       status: "success",
-        users:drivers,
+      users: drivers,
     });
   });
 });
@@ -27,7 +27,7 @@ const getDriver = catchAsync(async function (req, res, next) {
 
       return res.json({
         status: "success",
-          user:driver,
+        user: driver,
       });
     }
   );
@@ -35,15 +35,22 @@ const getDriver = catchAsync(async function (req, res, next) {
 
 const addDriver = catchAsync(async (req, res, next) => {
   const data = req.body;
-  data.password = await bcrypt.hash(data.password, 12);
 
-  DB.query(driverQuery.add_driver(data), function (err, result) {
+  if (!data.password)
+    return next(new AppError("Please input your password", 400));
+
+  data.password = await bcrypt.hash(data.password, 12);
+  data.photo = staticFilePath(req.file.filename);
+
+  console.log(data.photo);
+
+  DB.query(driverQuery.add_driver(), data, function (err, result) {
     if (err) return next(new AppError(err.message, 400));
 
     return res.json({
       status: "success",
       message: "Driver registered successfully",
-        user: result,
+      user: result,
     });
   });
 });
@@ -60,7 +67,7 @@ const updateCurrentLocation = catchAsync(async (req, res, next) => {
       return res.json({
         status: "success",
         message: "Driver location updated successfully",
-          user: result,
+        user: result,
       });
     }
   );
@@ -75,7 +82,7 @@ const history = catchAsync(async function (req, res, next) {
       return res.json({
         status: "success",
         message: "driver history loaded successfully",
-          history: result,
+        history: result,
       });
     }
   );
@@ -89,7 +96,7 @@ const displayStatus = catchAsync(async function (req, res, next) {
 
       return res.json({
         status: "success",
-          status: result,
+        status: result,
       });
     }
   );

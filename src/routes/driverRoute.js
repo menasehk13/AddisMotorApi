@@ -1,11 +1,13 @@
 import { Router } from "express";
 import driverController from "../controllers/driverController";
+import upload from "../utils/multer";
+
 const router = Router();
 
 router
   .route("/")
   .get(driverController.getDrivers)
-  .post(driverController.addDriver);
+  .post(upload.single("driverprofile"), driverController.addDriver);
 
 router.route("/:id").get(driverController.getDriver);
 
