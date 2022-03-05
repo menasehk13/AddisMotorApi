@@ -23,7 +23,7 @@ const getUsers = catchAsync(async (req, res, next) => {
 
 // get user
 const getUser = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.getuser(req.params.id), function (err, results, fields) {
+  DB.query(userQuery.getuser(req.query.id), function (err, results, fields) {
     if (err) return next(new AppError(err.message, 400));
     return res.json({ user: results });
   });
