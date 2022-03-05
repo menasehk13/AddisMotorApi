@@ -10,7 +10,7 @@ const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
     if (err) return next(new AppError(err.message, 400));
 
-    io.emit("drivers", drivers);
+
     return res.json({
       status: "success",
       users: drivers,

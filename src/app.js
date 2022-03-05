@@ -22,7 +22,7 @@ const io = socketIO(server, {
   transports: ["polling"],
   cors: {
     cors: {
-      origin: "http://localhost:3000",
+      origin: "http://localhost:5000",
     },
   },
 });
@@ -37,7 +37,14 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`socket ${socket.id} disconnected`);
   });
+
+  socket.on("test", (l) => console.log(l) )
 });
+
+
+io.emit("driver",'helloworld')
+
+
 
 export { io };
 

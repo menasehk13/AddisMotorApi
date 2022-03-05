@@ -33,6 +33,7 @@ const getUser = catchAsync(async (req, res, next) => {
 const createUser = catchAsync(async (req, res, next) => {
   const data = req.body;
 
+  console.log(req.file);
   if(data.profile) data.profile = staticFilePath(req.file.filename);
 
   DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
