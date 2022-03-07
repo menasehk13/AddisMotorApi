@@ -42,10 +42,10 @@ const addDriver = catchAsync(async (req, res, next) => {
   data.password = await bcrypt.hash(data.password, 12);
   data.photo = staticFilePath(req.file.filename);
 
-  console.log(data.photo);
-
   DB.query(driverQuery.add_driver(), data, function (err, result) {
     if (err) return next(new AppError(err.message, 400));
+
+    // console.log();
 
     return res.json({
       status: "success",
@@ -106,10 +106,15 @@ const displayStatus = catchAsync(async function (req, res, next) {
 
 // online driver view
 const onlineDriver = catchAsync(async (req, res, next) => {
-  DB.query(driverQuery.getOnlineDrivers(), (err, results) => {
-    if (err) return next(new AppError(err.message, 400));
-    return res.json({ divers: results });
-  });
+  // DB.query(driverQuery.getOnlineDrivers(), (err, results) => {
+  //   if (err) return next(new AppError(err.message, 400));
+
+    io.on("driver", (...args) => {
+        console.log(...args);
+    });
+
+    return res.json({ divers: "results" });
+  // });
 });
 
 export default {
