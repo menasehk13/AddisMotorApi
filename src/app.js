@@ -18,14 +18,7 @@ app.use(
 
 const server = http.createServer(app);
 
-const io = socketIO(server, {
-  transports: ["polling"],
-  cors: {
-    cors: {
-      origin: "http://localhost:5000",
-    },
-  },
-});
+const io = socketIO(server);
 
 io.on("connection", (socket) => {
   console.log("A user is connected");
@@ -34,15 +27,16 @@ io.on("connection", (socket) => {
     console.log(`message from ${socket.id} : ${message}`);
   });
 
-  socket.on("disconnect", () => {
-    console.log(`socket ${socket.id} disconnected`);
+  socket.on("disconnect", (reason) => {
+    console.log(`socket ${socket.id} disconnected for reason ${reason}`);
+
   });
 
   socket.on("test", (l) => console.log(l) )
 });
 
 
-io.emit("driver",'helloworld')
+io.emit("driver","helloworld")
 
 
 

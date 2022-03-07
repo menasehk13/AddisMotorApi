@@ -14,4 +14,6 @@ export const {
   STATIC_FILES_URL,
 } = process.env;
 
+export const url = `http://localhost:${PORT}${apiV1Prefix}${API_KEY}`
+
 export const roles = ["user", "admin", "driver", "operator"];

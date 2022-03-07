@@ -4,14 +4,9 @@ import connectDB from "../helpers/connection";
 import userQuery from "../queries/user";
 import AppError from "../helpers/appError";
 import { staticFilePath } from "../helpers/utils";
+import { url } from "../helpers/constants";
 
 const DB = connectDB();
-
-const checkMulter = catchAsync(async (req, res, next) => {
-  const { profile } = req.file;
-
-  res.json(req.file);
-});
 
 // get users
 const getUsers = catchAsync(async (req, res, next) => {
@@ -28,12 +23,25 @@ const getUser = catchAsync(async (req, res, next) => {
     return res.json({ user: results });
   });
 });
+ 
+const createUserForm = catchAsync(async (req, res, next) => {
+  res.send(`
+    <form action="${url}/users" method="post" enctype="multipart/form-data">
+    <input type="text" name="firstname">
+    <input type="text" name="lastname">
+    <input type="email" name="email">
+    <input type="file" name="userprofile">
+    <input type="submit" value="Upload">
+    </form>
+`);
+})
 
 // create/register user [implemented on authController.js]
 const createUser = catchAsync(async (req, res, next) => {
   const data = req.body;
 
-  console.log(req.file);
+  console.log(data);
+
   if(data.profile) data.profile = staticFilePath(req.file.filename);
 
   DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
@@ -45,6 +53,7 @@ const createUser = catchAsync(async (req, res, next) => {
      id:results.insertId });
   });
 });
+
 // update user
 const updateUser = catchAsync(async (req, res, next) => {
   DB.query(
@@ -105,6 +114,7 @@ const payment = catchAsync(async (req, res, mext) => {
 export default {
   getUsers,
   getUser,
+  createUserForm,
   createUser,
   updateUser,
   // nearbyDriver,
@@ -112,5 +122,4 @@ export default {
   journeyLocation,
   journeyStarted,
   payment,
-  checkMulter,
 };
