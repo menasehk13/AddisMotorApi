@@ -10,11 +10,14 @@ router
   .route("/")
   .get(userController.getUsers)
   .post(upload.single("userprofile"), userController.createUser);
+  
+router.get("/service",userController.Service)
 
 router.route("/:id").get(userController.getUser).patch(
   // authController.protect,
   // authController.restrictTo("admin"),
   userController.updateUser
-);
+);  
+
 
 export default router;

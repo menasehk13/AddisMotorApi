@@ -44,6 +44,11 @@ export function getuserbyphone(number) {
             WHERE phonenumber = '${number}'
     `;
 }
+export function getService(){
+  return `
+  select * from service;
+  `
+}
 
 export function requestDriver(data) {
   return `
@@ -169,4 +174,5 @@ export default {
   journeystarted,
   payment,
   driverfound,
+  getService,
 };

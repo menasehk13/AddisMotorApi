@@ -6,7 +6,7 @@ import { apiV1Prefix, API_KEY, PORT } from "./helpers/constants";
 import { appConfig } from "./helpers/utils";
 import routes from "./routes";
 import http from "http";
-import socketIO from "socket.io";
+import {Server} from "socket.io";
 import path from "path";
 
 const app = express();
@@ -18,29 +18,37 @@ app.use(
 
 const server = http.createServer(app);
 
-const io = socketIO(server);
+const io = new Server(server);
+
+let sock;
 
 io.on("connection", (socket) => {
   console.log("A user is connected");
+  sock = socket;
 
   socket.on("message", (message) => {
     console.log(`message from ${socket.id} : ${message}`);
   });
 
-  socket.on("disconnect", (reason) => {
-    console.log(`socket ${socket.id} disconnected for reason ${reason}`);
+  socket.on("test", (msg) => {
+    console.log(msg);
+    io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
+  })
 
+ 
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
   });
 
-  socket.on("test", (l) => console.log(l) )
+  // socket.on("test", (msg) => console.log(msg))
+  
+  socket.on("disconnect", (reason) => { 
+    console.log(`socket ${socket.id} disconnected for reason ${reason}`);
+  });
 });
 
 
-io.emit("driver","helloworld")
-
-
-
-export { io };
+export { io, sock };
 
 connectDB().connect(function (err) {
   if (err) return console.log(err, err.message);
@@ -66,6 +74,10 @@ process.on("uncaughtException", (err) => {
 
 // configuring app
 appConfig(app);
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
 
 let apiprefix = apiV1Prefix + API_KEY;
 // check if the api key is valid

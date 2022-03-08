@@ -1,7 +1,7 @@
 import multer from "multer";
 import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
-import userQuery from "../queries/user";
+import userQuery, { getService } from "../queries/user";
 import AppError from "../helpers/appError";
 import { staticFilePath } from "../helpers/utils";
 import { url } from "../helpers/constants";
@@ -42,16 +42,16 @@ const createUser = catchAsync(async (req, res, next) => {
 
   console.log(data);
 
-  if(data.profile) data.profile = staticFilePath(req.file.filename);
+  // if(data.profile) data.profile = staticFilePath(req.file.filename);
 
-  DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
-    if (err) return next(new AppError(err.message, 400));
+  // DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
+  //   if (err) return next(new AppError(err.message, 400));
 
-    return res.json({ 
-      message: "Success", 
-    // user: results,
-     id:results.insertId });
-  });
+  //   return res.json({ 
+  //     message: "Success", 
+  //   // user: results,
+  //    id:results.insertId });
+  // });
 });
 
 // update user
@@ -102,8 +102,16 @@ const journeyStarted = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
+
+//get service
+const Service = catchAsync(async (req, res, next) => {
+  DB.query(userQuery.getService(), function (err, results, fields) {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json( results );
+  });
+});
 // payment
-const payment = catchAsync(async (req, res, mext) => {
+const payment = catchAsync(async (req, res, next) => {
   DB.query(userQuery.payment(req.body), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
@@ -122,4 +130,5 @@ export default {
   journeyLocation,
   journeyStarted,
   payment,
-};
+  Service
+}

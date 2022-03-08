@@ -3,7 +3,7 @@ import driverQuery from "../queries/driver";
 import { catchAsync } from "../middlewares/error";
 import bcrypt from "bcryptjs";
 import AppError from "../helpers/appError";
-import { io } from "../app";
+import { io, sock } from "../app";
 import { staticFilePath } from "../helpers/utils";
 
 const getDrivers = catchAsync(async function (req, res, next) {
@@ -19,11 +19,20 @@ const getDrivers = catchAsync(async function (req, res, next) {
 });
 
 const getDriver = catchAsync(async function (req, res, next) {
+  const {id} = req.query;
   DB.query(
-    driverQuery.getdriver(req.params.id),
+    driverQuery.getdriver(id),
     function (err, result, fields) {
       if (err) return next(new AppError(err.message, 400));
       const driver = result[0];
+
+      if(!driver) return next(new AppError(`Found No Driver with id [${id}] `))
+
+      console.log(result, );
+      
+      // sock.emit("driver", driver);
+
+      // sock.on("test", msg => console.log(msg))
 
       return res.json({
         status: "success",
@@ -57,10 +66,10 @@ const addDriver = catchAsync(async (req, res, next) => {
 
 const updateCurrentLocation = catchAsync(async (req, res, next) => {
   const data = req.body;
-  const { driverid } = req.params;
+  const { id } = req.params;
 
   DB.query(
-    driverQuery.updatecurrentlocation({ ...data, driverid }),
+    driverQuery.updatecurrentlocation({ ...data, id }),
     function (err, result, fields) {
       if (err) return next(new AppError(err.message, 400));
 

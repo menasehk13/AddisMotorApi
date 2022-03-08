@@ -9,14 +9,14 @@ router
   .get(driverController.getDrivers)
   .post(upload.single("driverprofile"), driverController.addDriver);
 
-router.route("/:id").get(driverController.getDriver);
+router.route("/driver").get(driverController.getDriver);
 
 router.route("/status/:driverid").get(driverController.displayStatus);
 
 router.route("/history/:driverid").get(driverController.history);
 
 router
-  .route("/updatelocation/:driverid")
+  .route("/updatelocation")
   .post(driverController.updateCurrentLocation);
 
 export default router;
