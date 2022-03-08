@@ -10,7 +10,6 @@ const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
     if (err) return next(new AppError(err.message, 400));
 
-
     return res.json({
       status: "success",
       users: drivers,
@@ -57,10 +56,10 @@ const addDriver = catchAsync(async (req, res, next) => {
 
 const updateCurrentLocation = catchAsync(async (req, res, next) => {
   const data = req.body;
-  const { driverid } = req.params;
+  const { id } = req.query;
 
   DB.query(
-    driverQuery.updatecurrentlocation({ ...data, driverid }),
+    driverQuery.updatecurrentlocation({ ...data, id }),
     function (err, result, fields) {
       if (err) return next(new AppError(err.message, 400));
 
@@ -109,11 +108,11 @@ const onlineDriver = catchAsync(async (req, res, next) => {
   // DB.query(driverQuery.getOnlineDrivers(), (err, results) => {
   //   if (err) return next(new AppError(err.message, 400));
 
-    io.on("driver", (...args) => {
-        console.log(...args);
-    });
+  io.on("driver", (...args) => {
+    console.log(...args);
+  });
 
-    return res.json({ divers: "results" });
+  return res.json({ divers: "results" });
   // });
 });
 

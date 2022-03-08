@@ -23,7 +23,7 @@ const getUser = catchAsync(async (req, res, next) => {
     return res.json({ user: results });
   });
 });
- 
+
 const createUserForm = catchAsync(async (req, res, next) => {
   res.send(`
     <form action="${url}/users" method="post" enctype="multipart/form-data">
@@ -34,7 +34,7 @@ const createUserForm = catchAsync(async (req, res, next) => {
     <input type="submit" value="Upload">
     </form>
 `);
-})
+});
 
 // create/register user [implemented on authController.js]
 const createUser = catchAsync(async (req, res, next) => {
@@ -42,16 +42,16 @@ const createUser = catchAsync(async (req, res, next) => {
 
   console.log(data);
 
-  if(data.profile) data.profile = staticFilePath(req.file.filename);
+  // if(data.profile) data.profile = staticFilePath(req.file.filename);
 
-  DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
-    if (err) return next(new AppError(err.message, 400));
+  // DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
+  //   if (err) return next(new AppError(err.message, 400));
 
-    return res.json({ 
-      message: "Success", 
-    // user: results,
-     id:results.insertId });
-  });
+  //   return res.json({
+  //     message: "Success",
+  //   // user: results,
+  //    id:results.insertId });
+  // });
 });
 
 // update user

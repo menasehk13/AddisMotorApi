@@ -15,8 +15,6 @@ router.route("/status/:driverid").get(driverController.displayStatus);
 
 router.route("/history/:driverid").get(driverController.history);
 
-router
-  .route("/updatelocation/:driverid")
-  .post(driverController.updateCurrentLocation);
+router.route("/updatelocation").post(driverController.updateCurrentLocation);
 
 export default router;
