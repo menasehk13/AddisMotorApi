@@ -4,7 +4,7 @@ import userController from "../controllers/userController";
 import upload from "../utils/multer";
 const router = Router();
 
-router.post("/createUser", userController.createUserForm)
+router.post("/createUser", userController.createUserForm);
 
 router
   .route("/")
@@ -12,6 +12,8 @@ router
   .post(upload.single("userprofile"), userController.createUser);
   
 router.get("/service",userController.Service)
+
+router.route("/user").get(userController.getUser);
 
 router.route("/:id").get(userController.getUser).patch(
   // authController.protect,
