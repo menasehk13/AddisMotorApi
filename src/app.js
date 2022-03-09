@@ -11,8 +11,9 @@ import path from "path";
 
 const app = express();
 
+
 app.use(
-  "/static",
+  "static",
   express.static(path.join(__dirname.replace("\\src", ""), "public"))
 );
 

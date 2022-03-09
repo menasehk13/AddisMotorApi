@@ -12,6 +12,9 @@ export const {
   JWTExpiresIn,
   PORT,
   STATIC_FILES_URL,
+  TWILIO_ACCOUNT_SID,
+  TWILIO_SERVICE_ID,
+  TWILIO_AUTH_TOKEN
 } = process.env;
 
 export const url = `http://localhost:${PORT}${apiV1Prefix}${API_KEY}`

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/app.js",
     "babel-node": "babel-node --presets=@babel/preset-env",
-    "dev": "nodemon --exec npm run babel-node src/app.js"
+    "dev": "npx kill-port 5000 && nodemon --exec npm run babel-node src/app.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "multer": "^1.4.4",
     "mysql2": "^2.3.3",
     "socket.io": "^4.4.1",
+    "twilio": "^3.75.0",
     "util": "^0.12.4"
   },
   "devDependencies": {

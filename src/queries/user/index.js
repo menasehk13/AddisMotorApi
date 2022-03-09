@@ -46,7 +46,16 @@ export function getuserbyphone(number) {
 }
 export function getService(){
   return `
-  select * from service;
+  SELECT 
+    service.servicetype,
+    service.servicepicture,
+    price.bookingfee,
+    price.distance,
+    price.price
+
+    FROM carservicerelation
+    JOIN service on service.serviceid =  carservicerelation.serviceid
+    JOIn price on price.priceid =  carservicerelation.priceid;
   `
 }
 

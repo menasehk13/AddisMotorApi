@@ -22,10 +22,10 @@ function updatecurrentlocation(data) {
      UPDATE
         Driver
       SET
-       lattitude=${Number(data.lat)}
-       longtuide=${Number(data.lng)}
+       lat=${Number(data.lat)},
+       lng=${Number(data.lng)}
       WHERE
-        driverid=${data.driverid} 
+        id=${data.id} 
 `;
 }
 // on testing we will see the result of our need
