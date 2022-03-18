@@ -58,7 +58,7 @@ const login = catchAsync(async (req, res, next) => {
     const user = data[0];
 
     // check if email is in the db
-    if (!data[0]) return next(new AppError("sorry, unregistered account"));
+    if (!data[0] && type!="user") return next(new AppError("sorry, unregistered account"));
 
     // compare the password associated with the email and password from request
     let isPasswordCorrect;
@@ -92,6 +92,7 @@ const login = catchAsync(async (req, res, next) => {
 
 const verify = catchAsync(async (req, res, next) => {
   const {code, phonenumber} = req.body;
+  console.log(req.body);
 
   twillioClient.verify
   .services(TWILIO_SERVICE_ID)
@@ -105,13 +106,20 @@ const verify = catchAsync(async (req, res, next) => {
         if(user) {
           return res.json({
             message: "User verified successfully",
+            status:"User Already Registered",
             user
+          })
+        }else{
+          return res.json({
+            message:"New User Added",
+            status:"User verified successfully"
           })
         }
       })
     }
   } )  
   .catch(err =>{
+    if(err.code == 20404) return next(new AppError("Invalid Verification code ", 400));
     return next(new AppError(err.message, 400))
   });
 

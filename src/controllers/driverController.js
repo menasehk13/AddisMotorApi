@@ -10,10 +10,7 @@ const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
     if (err) return next(new AppError(err.message, 400));
 
-    return res.json({
-      status: "success",
-      users: drivers,
-    });
+    return res.json(drivers);
   });
 });
 
@@ -27,7 +24,7 @@ const getDriver = catchAsync(async function (req, res, next) {
 
       if(!driver) return next(new AppError(`Found No Driver with id [${id}] `))
 
-      console.log(result, );
+      // console.log(result, );
       
       // sock.emit("driver", driver);
 
@@ -71,7 +68,7 @@ const updateCurrentLocation = catchAsync(async (req, res, next) => {
     driverQuery.updatecurrentlocation({ ...data, id }),
     function (err, result, fields) {
       if (err) return next(new AppError(err.message, 400));
-
+      
       return res.json({
         status: "success",
         message: "Driver location updated successfully",
@@ -80,6 +77,24 @@ const updateCurrentLocation = catchAsync(async (req, res, next) => {
     }
   );
 });
+const updatestatus = catchAsync(async (req,res,next)=>{
+  const data = req.body;
+  const {id} = req.query;
+  DB.query(driverQuery.updateStatus({...data,id}),(err,result,fields)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({
+      status: "success",
+      message: "status Updated",
+    })
+  })
+})
+
+const totalprice = catchAsync(async (req,res,next)=>{
+  DB.query(driverQuery.totalPrice(req.query.id),(err,result)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(result[0])
+  })
+})
 
 const history = catchAsync(async function (req, res, next) {
   DB.query(
@@ -110,6 +125,27 @@ const displayStatus = catchAsync(async function (req, res, next) {
   );
 });
 
+const updateDriverSocket = catchAsync(async function (req, res, next) {
+  const data = req.body;
+  const { id } = req.query;
+  console.log(req.body, req.query);
+  DB.query(
+    driverQuery.updateDriverSocket({ ...data, id }),
+    function (err, result, fields) {
+      if (err) {
+        console.log(err);
+        return next(new AppError(err.message, 400));
+      }
+      return res.json({
+        status: "success",
+        message: "driver update succesful",
+        driver: result,
+      });
+    }
+  );
+});
+
+
 // MIGRATED FROM USER
 
 // online driver view
@@ -133,4 +169,7 @@ export default {
   history,
   updateCurrentLocation,
   onlineDriver,
+  updateDriverSocket,
+  updatestatus,
+  totalprice
 };

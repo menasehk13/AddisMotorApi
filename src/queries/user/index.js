@@ -59,26 +59,71 @@ export function getService(){
   `
 }
 
+export function displayDriverLocation(){
+  return `
+  SELECT lat,lng,id,socketid
+  from driver 
+  WHERE driver.activeid = 1 AND driver.status = "approved" ;
+  `
+}
+
+export function viewDrivers(data){
+  return `
+  SELECT 
+  driver.lat ,
+  driver.lng,
+  driver.serviceid,
+  (6371 * acos(cos(radians(${data.lat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.lng})) + sin(radians(${data.lat})) * sin(radians(driver.lat)))) AS distance
+ FROM driver
+ 
+ HAVING distance < 30;
+  `
+}
+
+export function driverInfo(id){
+  return `
+  SELECT
+    driver.firstname,
+    driver.lastname,
+    driver.phonenumber,
+    driver.photo,
+    cardetail.color,
+    cardetail.productionyear,
+    cardetail.licenseplate,
+    cardetail.model
+FROM
+    driver
+    JOIN cardetail on driver.cardetailid = cardetail.id
+WHERE
+    driver.id = ${id};
+  `
+}
+
 export function requestDriver(data) {
   return `
-    SELECT 
-        firstname,
-        lastname,
-        photo,
-        phonenumber,
-        lattitude as lat,
-        longtuide as lng,
-        (6371 * acos(cos(radians(${data.lat})) * cos(radians(Driver.lattitude)) * cos(radians(Driver.longitude) - radians(${data.lng})) + sin(radians(${data.lat})) * sin(radians(Driver.lattitude)))) AS distance    
-    From 
-        Driver,Service,Active
-    Where
-        serviceid='${data.service}' And activeid='1'
-    Having Distance < 38
-    OrderBy Distance
+  SELECT driver.id,
+  firstname,
+  lastname,
+  photo,
+  phonenumber,
+  cardetail.model,
+  cardetail.productionyear,
+  cardetail.licenseplate,
+  cardetail.color,
+  lat,
+  lng,
+    (6371 * acos(cos(radians(${data.lat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(3${data.lng})) + sin(radians(${data.lat})) * sin(radians(driver.lat)))) AS distance 
+From 
+  Driver
+JOIN cardetail on driver.cardetailid = cardetail.id     
+     WHERE activeid = 1
+    Having Distance < 50
+    ORDER BY distance
     Limit 10;
           
     `;
 }
+
 
 export function history(userid) {
   return `
@@ -102,8 +147,8 @@ export function booking(data) {
         SET
         arrivinglocation='${data.arriving}',
         startinglocation='${data.starting}',
-        userid='${data.userid}',
-        driverid='${data.driverid}',
+        userid=${data.userid},
+        driverid=${data.driverid},
         status='driver on the way'
 `;
 }
@@ -177,6 +222,7 @@ export default {
   getuser,
   getuserbyphone,
   requestDriver,
+  driverInfo,
   history,
   booking,
   journeylocation,
@@ -184,4 +230,6 @@ export default {
   payment,
   driverfound,
   getService,
+  displayDriverLocation,
+  viewDrivers
 };

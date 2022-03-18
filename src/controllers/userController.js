@@ -20,7 +20,7 @@ const getUsers = catchAsync(async (req, res, next) => {
 const getUser = catchAsync(async (req, res, next) => {
   DB.query(userQuery.getuser(req.query.id), function (err, results, fields) {
     if (err) return next(new AppError(err.message, 400));
-    return res.json({ user: results });
+    return res.json(results[0]);
   });
 });
 
@@ -42,16 +42,16 @@ const createUser = catchAsync(async (req, res, next) => {
 
   console.log(data);
 
-  // if(data.profile) data.profile = staticFilePath(req.file.filename);
+  if(data.profile) data.profile = staticFilePath(req.file.filename);
+  
+  DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
+    if (err) return next(new AppError(err.message, 400));
 
-  // DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
-  //   if (err) return next(new AppError(err.message, 400));
-
-  //   return res.json({
-  //     message: "Success",
-  //   // user: results,
-  //    id:results.insertId });
-  // });
+    return res.json({
+      message: "Success",
+    // user: results,
+     id:results.insertId });
+  });
 });
 
 // update user
@@ -68,9 +68,22 @@ const updateUser = catchAsync(async (req, res, next) => {
 
 // nearby driver -> NOT DONE
 const nearbyDriver = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.nearbyDriver(req.body), (err, results) => {
-    if (err) return next(new AppError(err.message, 400));
-    return res.json({ drivers: results });
+  DB.query(userQuery.viewDrivers(req.body), (err, results) => {
+    if (err) {
+      console.log(err);
+      return next(new AppError(err.message, 400));
+    }
+    return res.json({ user: results });
+  });
+});
+// Driver Information
+const driverinfo=catchAsync(async(req,res,next)=>{
+  
+  DB.query(userQuery.driverInfo(req.query.id),(err,results)=>{
+    if(err){
+      return next(new AppError(err.message,400))
+    }
+    return res.json(results[0])
   });
 });
 
@@ -117,6 +130,16 @@ const payment = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
+
+// send  drivers location
+const displayDriverLocation = catchAsync(async (req, res, next) => {
+  DB.query(userQuery.displayDriverLocation(), (err, drivers, fields) => {
+    if(err) return next(new AppError(err.message, 400));
+
+    return res.json(drivers)
+  })
+}) 
+
 // delete user
 
 export default {
@@ -125,10 +148,12 @@ export default {
   createUserForm,
   createUser,
   updateUser,
-  // nearbyDriver,
+  nearbyDriver,
+  driverinfo,
   foundDriver,
   journeyLocation,
   journeyStarted,
   payment,
-  Service
+  Service,
+  displayDriverLocation
 }

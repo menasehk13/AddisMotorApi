@@ -1,17 +1,19 @@
 import "dotenv/config";
 import express from "express";
 import AppError from "./helpers/appError";
-import connectDB from "./helpers/connection";
+import connectDB, { DB } from "./helpers/connection";
 import { apiV1Prefix, API_KEY, PORT } from "./helpers/constants";
 import { appConfig } from "./helpers/utils";
 import routes from "./routes";
 import http from "http";
+import cors from 'cors';
 import {Server} from "socket.io";
 import path from "path";
+import userQuery from "./queries/user";
 
 const app = express();
 
-
+app.use(cors());
 app.use(
   "static",
   express.static(path.join(__dirname.replace("\\src", ""), "public"))
@@ -31,17 +33,40 @@ io.on("connection", (socket) => {
     console.log(`message from ${socket.id} : ${message}`);
   });
 
+  // socket.on("")
+
   socket.on("test", (msg) => {
     console.log(msg);
     io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   })
-
- 
+  socket.on("data",(d) =>{
+    console.log(d);
+    const data = JSON.parse(d) || d
+    DB.query(userQuery.displayDriverLocation(), (err, drivers, fields) => {
+      if(err) console.log(err.message)
+      io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
+      console.log( data, drivers);
+    })
+  })
+    socket.on("rideaccepted",(data)=>{
+      const result = JSON.parse(data)
+      DB.query(userQuery.booking(result),(err, drivers,fields)=>{
+        if(err) console.log(err.message)
+        io.to(result.socketid).emit("driverfound",result)
+        console.log(result)
+      })
+  })
+  socket.emit("data","data")
+   socket.on("value",(data)=>{
+    const d = JSON.parse(data)
+    console.log(d.socketid)
+    io.to(d.socketid).emit('val', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
+   })
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
 
-  // socket.on("test", (msg) => console.log(msg))
+  socket.on("test", (msg) => console.log(msg))
   
   socket.on("disconnect", (reason) => { 
     console.log(`socket ${socket.id} disconnected for reason ${reason}`);

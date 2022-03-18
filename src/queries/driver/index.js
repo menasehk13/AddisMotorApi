@@ -28,13 +28,50 @@ function updatecurrentlocation(data) {
         id=${data.id} 
 `;
 }
+
+function updateDriverSocket(data) {
+  return `
+    UPDATE 
+    driver 
+    SET
+    socketid = "${data.socketid}"
+    WHERE 
+    id =${data.id};  
+  `
+}
+
 // on testing we will see the result of our need
 // function notifydriver(data){
 //     return`
 
 //     `
 // }
+// total distance and price
 
+function updateStatus(data){
+  return `
+  UPDATE
+	driver
+SET
+	driver.status = '${data.status}'
+WHERE
+	driver.id =${data.id} ;
+  `
+}
+
+function totalPrice(id){
+return `
+SELECT
+	SUM(paymnet.price) AS totalPrice,
+	SUM(paymnet.distance) AS totalDistance
+FROM
+	paymnet
+WHERE
+	paymnet.driverid = ${id}
+	AND DATE(paymnet.date) = CURDATE();
+`
+
+}
 function history(driverid) {
   return `
  SELECT 
@@ -82,4 +119,7 @@ export default {
   displaystatus,
   history,
   getOnlineDrivers,
+  updateDriverSocket,
+  updateStatus,
+  totalPrice
 };
