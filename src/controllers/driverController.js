@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import AppError from "../helpers/appError";
 import { io, sock } from "../app";
 import { staticFilePath } from "../helpers/utils";
+import { json } from "express/lib/response";
 
 const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
@@ -124,11 +125,40 @@ const displayStatus = catchAsync(async function (req, res, next) {
     }
   );
 });
+// journey
+const journeyStarted = catchAsync(async (req,res,next)=>{
+  DB.query(driverQuery.journey(req.data),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({status:"success",journeyid:results.insertId})
+  })
+})
+// payement 
+const payment = catchAsync(async (req,res,next)=>{
+  DB.query(driverQuery.payment(req.body),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({status: "success"})
+  })
+})
 
+const priceid = catchAsync(async (req,res,next)=>{
+  DB.query(driverQuery.priceId(req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results[0])
+  })
+})
+const bookingData = catchAsync(async (req,res,next)=>{
+  const data = req.body
+  DB.query(driverQuery.booking(data),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+
+    return res.json({status:"success",bookingid:results.insertId})
+  })
+})
 const updateDriverSocket = catchAsync(async function (req, res, next) {
   const data = req.body;
   const { id } = req.query;
   console.log(req.body, req.query);
+  
   DB.query(
     driverQuery.updateDriverSocket({ ...data, id }),
     function (err, result, fields) {
@@ -171,5 +201,10 @@ export default {
   onlineDriver,
   updateDriverSocket,
   updatestatus,
-  totalprice
+  totalprice,
+  priceid,
+  payment,
+  bookingData,
+  journeyStarted
+  
 };

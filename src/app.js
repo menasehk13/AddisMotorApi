@@ -10,6 +10,7 @@ import cors from 'cors';
 import {Server} from "socket.io";
 import path from "path";
 import userQuery from "./queries/user";
+import driverQuery from "./queries/driver"
 
 const app = express();
 
@@ -50,21 +51,22 @@ io.on("connection", (socket) => {
   })
     socket.on("rideaccepted",(data)=>{
       const result = JSON.parse(data)
-      DB.query(userQuery.booking(result),(err, drivers,fields)=>{
-        if(err) console.log(err.message)
-        io.to(result.socketid).emit("driverfound",result)
+        io.to(result.socketid
+          ).emit("driverfound",result) 
         console.log(result)
-      })
+      });
+
+  socket.on("journystarted",(data)=>{
+    const result = JSON.parse(data) || data
+      io.to(result.socketid).emit("started",result)       
+      console.log(result)
   })
-  socket.emit("data","data")
-   socket.on("value",(data)=>{
-    const d = JSON.parse(data)
-    console.log(d.socketid)
-    io.to(d.socketid).emit('val', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
-   })
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
+
+  socket.on("jouneyfinished",(data)=>{
+    const result = JSON.parse(data) || data
+    io.to(data.socketid).emit("finished",result)
+  })
+
 
   socket.on("test", (msg) => console.log(msg))
   

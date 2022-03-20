@@ -110,6 +110,66 @@ export function getOnlineDrivers() {
      activeid=1 AND status = 'approved'   
     `;
 }
+export function journey(data){
+  return `
+  INSERT INTO 
+ 
+  journey 
+  
+  SET 
+  
+  lng =${data.lng} ,
+  lat =${data.lat} ,
+  userid =${data.userid} ,
+  driverid =${data.driverid} ,
+  bookingid =${data.bookingid} ;
+  `
+}
+function payment(data){
+  return `
+  INSERT INTO paymnet 
+SET 
+price = ${data.price},
+distance = ${data.distance},
+userid = ${data.userid},
+priceid = ${data.priceid},
+driverid = ${data.driverid},
+journeyid =${data.journeyid} ;
+
+
+INSERT INTO history 
+SET 
+
+history.driverid = ${data.driverid} ,
+history.paymentid = LAST_INSERT_ID(),
+history.bookingid = ${data.bookingid},
+history.userid = ${data.userid};
+  `
+}
+export function booking(data) {
+  return `
+    INSERT INTO
+        Booking
+        SET
+        arrivinglocation='${data.arriving}',
+        startinglocation='${data.starting}',
+        userid=${data.userid},
+        driverid=${data.driverid},
+        status='driver on the way'
+`;
+}
+function priceId(id){
+  return `
+  SELECT
+	carservicerelation.priceid AS priceId,
+	price.price AS price
+FROM
+	carservicerelation
+	JOIN price ON carservicerelation.priceid = price.priceid
+WHERE
+	serviceid = ${id};
+  `
+}
 
 export default {
   getdriver,
@@ -121,5 +181,9 @@ export default {
   getOnlineDrivers,
   updateDriverSocket,
   updateStatus,
-  totalPrice
+  totalPrice,
+  journey,
+  priceId,
+  payment,
+  booking
 };

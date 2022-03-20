@@ -140,18 +140,7 @@ GroupBy Payment.date
 `;
 }
 
-export function booking(data) {
-  return `
-    INSERT INTO
-        Booking
-        SET
-        arrivinglocation='${data.arriving}',
-        startinglocation='${data.starting}',
-        userid=${data.userid},
-        driverid=${data.driverid},
-        status='driver on the way'
-`;
-}
+
 
 export function journeystarted(data) {
   return `
@@ -201,6 +190,14 @@ export function payment(data) {
     `;
 }
 
+function ratingReview(){
+  return `
+  INSERT INTO 
+      ratingandreview 
+  SET ? ;
+  `
+}
+
 export function driverfound(data) {
   return `
 INSERT INTO  
@@ -224,12 +221,12 @@ export default {
   requestDriver,
   driverInfo,
   history,
-  booking,
   journeylocation,
   journeystarted,
   payment,
   driverfound,
   getService,
   displayDriverLocation,
-  viewDrivers
+  viewDrivers,
+  ratingReview
 };

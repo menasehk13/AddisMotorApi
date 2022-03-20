@@ -10,6 +10,7 @@ router
   .route("/")
   .get(userController.getUsers)
   .post(upload.single("userprofile"), userController.createUser);
+  router.post("/rateDriver",userController.rating)
   router.get("/nearby",userController.nearbyDriver)
   router.get("/driverinfo",userController.driverinfo)
 router.get("/service",userController.Service)

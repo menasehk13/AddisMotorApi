@@ -92,7 +92,7 @@ export function addnewdriver(data) {
         activeid=1,
         addeddate='${Date.now()}',
         status='missing'
-        cardetailid=scope_identity()
+        cardetailid=LAST_INSERT_ID()
       ;
     `;
 }

@@ -53,7 +53,13 @@ const createUser = catchAsync(async (req, res, next) => {
      id:results.insertId });
   });
 });
-
+// rate driver 
+const rating = catchAsync(async (req,res,next)=>{
+  DB.query(userQuery.ratingReview(),req.body,(err,results,fields) => {
+    if(err) return next(new AppError(err.message,400));
+    return res.json({ message: "Success"})
+  })
+})
 // update user
 const updateUser = catchAsync(async (req, res, next) => {
   DB.query(
@@ -107,15 +113,6 @@ const journeyLocation = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
-// cancel drive
-
-const journeyStarted = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.journeystarted, (err, results) => {
-    if (err) return next(new AppError(err.message, 400));
-    return res.json(results);
-  });
-});
-
 //get service
 const Service = catchAsync(async (req, res, next) => {
   DB.query(userQuery.getService(), function (err, results, fields) {
@@ -130,6 +127,8 @@ const payment = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
+// payemnt 
+
 
 // send  drivers location
 const displayDriverLocation = catchAsync(async (req, res, next) => {
@@ -152,8 +151,8 @@ export default {
   driverinfo,
   foundDriver,
   journeyLocation,
-  journeyStarted,
   payment,
   Service,
-  displayDriverLocation
+  displayDriverLocation,
+  rating
 }
