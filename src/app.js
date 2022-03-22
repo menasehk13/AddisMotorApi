@@ -56,15 +56,16 @@ io.on("connection", (socket) => {
         console.log(result)
       });
 
-  socket.on("journystarted",(data)=>{
-    const result = JSON.parse(data) || data
+  socket.on("journeystarted",(data)=>{
+    const result = JSON.parse(data)
       io.to(result.socketid).emit("started",result)       
-      console.log(result)
+      console.log({touser:result})
   })
 
-  socket.on("jouneyfinished",(data)=>{
+  socket.on("journeyfinished",(data)=>{
     const result = JSON.parse(data) || data
-    io.to(data.socketid).emit("finished",result)
+    io.to(result.socketid).emit("finished",result)
+    console.log(result)
   })
 
 

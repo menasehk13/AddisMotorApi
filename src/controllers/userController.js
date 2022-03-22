@@ -53,6 +53,15 @@ const createUser = catchAsync(async (req, res, next) => {
      id:results.insertId });
   });
 });
+
+// history
+const historyView = catchAsync(async (req,res,next)=>{
+  DB.query(userQuery.history(req.query.userid),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+}) 
+
 // rate driver 
 const rating = catchAsync(async (req,res,next)=>{
   DB.query(userQuery.ratingReview(),req.body,(err,results,fields) => {
@@ -138,7 +147,7 @@ const displayDriverLocation = catchAsync(async (req, res, next) => {
     return res.json(drivers)
   })
 }) 
-
+  
 // delete user
 
 export default {
@@ -154,5 +163,6 @@ export default {
   payment,
   Service,
   displayDriverLocation,
-  rating
+  rating,
+  historyView
 }

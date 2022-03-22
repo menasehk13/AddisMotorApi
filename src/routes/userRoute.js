@@ -10,11 +10,13 @@ router
   .route("/")
   .get(userController.getUsers)
   .post(upload.single("userprofile"), userController.createUser);
+  router.route("/history").get(userController.historyView)
   router.post("/rateDriver",userController.rating)
   router.get("/nearby",userController.nearbyDriver)
   router.get("/driverinfo",userController.driverinfo)
 router.get("/service",userController.Service)
 router.route("/user").get(userController.getUser);
+
 
 router.route("/:id").patch(
   // authController.protect,

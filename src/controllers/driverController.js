@@ -99,15 +99,11 @@ const totalprice = catchAsync(async (req,res,next)=>{
 
 const history = catchAsync(async function (req, res, next) {
   DB.query(
-    driverQuery.history(req.params.driverid),
+    driverQuery.history(req.query.driverid),
     function (err, result, fields) {
       if (err) return next(new AppError(err.message, 400));
 
-      return res.json({
-        status: "success",
-        message: "driver history loaded successfully",
-        history: result,
-      });
+      return res.json(result);
     }
   );
 });
@@ -127,7 +123,7 @@ const displayStatus = catchAsync(async function (req, res, next) {
 });
 // journey
 const journeyStarted = catchAsync(async (req,res,next)=>{
-  DB.query(driverQuery.journey(req.data),(err,results)=>{
+  DB.query(driverQuery.journey(req.body),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
     return res.json({status:"success",journeyid:results.insertId})
   })
@@ -135,6 +131,14 @@ const journeyStarted = catchAsync(async (req,res,next)=>{
 // payement 
 const payment = catchAsync(async (req,res,next)=>{
   DB.query(driverQuery.payment(req.body),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+
+    return res.json({status: "success",paymentid:results.insertId})
+  })
+})
+
+const addhistory = catchAsync ( async (req,res,next)=>{
+  DB.query(driverQuery.addHistory(req.body),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
     return res.json({status: "success"})
   })
@@ -205,6 +209,7 @@ export default {
   priceid,
   payment,
   bookingData,
-  journeyStarted
+  journeyStarted,
+  addhistory
   
 };

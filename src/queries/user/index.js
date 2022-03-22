@@ -127,16 +127,21 @@ JOIN cardetail on driver.cardetailid = cardetail.id
 
 export function history(userid) {
   return `
-    SELECT 
-    startinglocation,
-    arrivinglocation,
-    price,
-    distance,
-From 
-    History,User,Booking,Payment
-Where
-    userid=${userid} 
-GroupBy Payment.date    
+  SELECT 
+  booking.arrivinglocation,
+  booking.startinglocation,
+  paymnet.price,
+  paymnet.distance,
+  paymnet.date
+  From 
+  
+   History
+   
+   JOIN driver on history.driverid = driver.id
+   JOIN booking on history.bookingid = booking.bookingid
+   JOIN paymnet on history.paymentid = paymnet.paymentid 
+   WHERE history.userid = ${userid} 
+   ORDER by paymnet.date ASC   
 `;
 }
 

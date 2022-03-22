@@ -74,17 +74,23 @@ WHERE
 }
 function history(driverid) {
   return `
- SELECT 
- startinglocation,
- arrivinglocation,
- price,
- distance,
-From 
- History,User,Booking,Payment
-Where
- driver=${driverid} 
-GroupBy Payment.date 
- `;
+  SELECT 
+  booking.arrivinglocation,
+  booking.startinglocation,
+  paymnet.price,
+  paymnet.distance,
+  paymnet.date
+  
+  From 
+   History
+   JOIN user on history.userid = user.id
+   JOIN booking on history.bookingid = booking.bookingid
+   JOIN paymnet on history.paymentid = paymnet.paymentid 
+   WHERE history.driverid = ${driverid}
+   
+   ORDER by paymnet.date ASC
+   ;
+ `
 }
 
 function displaystatus(driverid) {
@@ -112,17 +118,13 @@ export function getOnlineDrivers() {
 }
 export function journey(data){
   return `
-  INSERT INTO 
- 
-  journey 
-  
+  INSERT INTO journey
   SET 
-  
-  lng =${data.lng} ,
-  lat =${data.lat} ,
-  userid =${data.userid} ,
-  driverid =${data.driverid} ,
-  bookingid =${data.bookingid} ;
+  lat = ${data.lat},
+  lng =  ${data.lng},
+  userid = ${data.userid},
+  driverid = ${data.driverid},
+  bookingid = ${data.bookingid};
   `
 }
 function payment(data){
@@ -135,16 +137,18 @@ userid = ${data.userid},
 priceid = ${data.priceid},
 driverid = ${data.driverid},
 journeyid =${data.journeyid} ;
+  `
+}
 
-
+function addHistory(data){
+return `
 INSERT INTO history 
 SET 
-
-history.driverid = ${data.driverid} ,
-history.paymentid = LAST_INSERT_ID(),
+history.driverid = ${data.driverid},
+history.paymentid = ${data.paymentid},
 history.bookingid = ${data.bookingid},
 history.userid = ${data.userid};
-  `
+`
 }
 export function booking(data) {
   return `
@@ -185,5 +189,6 @@ export default {
   journey,
   priceId,
   payment,
-  booking
+  booking,
+  addHistory
 };
