@@ -26,6 +26,6 @@ router.route("/journey").post(driverController.journeyStarted);
 router.route("/updatelocation").post(driverController.updateCurrentLocation);
 router.route("/updatesocket").post(driverController.updateDriverSocket);
 router.route("/rating").get(driverController.rating)
-route.route("/cardetail").get(driverController.carDetail)
+router.route("/cardetail").get(driverController.carDetail)
 
 export default router;

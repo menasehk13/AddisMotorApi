@@ -88,7 +88,7 @@ function history(driverid) {
   paymnet.price,
   paymnet.distance,
   paymnet.date
-  
+   
   From 
    History
    JOIN user on history.userid = user.id
