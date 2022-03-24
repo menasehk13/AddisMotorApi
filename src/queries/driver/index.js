@@ -79,15 +79,19 @@ function history(driverid) {
   booking.startinglocation,
   paymnet.price,
   paymnet.distance,
-  paymnet.date
+  paymnet.date,
+  price.bookingfee,
+  price.tax,
+  paymnet.price - paymnet.price * price.tax as earning 
   
   From 
    History
+   
    JOIN user on history.userid = user.id
    JOIN booking on history.bookingid = booking.bookingid
    JOIN paymnet on history.paymentid = paymnet.paymentid 
+   JOIN price on price.priceid = paymnet.priceid
    WHERE history.driverid = ${driverid}
-   
    ORDER by paymnet.date ASC
    ;
  `
@@ -195,7 +199,8 @@ function priceId(id){
   return `
   SELECT
 	carservicerelation.priceid AS priceId,
-	price.price AS price
+	price.price AS price,
+    price.bookingfee
 FROM
 	carservicerelation
 	JOIN price ON carservicerelation.priceid = price.priceid
