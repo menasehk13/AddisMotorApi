@@ -71,8 +71,9 @@ const rating = catchAsync(async (req,res,next)=>{
 })
 // update user
 const updateUser = catchAsync(async (req, res, next) => {
+  console.log(req.query.id)
   DB.query(
-    userQuery.edituser({ ...req.body, ...req.params.id }),
+    userQuery.edituser({ ...req.body, id:req.query.id }),
     (err, results) => {
       console.log(err);
       if (err) return next(new AppError(err.message, 400));
@@ -141,9 +142,10 @@ const payment = catchAsync(async (req, res, next) => {
 
 // send  drivers location
 const displayDriverLocation = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.displayDriverLocation(), (err, drivers, fields) => {
+  const data  = req.body
+  console.log(data)
+  DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
     if(err) return next(new AppError(err.message, 400));
-
     return res.json(drivers)
   })
 }) 

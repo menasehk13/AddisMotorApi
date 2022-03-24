@@ -6,8 +6,14 @@ function getdrivers() {
 
 function getdriver(id) {
   return `
-    SELECT * FROM Driver WHERE id='${id}'
-  `;
+  SELECT
+    *
+FROM
+	Driver
+
+WHERE
+	driver.id = ${id};
+  `
 }
 
 function add_driver() {
@@ -63,12 +69,14 @@ function totalPrice(id){
 return `
 SELECT
 	SUM(paymnet.price) AS totalPrice,
-	SUM(paymnet.distance) AS totalDistance
+	SUM(paymnet.distance) AS totalDistance,
+	COUNT(paymentid) AS totalTrip,
+  currency
 FROM
 	paymnet
+JOIN  driver on paymnet.driverid = ${id}
 WHERE
-	paymnet.driverid = ${id}
-	AND DATE(paymnet.date) = CURDATE();
+	paymnet.driverid = ${id} AND DATE(paymnet.date) = CURDATE();
 `
 
 }

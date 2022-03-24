@@ -25,7 +25,7 @@ const getDriver = catchAsync(async function (req, res, next) {
 
       if(!driver) return next(new AppError(`Found No Driver with id [${id}] `))
 
-      // console.log(result, );
+      console.log(driver, id );
       
       // sock.emit("driver", driver);
 
@@ -46,7 +46,9 @@ const addDriver = catchAsync(async (req, res, next) => {
     return next(new AppError("Please input your password", 400));
 
   data.password = await bcrypt.hash(data.password, 12);
-  data.photo = staticFilePath(req.file.filename);
+
+  if(data.photo) data.photo = staticFilePath(req.file.filename)
+  else return next(new AppError("Please upload your profile picture"))
 
   DB.query(driverQuery.add_driver(), data, function (err, result) {
     if (err) return next(new AppError(err.message, 400));
@@ -195,6 +197,7 @@ const onlineDriver = catchAsync(async (req, res, next) => {
   // });
 });
 
+
 export default {
   getDrivers,
   getDriver,
@@ -211,5 +214,4 @@ export default {
   bookingData,
   journeyStarted,
   addhistory
-  
 };

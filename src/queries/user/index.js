@@ -13,10 +13,10 @@ export function edituser(data) {
     SET
         firstname='${data.firstname}',
         lastname='${data.lastname}',
-        phonenumber='${data.phonenumber}'
+        email='${data.email}'
     WHERE
-       id='${data.id}'
-    `;
+       id=${data.id};
+    `
 }
 
 export function getusers() {
@@ -112,15 +112,15 @@ export function requestDriver(data) {
   cardetail.color,
   lat,
   lng,
-    (6371 * acos(cos(radians(${data.lat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(3${data.lng})) + sin(radians(${data.lat})) * sin(radians(driver.lat)))) AS distance 
+  socketid,
+    (6371 * acos(cos(radians(${data.pickLat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.pickLng})) + sin(radians(${data.pickLat})) * sin(radians(driver.lat)))) AS distance 
 From 
   Driver
 JOIN cardetail on driver.cardetailid = cardetail.id     
-     WHERE activeid = 1
-    Having Distance < 50
+     WHERE activeid = 1 AND driver.status = 'approved'
+    Having Distance < 10
     ORDER BY distance
-    Limit 10;
-          
+    Limit 5;       
     `;
 }
 

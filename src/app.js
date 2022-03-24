@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
   socket.on("data",(d) =>{
     console.log(d);
     const data = JSON.parse(d) || d
-    DB.query(userQuery.displayDriverLocation(), (err, drivers, fields) => {
+    DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
       if(err) console.log(err.message)
       io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
       console.log( data, drivers);

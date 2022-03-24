@@ -13,6 +13,7 @@ router
 
 router.route("/driver").get(driverController.getDriver);
 
+
 router.route("/status/:driverid").get(driverController.displayStatus);
 router.route("/booking").post(driverController.bookingData);
 router.route("/history").get(driverController.history);

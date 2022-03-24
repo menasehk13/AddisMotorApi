@@ -15,7 +15,7 @@ router
   router.get("/nearby",userController.nearbyDriver)
   router.get("/driverinfo",userController.driverinfo)
 router.get("/service",userController.Service)
-router.route("/user").get(userController.getUser);
+router.route("/user").get(userController.getUser).patch(userController.updateUser);
 
 
 router.route("/:id").patch(

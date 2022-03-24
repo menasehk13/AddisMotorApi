@@ -48,6 +48,6 @@ export function simpleGetUser(req, value) {
 }
 
 export function staticFilePath(filename) {
-  // http://196.168.54.10:5000/static/data/uploads/imagename.png
+  // /static/data/uploads/imagename.png
   return STATIC_FILES_URL + filename.replace(" ", "%20");
 }
