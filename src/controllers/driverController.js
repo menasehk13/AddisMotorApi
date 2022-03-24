@@ -182,20 +182,20 @@ const updateDriverSocket = catchAsync(async function (req, res, next) {
 });
 
 
-// MIGRATED FROM USER
+const rating = catchAsync(async (req,res,next)=>{
+  
+  DB.query(driverQuery.viewRating(req.query.id),(err,results)=>{
+   if(err) return next(new AppError(err.message,400))
+   return res.json({user:results})
+  })
+})
 
-// online driver view
-const onlineDriver = catchAsync(async (req, res, next) => {
-  // DB.query(driverQuery.getOnlineDrivers(), (err, results) => {
-  //   if (err) return next(new AppError(err.message, 400));
-
-  io.on("driver", (...args) => {
-    console.log(...args);
-  });
-
-  return res.json({ divers: "results" });
-  // });
-});
+const carDetail = catchAsync(async (req,res,next)=>{
+  DB.query(driverQuery.carInfo(req.query.id),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    return res.json({user:results})
+  })
+})
 
 
 export default {
@@ -205,7 +205,6 @@ export default {
   displayStatus,
   history,
   updateCurrentLocation,
-  onlineDriver,
   updateDriverSocket,
   updatestatus,
   totalprice,
@@ -213,5 +212,8 @@ export default {
   payment,
   bookingData,
   journeyStarted,
-  addhistory
+  addhistory,
+  rating,
+  carDetail
+  
 };

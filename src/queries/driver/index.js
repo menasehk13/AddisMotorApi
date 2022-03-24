@@ -147,6 +147,35 @@ driverid = ${data.driverid},
 journeyid =${data.journeyid} ;
   `
 }
+function viewRating(id){
+  return `
+  SELECT AVG(ratingandreview.rating) rating
+FROM 
+ratingandreview 
+WHERE
+ratingandreview.driverid = ${id};
+  `
+}
+
+function carInfo(id){
+  return `
+  SELECT 
+cardetail.productionyear,
+cardetail.model,
+cardetail.licenseplate,
+cardetail.color,
+service.servicetype
+FROM 
+driver 
+JOIN cardetail on cardetail.id = driver.cardetailid
+JOIN service on service.serviceid = driver.serviceid
+
+WHERE 
+    driver.id = ${id};
+  `
+}
+
+
 
 function addHistory(data){
 return `
@@ -198,5 +227,7 @@ export default {
   priceId,
   payment,
   booking,
-  addHistory
+  addHistory,
+  carInfo,
+  viewRating
 };
