@@ -219,5 +219,7 @@ export default {
   priceId,
   payment,
   booking,
-  addHistory
+  addHistory,
+  carInfo,
+  viewRating
 };
