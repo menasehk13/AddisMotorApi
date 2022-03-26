@@ -18,9 +18,9 @@ WHERE
 
 function add_driver() {
   return `  
-        INSERT INTO
-            Driver
-        SET ?
+          INSERT INTO
+          Driver
+          SET ?
         `;
 }
 function updatecurrentlocation(data) {
@@ -87,15 +87,19 @@ function history(driverid) {
   booking.startinglocation,
   paymnet.price,
   paymnet.distance,
-  paymnet.date
-   
+  paymnet.date,
+  price.bookingfee,
+  price.tax,
+  paymnet.price - paymnet.price * price.tax as earning 
+  
   From 
    History
+   
    JOIN user on history.userid = user.id
    JOIN booking on history.bookingid = booking.bookingid
    JOIN paymnet on history.paymentid = paymnet.paymentid 
+   JOIN price on price.priceid = paymnet.priceid
    WHERE history.driverid = ${driverid}
-   
    ORDER by paymnet.date ASC
    ;
  `
@@ -164,12 +168,14 @@ cardetail.productionyear,
 cardetail.model,
 cardetail.licenseplate,
 cardetail.color,
-service.servicetype
+service.servicetype,
+driverdocument.registration,
+driverdocument.Inscurance
 FROM 
 driver 
 JOIN cardetail on cardetail.id = driver.cardetailid
 JOIN service on service.serviceid = driver.serviceid
-
+JOIN driverdocument on driverdocument.driverid = driver.id
 WHERE 
     driver.id = ${id};
   `
@@ -203,7 +209,8 @@ function priceId(id){
   return `
   SELECT
 	carservicerelation.priceid AS priceId,
-	price.price AS price
+	price.price AS price,
+    price.bookingfee
 FROM
 	carservicerelation
 	JOIN price ON carservicerelation.priceid = price.priceid
