@@ -98,7 +98,12 @@ const totalprice = catchAsync(async (req,res,next)=>{
     return res.json(result[0])
   })
 })
-
+const driverstatus = catchAsync(async function(req,res,next){
+  DB.query(driverQuery.driverStatus(req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results[0])
+  })
+})
 const history = catchAsync(async function (req, res, next) {
   DB.query(
     driverQuery.history(req.query.driverid),
@@ -186,14 +191,15 @@ const rating = catchAsync(async (req,res,next)=>{
   
   DB.query(driverQuery.viewRating(req.query.id),(err,results)=>{
    if(err) return next(new AppError(err.message,400))
-   return res.json({user:results})
+   return res.json({user:results[0]})
   })
 })
 
 const carDetail = catchAsync(async (req,res,next)=>{
   DB.query(driverQuery.carInfo(req.query.id),(err,results)=>{
-    if(err) next(new AppError(err.message,400))
-    return res.json({user:results})
+    if(err) return next(new AppError(err.message,400))
+    if(results.length > 0) return res.json({user:results[0]})
+    return res.json({status:"no data"})
   })
 })
 
@@ -214,6 +220,7 @@ export default {
   journeyStarted,
   addhistory,
   rating,
-  carDetail
+  carDetail,
+  driverstatus
   
 };

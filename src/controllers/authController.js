@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import AppError from "../helpers/appError";
 import { DB } from "../helpers/connection";
 import {  JWTSecretKey, TWILIO_ACCOUNTSID, TWILIO_ACCOUNT_SID,TWILIO_SERVICE_ID } from "../helpers/constants";
-import { signToken, createSendToken, simpleGetUser } from "../helpers/utils";
+import { signToken, createSendToken, simpleGetUser, staticFilePath } from "../helpers/utils";
 import { catchAsync } from "../middlewares/error";
 import jwt from "jsonwebtoken";
 import userQuery from "../queries/user";
@@ -17,12 +17,19 @@ const register = catchAsync(async (req, res, next) => {
   const data = req.body;
   const type = req.query.type || "driver";
 
-  data.password = await bcrypt.hash(data.password, 12);
+  if(type != "user" ) data.password = await bcrypt.hash(data.password, 12);
+
+  
+  if(req.file?.fieldname == "profile") data.photo = staticFilePath(req.file.filename)
 
   let query;
-  if (type == "driver") query = driverQuery.add_driver();
+  if (type == "driver") {
+    query = driverQuery.add_driver();
+  }
   else if (type == "admin") query = adminQuery.addadmin();
-  else query = userQuery.adduser();
+  else if(type == "user") query = userQuery.adduser();
+
+  else return next(new AppError("Invalid user type", 400));
 
   DB.query(query, data, function (err, results, fields) {
     console.log(err, data, fields);

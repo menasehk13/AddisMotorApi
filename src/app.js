@@ -19,6 +19,7 @@ app.use(
   "static",
   express.static(path.join(__dirname.replace("\\src", ""), "public"))
 );
+app.set("view engine", "ejs")
 
 const server = http.createServer(app);
 
@@ -46,7 +47,6 @@ io.on("connection", (socket) => {
     DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
       if(err) console.log(err.message)
       io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
-      console.log( data, drivers);
     })
   })
     socket.on("rideaccepted",(data)=>{
@@ -58,8 +58,7 @@ io.on("connection", (socket) => {
 
   socket.on("journeystarted",(data)=>{
     const result = JSON.parse(data)
-      io.to(result.socketid).emit("started",result)       
-      console.log({touser:result})
+      io.to(result.socketid).emit("started",result)
   })
 
   socket.on("journeyfinished",(data)=>{
@@ -101,12 +100,16 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-// configuring app
-appConfig(app);
-
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+
+app.get("/form", (req,res) => {
+  res.render("index")
+})
+
+// configuring app
+appConfig(app);
 
 let apiprefix = apiV1Prefix + API_KEY;
 // check if the api key is valid

@@ -4,7 +4,7 @@ import userController from "../controllers/userController";
 import upload from "../utils/multer";
 const router = Router();
 
-router.post("/createUser", userController.createUserForm);
+router.post("/createUser", userController.createUser);
 
 router
   .route("/")
@@ -14,8 +14,11 @@ router
   router.post("/rateDriver",userController.rating)
   router.get("/nearby",userController.nearbyDriver)
   router.get("/driverinfo",userController.driverinfo)
+  router.route("/reasons").get(userController.reasons)
+router.route("/cancelService").post(userController.cancelService)
 router.get("/service",userController.Service)
 router.route("/user").get(userController.getUser).patch(userController.updateUser);
+router.route("/rating").get(userController.ratingView)
 
 
 router.route("/:id").patch(

@@ -5,6 +5,7 @@ import userQuery, { getService } from "../queries/user";
 import AppError from "../helpers/appError";
 import { staticFilePath } from "../helpers/utils";
 import { url } from "../helpers/constants";
+import { json } from "express/lib/response";
 
 const DB = connectDB();
 
@@ -61,7 +62,14 @@ const historyView = catchAsync(async (req,res,next)=>{
     return res.json(results)
   })
 }) 
+// view rated driver 
 
+const ratingView = catchAsync(async (req,res,next)=>{
+  DB.query(userQuery.viewRating(req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results[0])
+  })
+})
 // rate driver 
 const rating = catchAsync(async (req,res,next)=>{
   DB.query(userQuery.ratingReview(),req.body,(err,results,fields) => {
@@ -149,7 +157,21 @@ const displayDriverLocation = catchAsync(async (req, res, next) => {
     return res.json(drivers)
   })
 }) 
+  const cancelService = catchAsync(async (req,res,next)=>{
+ 
+  DB.query(userQuery.cancelReason(req.body),(err,results)=>{
+    if(err) return next(new AppError(err.message,400));
+    return res.json(results)
+  })
   
+  })
+
+  const reasons = catchAsync(async (req,res,next)=>{
+    DB.query(userQuery.Reasons(),(err,results)=>{
+      if(err) return next(new AppError(err.message,400))
+      return res.json(results)
+    })
+  })
 // delete user
 
 export default {
@@ -166,5 +188,8 @@ export default {
   Service,
   displayDriverLocation,
   rating,
-  historyView
+  historyView,
+  ratingView,
+  cancelService,
+  reasons
 }

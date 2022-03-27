@@ -219,7 +219,31 @@ INSERT INTO
    ;
 `;
 }
-
+function viewRating(id){
+  return`
+  SELECT AVG(ratingandreview.rating) rating
+FROM 
+ratingandreview 
+WHERE
+ratingandreview.driverid = ${id};
+  `
+}
+function cancelReason(data){
+  return `
+  UPDATE 
+  booking 
+  SET 
+  reason = ${data.reasonid}
+  where booking.bookingid = ${data.bookingid};
+  `
+}
+function Reasons(){
+  return `
+  SELECT
+	*
+FROM
+	reason;`
+}
 export default {
   adduser,
   edituser,
@@ -236,5 +260,8 @@ export default {
   getService,
   displayDriverLocation,
   viewDrivers,
-  ratingReview
+  ratingReview,
+  viewRating,
+  cancelReason,
+  Reasons
 };
