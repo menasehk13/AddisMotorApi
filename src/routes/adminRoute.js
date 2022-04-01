@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { route } from "express/lib/router";
 import adminController from "../controllers/adminController";
 import authController from "../controllers/authController";
 
@@ -9,10 +10,16 @@ router.route("/admin/:email").get(adminController.getAdmin);
 
 router
   .route("/dashboard")
-  .get(authController.protect, adminController.dashboard);
-  
+  .get(adminController.dashboard);
+  router.route("/drivers").get(adminController.getDrivers)
+  router.route("/driver").get(adminController.getDriver)
+  router.route("/driver/order").get(adminController.driverOrder);
+  router.route("/driver/order/detail").get(adminController.driverOrderDetail)
 router.route("/driver/:id").get(adminController.driverDocument);
-router.route("/driver/:id/order").get(adminController.driverOrder);
+
+
+router.route("/dashboard/activedrivers").get(adminController.activeDriver)
+router.route("/dashboard/inservice").get(adminController.activeDriver)
 
 router.route("/accounting").get(adminController.accounting);
 router.route("/accounting/drivers").get(adminController.accountingDrivers);

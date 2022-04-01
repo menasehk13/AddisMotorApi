@@ -55,7 +55,9 @@ export function getService(){
 
     FROM carservicerelation
     JOIN service on service.serviceid =  carservicerelation.serviceid
-    JOIn price on price.priceid =  carservicerelation.priceid;
+    JOIn price on price.priceid =  carservicerelation.priceid
+    order by carservicerelation.relationid DESC
+    ;
   `
 }
 
@@ -101,26 +103,36 @@ WHERE
 
 export function requestDriver(data) {
   return `
-  SELECT driver.id,
-  firstname,
-  lastname,
-  photo,
-  phonenumber,
-  cardetail.model,
-  cardetail.productionyear,
-  cardetail.licenseplate,
-  cardetail.color,
-  lat,
-  lng,
-  socketid,
-    (6371 * acos(cos(radians(${data.pickLat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.pickLng})) + sin(radians(${data.pickLat})) * sin(radians(driver.lat)))) AS distance 
-From 
-  Driver
-JOIN cardetail on driver.cardetailid = cardetail.id     
-     WHERE activeid = 1 AND driver.status = 'approved'
-    Having Distance < 10
-    ORDER BY distance
-    Limit 5;       
+  SELECT
+	driver.id,
+	firstname,
+	lastname,
+	photo,
+	phonenumber,
+	cardetail.model,
+	cardetail.productionyear,
+	cardetail.licenseplate,
+	cardetail.color,
+	lat,
+	lng,
+	socketid,
+	servicetype,
+	(6371 * acos(cos(radians(${data.pickLat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.pickLng})) + sin(radians(${data.pickLat})) * sin(radians(driver.lat)))) AS distance
+FROM
+	Driver
+	JOIN cardetail ON driver.cardetailid = cardetail.id
+	JOIN service ON driver.serviceid = service.serviceid
+WHERE
+	activeid = 1
+	AND driver.status = 'approved'
+	AND currency > 0
+	AND driver.serviceid = ${data.serviceId}
+HAVING
+	Distance < 10
+ORDER BY
+	distance
+LIMIT 5;
+   
     `;
 }
 
@@ -148,7 +160,14 @@ export function history(userid) {
 `;
 }
 
-
+export function updateSocket(id,socketid){
+  return `
+  UPDATE user
+set 
+socketid = "${socketid}"
+WHERE user.id  = ${id};
+  `
+}
 
 export function journeystarted(data) {
   return `
@@ -263,5 +282,6 @@ export default {
   ratingReview,
   viewRating,
   cancelReason,
-  Reasons
+  Reasons,
+  updateSocket
 };

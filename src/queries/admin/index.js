@@ -30,11 +30,12 @@ export function addadmin() {
     ;
     `;
 }
-export function dashboard(data) {
+export function dashboard(limit) {
   return `
     SELECT *
     FROM
          Driver
+         LIMIT ${limit}
          `;
   // orderby ${data} ASC
   // SELECT
@@ -60,13 +61,36 @@ export function dashboard(data) {
 export function drivers() {
   return `
      SELECT 
-        photo,
-        CONCAT(firstname," ",lastname) as name,
-        phonenumber,
-        status,
+       *
      FROM
         Driver;
     `;
+}
+
+export function users(){
+  return `
+  SELECT 
+    *
+  FROM 
+    user;
+  `
+}
+
+export function activeDriver(status){
+  return `
+   select 
+    photo,
+    CONCAT(firstname," ", lastname) as name,
+    phonenumber,
+    status,
+    lat,
+    lng
+    FROM 
+     Driver
+     where activeid = 1 and status = "${status}";
+     ;
+  
+  `
 }
 
 export function addnewdriver(data) {
@@ -108,31 +132,69 @@ export function addnewdocument(data) {
     `;
 }
 
-export function driverdetail(data) {
+export function driverdetail(id) {
   return `
-     SELECT *
-     FROM 
-        Driver,CarDetail,Service
-     WHERE
-       driverid=${data.driverid};
-
-     SELECT AVG(rating) as rating
-     FROM
-       RatingAndReview
-     Where
-         driverid=${data.driverid}
+  SELECT 
+  firstname,
+  lastname,
+  email,
+  phonenumber,
+  photo,
+  gender,
+  cardetail.productionyear,
+  cardetail.model,
+  cardetail.licenseplate,
+  cardetail.color,
+  service.servicetype,
+  AVG(ratingandreview.rating) as rating
+  from driver 
+  left OUTER JOIN cardetail on cardetail.id= driver.cardetailid
+  left OUTER JOIN service on service.serviceid = driver.serviceid
+   left OUTER JOIN ratingandreview on ratingandreview.driverid = driver.id
+  WHERE driver.id = ${id};
     `;
 }
-export function driverdetailorder(data) {
+export function driverdetailorder(id) {
   return `
-    SELECT 
-     CONCAT(driver.firstname," ",driver.lastname) as name,
-     startinglocation as startpoint ,
-     arrivinglocation as destination,
-     date ,
-     price 
-    FROM History,Driver,Payment,Booking;
+  SELECT 
+history.historyid as id,  
+CONCAT(user.firstname," ",user.lastname) as name,
+booking.startinglocation,
+booking.arrivinglocation,
+history.date,
+paymnet.price 
+from 
+history 
+LEFT OUTER JOIN user on user.id = history.userid
+LEFT OUTER JOIN booking on  booking.bookingid = history.bookingid
+LEFT OUTER JOIN paymnet on paymnet.paymentid = history.paymentid
+WHERE history.driverid= ${id};
     `;
+}
+function driverorderDetail(id){
+  return `
+  SELECT 
+  booking.bookingid as id,
+  booking.arrivinglocation,
+  booking.startinglocation,
+  paymnet.price,
+  paymnet.distance,
+  paymnet.date,
+  price.bookingfee,
+  paymnet.price * price.tax as tax,
+  paymnet.price - paymnet.price * price.tax as earning 
+  
+  From 
+   History
+   
+   JOIN user on history.userid = user.id
+   JOIN booking on history.bookingid = booking.bookingid
+   JOIN paymnet on history.paymentid = paymnet.paymentid 
+   JOIN price on price.priceid = paymnet.priceid
+   WHERE history.historyid = ${id}
+   ORDER by paymnet.date ASC
+   ;
+  `
 }
 export function driverdetailreview(data) {
   return `
@@ -287,6 +349,7 @@ export default {
   addadmin,
   dashboard,
   drivers,
+  users,
   addnewdriver,
   addnewdocument,
   driverdetail,
@@ -305,4 +368,6 @@ export default {
   complaints,
   complaintsdetail,
   updateComplaints,
+  activeDriver,
+  driverorderDetail
 };

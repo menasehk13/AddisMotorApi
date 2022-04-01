@@ -145,7 +145,14 @@ const payment = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
-// payemnt 
+// socketupdate
+const socket = catchAsync(async (req,res,next)=>{
+  
+  DB.query(userQuery.updateSocket(req.query.id,req.body.socketid),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({status:"updated"})
+  })
+})
 
 
 // send  drivers location
@@ -191,5 +198,6 @@ export default {
   historyView,
   ratingView,
   cancelService,
-  reasons
+  reasons,
+  socket
 }

@@ -1,6 +1,23 @@
 function getdrivers() {
   return `
-    SELECT * FROM Driver
+  SELECT
+  id,
+  firstname,
+  lastname,
+  photo,
+  email,
+  gender,
+  phonenumber,
+  status,
+  lat,
+  lng,
+  activeid,
+  service.servicetype 
+  FROM
+   Driver
+   JOIN service on driver.serviceid = service.serviceid
+   WHERE driver.activeid = 1
+   ;
   `;
 }
 
@@ -74,7 +91,7 @@ SELECT
   currency
 FROM
 	paymnet
-JOIN  driver on paymnet.driverid = ${id}
+JOIN  driver on paymnet.driverid = driver.id
 WHERE
 	paymnet.driverid = ${id} AND DATE(paymnet.date) = CURDATE();
 `
@@ -89,7 +106,8 @@ function history(driverid) {
   paymnet.distance,
   paymnet.date,
   price.bookingfee,
-  price.tax,
+  price.tax * paymnet.price as tax, 
+  booking.bookingid,
   paymnet.price - paymnet.price * price.tax as earning 
   
   From 
@@ -100,7 +118,7 @@ function history(driverid) {
    JOIN paymnet on history.paymentid = paymnet.paymentid 
    JOIN price on price.priceid = paymnet.priceid
    WHERE history.driverid = ${driverid}
-   ORDER by paymnet.date ASC
+   ORDER by paymnet.date DESC
    ;
  `
 }
@@ -218,7 +236,16 @@ WHERE
 	serviceid = ${id};
   `
 }
-
+function driverStatus(id){
+  return `
+  SELECT
+	status
+FROM
+	driver
+WHERE
+	id = ${id};
+  `
+}
 export default {
   getdriver,
   getdrivers,
@@ -236,5 +263,6 @@ export default {
   booking,
   addHistory,
   carInfo,
-  viewRating
+  viewRating,
+  driverStatus
 };

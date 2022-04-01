@@ -19,6 +19,7 @@ router.route("/cancelService").post(userController.cancelService)
 router.get("/service",userController.Service)
 router.route("/user").get(userController.getUser).patch(userController.updateUser);
 router.route("/rating").get(userController.ratingView)
+router.route("/socket").post(userController.socket)
 
 
 router.route("/:id").patch(

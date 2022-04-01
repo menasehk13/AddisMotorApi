@@ -59,6 +59,7 @@ io.on("connection", (socket) => {
   socket.on("journeystarted",(data)=>{
     const result = JSON.parse(data)
       io.to(result.socketid).emit("started",result)
+      console.log(result)
   })
 
   socket.on("journeyfinished",(data)=>{

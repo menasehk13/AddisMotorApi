@@ -2,6 +2,7 @@ import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
 import adminQuery from "../queries/admin";
 import AppError from "../helpers/appError";
+import admin from "../queries/admin";
 
 const DB = connectDB();
 
@@ -27,20 +28,21 @@ const getAdmin = catchAsync(async (req, res, next) => {
 
 // dashboard overview
 const dashboard = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.dashboard(req.body.orderby), (err, drivers) => {
+  DB.query(adminQuery.dashboard(req.query.limit), (err, drivers) => {
     if (err) return next(new AppError(err.message, 400));
-    return res.json({
-      status: "success",
-      data: {
-        drivers,
-      },
-    });
+    return res.json(
+        drivers);
   });
 });
-
+const activeDriver = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.activeDriver(req.query.status),(err,drivers)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(drivers)
+  })
+})
 // getdrivers
 const getDrivers = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.drivers, (err, results) => {
+  DB.query(adminQuery.drivers(), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
@@ -48,7 +50,7 @@ const getDrivers = catchAsync(async (req, res, next) => {
 
 // getdriver
 const getDriver = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.driverdetail(req.params.id), (err, results) => {
+  DB.query(adminQuery.driverdetail(req.query.id), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
@@ -72,12 +74,18 @@ const driverReview = catchAsync(async (req, res, next) => {
 
 // getdriverOrders
 const driverOrder = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.driverdetailorder(req.params.id), (err, results) => {
+  DB.query(adminQuery.driverdetailorder(req.query.id), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
 });
-
+// get order details
+const driverOrderDetail = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.driverorderDetail(req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+})
 // getaccounting
 const accounting = catchAsync(async (req, res, next) => {
   DB.query(adminQuery.accountingdrivers(), (err, results) => {
@@ -176,4 +184,6 @@ export default {
   userComplaints,
   selectedComplaints,
   updateComplaints,
+  activeDriver,
+  driverOrderDetail
 };
