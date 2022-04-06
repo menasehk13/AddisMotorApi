@@ -12,6 +12,7 @@ import driverQuery from "../queries/driver";
 import adminQuery from "../queries/admin";
 import { promisify } from "util";
 import twillioClient from "../helpers/twillioClient";
+import res from "express/lib/response";
 
 const register = catchAsync(async (req, res, next) => {
   const data = req.body;
@@ -35,6 +36,12 @@ const register = catchAsync(async (req, res, next) => {
     console.log(err, data, fields);
 
     if (err) return next(new AppError(err.message, 400));
+
+    if(type == "driver") {
+      sendPhoneVerification(data.phonenumber, next,res);
+      
+    }
+
     createSendToken(data, results, 200, res);
   });
 });
@@ -49,10 +56,12 @@ const login = catchAsync(async (req, res, next) => {
 
   let query = `SELECT * FROM ${type} WHERE phonenumber='${phonenumber}'`
 
-  if(type != 'user'){
+  if(type == 'admin'){
     query = `SELECT * FROM ${type} WHERE email='${email}'`;
     
     if (!email || !password) return next(new AppError("Please provide email and password", 404));
+  } else if(type == 'driver') {
+    if (!phonenumber || !password) return next(new AppError("Please provide phone number and password", 404));
   } else {
     if(type == 'user' && !phonenumber) return  next(new AppError("Please enter your phone number", 404));
   }
@@ -78,27 +87,32 @@ const login = catchAsync(async (req, res, next) => {
     // If everything ok, send token to client
     } else{ 
       console.log("else part ......");
-      
-      twillioClient
-        .verify
-        .services(TWILIO_SERVICE_ID)
-        .verifications
-        .create({ to: "+251" + phonenumber , channel: 'sms'})
-        .then(data => console.log({data, msg:"succes"}))
-        .catch(er => console.log(er))
-        
-        return res.json({
+       sendPhoneVerification(phonenumber, next,res)
+       return  res.json({
           user
         })
+        
     }
-
-
     createSendToken(user, data, 200, res);
   });
 });
 
+function sendPhoneVerification(phonenumber, next,res) {
+  twillioClient
+  .verify
+  .services(TWILIO_SERVICE_ID)
+  .verifications
+  .create({ to: "+251" + phonenumber , channel: 'sms'})
+  .then(data => res.json({data, msg:"succes"}))
+  .catch(er => {
+    console.log(er)
+    next(new AppError(er.message, 400))})
+}
+
 const verify = catchAsync(async (req, res, next) => {
   const {code, phonenumber} = req.body;
+  const type = req.query.type || 'user'
+
   console.log(req.body);
 
   twillioClient.verify
@@ -106,20 +120,19 @@ const verify = catchAsync(async (req, res, next) => {
   .verificationChecks.create({ to: "+251" + phonenumber, code })
   .then(data => {
     if(data.valid) {
-      DB.query(`SELECT * FROM User WHERE phonenumber=${phonenumber} LIMIT 1`, function(err, result, fields) {
+      DB.query(`SELECT * FROM ${type} WHERE phonenumber=${phonenumber} LIMIT 1`, function(err, result, fields) {
         if(err) next(new AppError(err ,err.message));
         const user = result[0]
-
         if(user) {
           return res.json({
-            message: "User verified successfully",
-            status:"User Already Registered",
+            message: `${type} verified successfully`,
+            status:`${type} Already Registered`,
             user
           })
         }else{
           return res.json({
-            message:"New User Added",
-            status:"User verified successfully"
+            message:`New ${type} Added`,
+            status:`${type} verified successfully`
           })
         }
       })

@@ -2,9 +2,20 @@ import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
 import adminQuery from "../queries/admin";
 import AppError from "../helpers/appError";
-import admin from "../queries/admin";
+import jwt from "jsonwebtoken";
 
 const DB = connectDB();
+
+
+// get users
+const currentAdmin = catchAsync(async (req, res, next) => {
+  const {id} = jwt.decode(req.query.token);
+console.log(id);
+  DB.query(`SELECT * FROM Admin WHERE id=${id} LIMIT 1`, function (err, results, fields) {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json({ user: results });
+  });
+});
 
 // get admins [just if needed]
 const getAdmins = catchAsync(async (req, res, next) => {
@@ -47,6 +58,14 @@ const getDrivers = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
+
+const getUsers = catchAsync(async (req,res,next) =>{
+DB.query(adminQuery.users(),(err,results)=>{
+  if(err) return next(new AppError(err.message,400))
+  return res.json(results)
+})
+
+})
 
 // getdriver
 const getDriver = catchAsync(async (req, res, next) => {
@@ -154,6 +173,22 @@ const selectedComplaints = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
+// car service
+const carServices = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.carService(),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+
+})
+// dispatch service 
+const selectDispatch = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.dispatchService(req.body),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+})
+
 // updateComplaints
 const updateComplaints = catchAsync(async (req, res, next) => {
   DB.query(
@@ -185,5 +220,9 @@ export default {
   selectedComplaints,
   updateComplaints,
   activeDriver,
-  driverOrderDetail
+  driverOrderDetail,
+  getUsers,
+  carServices,
+  selectDispatch,
+  currentAdmin
 };

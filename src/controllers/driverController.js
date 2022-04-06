@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import AppError from "../helpers/appError";
 import { io, sock } from "../app";
 import { staticFilePath } from "../helpers/utils";
-import { json } from "express/lib/response";
+import { json } from "express/lib/response"
 
 const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
@@ -221,6 +221,5 @@ export default {
   addhistory,
   rating,
   carDetail,
-  driverstatus
-  
+  driverstatus, 
 };

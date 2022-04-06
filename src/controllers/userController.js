@@ -5,7 +5,7 @@ import userQuery, { getService } from "../queries/user";
 import AppError from "../helpers/appError";
 import { staticFilePath } from "../helpers/utils";
 import { url } from "../helpers/constants";
-import { json } from "express/lib/response";
+import jwt from "jsonwebtoken"
 
 const DB = connectDB();
 
@@ -154,7 +154,14 @@ const socket = catchAsync(async (req,res,next)=>{
   })
 })
 
-
+//socket value
+const requestDriver = catchAsync( async (req,res,next)=>{
+    const data = req.body
+    DB.query(userQuery.requestDriver(data),(err,results)=>{
+      if(err) return next(new AppError(err.message,400))
+      return res.json(results)
+    })
+})
 // send  drivers location
 const displayDriverLocation = catchAsync(async (req, res, next) => {
   const data  = req.body
@@ -179,6 +186,12 @@ const displayDriverLocation = catchAsync(async (req, res, next) => {
       return res.json(results)
     })
   })
+  const UpdateFirstDrive = catchAsync(async (req,res,next)=>{
+    DB.query(userQuery.updateFirsttime(req.query.id),(err,results)=>{
+      if(err) return next(new AppError(err.message,400))
+      return res.json({"status":"updated"})
+    })
+  })
 // delete user
 
 export default {
@@ -199,5 +212,7 @@ export default {
   ratingView,
   cancelService,
   reasons,
-  socket
+  socket,
+  requestDriver,
+  UpdateFirstDrive
 }

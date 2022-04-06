@@ -126,12 +126,12 @@ WHERE
 	activeid = 1
 	AND driver.status = 'approved'
 	AND currency > 0
-	AND driver.serviceid = ${data.serviceId}
+	AND driver.serviceid = 4
 HAVING
 	Distance < 10
 ORDER BY
 	distance
-LIMIT 5;
+LIMIT 1;
    
     `;
 }
@@ -194,6 +194,16 @@ SET
 lattitude='${data.lattitude}',
 longittude='${data.longittude}',
 `;
+}
+export function updateFirsttime(id){
+  return `
+  UPDATE
+	user
+SET
+	firsttime = 0
+WHERE
+	id = ${id};
+  `
 }
 export function payment(data) {
   return `
@@ -283,5 +293,6 @@ export default {
   viewRating,
   cancelReason,
   Reasons,
-  updateSocket
+  updateSocket,
+  updateFirsttime
 };

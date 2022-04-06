@@ -317,6 +317,28 @@ export function complaints() {
     OrderBy date ASC ;
     `;
 }
+function dispatchService(data){
+  return `
+  SELECT
+	*,
+  cardetail.licenseplate,
+	cardetail.model,
+	cardetail.color,
+	service.servicetype,
+	(6371 * acos(cos(radians(${data.lat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.lng})) + sin(radians(${data.lat})) * sin(radians(driver.lat)))) AS distance
+FROM
+	driver
+	JOIN service ON service.serviceid = driver.serviceid
+  JOIN cardetail on cardetail.id = driver.cardetailid
+WHERE
+	service.servicetype = "${data.service}"
+	AND driver.status = "approved"
+HAVING
+	distance < 10
+ORDER BY
+	distance;
+  `
+}
 export function complaintsdetail(data) {
   return `
     SELECT
@@ -340,6 +362,23 @@ export function updateComplaints(data) {
      WHERE
       complaintsid=${data.id}  
     `;
+}
+function carService(){
+  return `
+  SELECT
+service.servicetype,
+carservicerelation.maxCapacity,
+paymentmethod.paymentmethod,
+searchradius.radius,
+price.price,
+service.servicepicture
+
+FROM carservicerelation
+JOIN service on carservicerelation.serviceid = service.serviceid
+JOIN paymentmethod on paymentmethod.paymentmethodid = carservicerelation.paymentmethodid
+JOIN searchradius on searchradius.searchradiusid = carservicerelation.searchradiusid
+JOIN price on price.priceid = carservicerelation.priceid;
+  `
 }
 
 export default {
@@ -369,5 +408,7 @@ export default {
   complaintsdetail,
   updateComplaints,
   activeDriver,
-  driverorderDetail
+  driverorderDetail,
+  carService,
+  dispatchService
 };

@@ -13,8 +13,12 @@ import userQuery from "./queries/user";
 import driverQuery from "./queries/driver"
 
 const app = express();
-
-app.use(cors());
+const corsOptions ={
+  origin:'http://localhost:3000', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.use(
   "static",
   express.static(path.join(__dirname.replace("\\src", ""), "public"))
@@ -23,7 +27,7 @@ app.set("view engine", "ejs")
 
 const server = http.createServer(app);
 
-const io = new Server(server);
+const io = new Server(server,{'pingTimeout': 180000, 'pingInterval': 25000,cors: { origin: '*' }});
 
 let sock;
 
@@ -36,7 +40,12 @@ io.on("connection", (socket) => {
   });
 
   // socket.on("")
+  socket.on("dispatchDriver",(data)=>{
+    console.log(data.driverid)
+    io.to(data.driverid).emit("userfound",data)
+    console.log(data)
 
+  })
   socket.on("test", (msg) => {
     console.log(msg);
     io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
@@ -46,6 +55,7 @@ io.on("connection", (socket) => {
     const data = JSON.parse(d) || d
     DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
       if(err) console.log(err.message)
+      console.log(drivers)
       io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
     })
   })

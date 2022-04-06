@@ -191,9 +191,9 @@ driverdocument.registration,
 driverdocument.Inscurance
 FROM 
 driver 
-JOIN cardetail on cardetail.id = driver.cardetailid
-JOIN service on service.serviceid = driver.serviceid
-JOIN driverdocument on driverdocument.driverid = driver.id
+Left outer JOIN cardetail on cardetail.id = driver.cardetailid
+Left outer JOIN service on service.serviceid = driver.serviceid
+Left outer JOIN driverdocument on driverdocument.driverid = driver.id
 WHERE 
     driver.id = ${id};
   `
