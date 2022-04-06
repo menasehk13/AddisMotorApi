@@ -95,7 +95,14 @@ JOIN  driver on paymnet.driverid = driver.id
 WHERE
 	paymnet.driverid = ${id} AND DATE(paymnet.date) = CURDATE();
 `
-
+}
+function currencyView(id){
+  `SELECT 
+    currency
+  FROM 
+    driver
+  WHERE id=${id}  
+  `
 }
 function history(driverid) {
   return `
@@ -264,5 +271,6 @@ export default {
   addHistory,
   carInfo,
   viewRating,
-  driverStatus
+  driverStatus,
+  currencyView
 };

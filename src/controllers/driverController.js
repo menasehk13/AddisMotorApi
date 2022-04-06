@@ -104,6 +104,7 @@ const driverstatus = catchAsync(async function(req,res,next){
     return res.json(results[0])
   })
 })
+ 
 const history = catchAsync(async function (req, res, next) {
   DB.query(
     driverQuery.history(req.query.driverid),

@@ -44,11 +44,18 @@ io.on("connection", (socket) => {
     console.log(data.driverid)
     io.to(data.driverid).emit("userfound",data)
     console.log(data)
-
   })
+
+  socket.on("cancel",(msg)=>{
+    console.log(msg)
+    const result = JSON.parse(msg)
+    io.to(result.socketid
+      ).emit("bookingCanceled",result) 
+  });
+
   socket.on("test", (msg) => {
     console.log(msg);
-    io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
+   // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   })
   socket.on("data",(d) =>{
     console.log(d);
