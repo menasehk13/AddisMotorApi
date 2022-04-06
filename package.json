@@ -28,7 +28,8 @@
     "util": "^0.12.4"
   },
   "engines": {
-  "node": "^8 || ^10"
+ "node": "16.x",
+ "npm": "8.x"
 },
   "devDependencies": {
     "@babel/core": "^7.17.2",
