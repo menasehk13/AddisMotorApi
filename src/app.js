@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "./helpers/config"
 import express from "express";
 import AppError from "./helpers/appError";
 import connectDB, { DB } from "./helpers/connection";
@@ -49,10 +49,9 @@ io.on("connection", (socket) => {
   socket.on("cancel",(msg)=>{
     console.log(msg)
     const result = JSON.parse(msg)
-    io.to(result.socketid
-      ).emit("bookingCanceled",result) 
+    io.to(result.socketid).emit("canceled",result) 
   });
-
+  
   socket.on("test", (msg) => {
     console.log(msg);
    // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
@@ -62,8 +61,12 @@ io.on("connection", (socket) => {
     const data = JSON.parse(d) || d
     DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
       if(err) console.log(err.message)
-      console.log(drivers)
-      io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
+      if(drivers.length>0){
+        io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
+      }else{
+        return console.log("No User Found")
+      }
+     
     })
   })
     socket.on("rideaccepted",(data)=>{

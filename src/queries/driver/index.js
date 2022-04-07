@@ -153,27 +153,18 @@ export function getOnlineDrivers() {
      activeid=1 AND status = 'approved'   
     `;
 }
-export function journey(data){
+export function journey(){
   return `
   INSERT INTO journey
-  SET 
-  lat = ${data.lat},
-  lng =  ${data.lng},
-  userid = ${data.userid},
-  driverid = ${data.driverid},
-  bookingid = ${data.bookingid};
+  SET ?
   `
 }
-function payment(data){
+function payment(){
   return `
   INSERT INTO paymnet 
 SET 
-price = ${data.price},
-distance = ${data.distance},
-userid = ${data.userid},
-priceid = ${data.priceid},
-driverid = ${data.driverid},
-journeyid =${data.journeyid} ;
+  ?
+ ;
   `
 }
 function viewRating(id){
@@ -208,26 +199,20 @@ WHERE
 
 
 
-function addHistory(data){
+function addHistory(){
 return `
 INSERT INTO history 
 SET 
-history.driverid = ${data.driverid},
-history.paymentid = ${data.paymentid},
-history.bookingid = ${data.bookingid},
-history.userid = ${data.userid};
+?
 `
 }
-export function booking(data) {
+export function booking() {
   return `
     INSERT INTO
         Booking
         SET
-        arrivinglocation='${data.arriving}',
-        startinglocation='${data.starting}',
-        userid=${data.userid},
-        driverid=${data.driverid},
-        status='driver on the way'
+         ?
+        ;
 `;
 }
 function priceId(id){

@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "babel-node src/app.js",
     "babel-node": "babel-node --presets=@babel/preset-env",
     "dev": "npx kill-port 5000 && nodemon --exec npm run babel-node src/app.js"
   },
