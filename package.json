@@ -27,9 +27,10 @@
     "twilio": "^3.75.0",
     "util": "^0.12.4"
   },
-   "engines" : { 
-    "node" : ">=8.0.0 <11.0.0" 
-  },
+  "engines": {
+ "node": "16.x",
+ "npm": "8.x"
+},
   "devDependencies": {
     "@babel/core": "^7.17.2",
     "@babel/node": "^7.16.8",
