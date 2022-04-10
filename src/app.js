@@ -90,7 +90,7 @@ io.on("connection", (socket) => {
   socket.on("test", (msg) => console.log(msg))
   
   socket.on("disconnect", (reason) => { 
-    console.log(reason)
+
   });
 });
 
