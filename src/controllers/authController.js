@@ -101,7 +101,7 @@ function sendPhoneVerification(phonenumber, next) {
   .services(TWILIO_SERVICE_ID)
   .verifications
   .create({ to: "+251" + phonenumber , channel: 'sms'})
-  .then(data => console.log(data))
+  .then(data)
   .catch(er => {
     console.log(er)
     next(new AppError(er.message, 400))})
