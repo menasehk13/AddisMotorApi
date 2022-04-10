@@ -54,7 +54,9 @@ io.on("connection", (socket) => {
     const data = JSON.parse(d) || d
     DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
       if(err) console.log(err.message)
+      
       if(drivers.length>0){
+        console.log(drivers)
         io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
       }else{
         return console.log("No User Found")
