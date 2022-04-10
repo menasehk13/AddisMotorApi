@@ -51,7 +51,6 @@ io.on("connection", (socket) => {
    // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   })
   socket.on("data",(d) =>{
-    console.log(d);
     const data = JSON.parse(d) || d
     DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
       if(err) console.log(err.message)
@@ -67,19 +66,19 @@ io.on("connection", (socket) => {
       const result = JSON.parse(data)
         io.to(result.socketid
           ).emit("driverfound",result) 
-        console.log(result)
+       
       });
 
   socket.on("journeystarted",(data)=>{
     const result = JSON.parse(data)
       io.to(result.socketid).emit("started",result)
-      console.log(result)
+      
   })
 
   socket.on("journeyfinished",(data)=>{
     const result = JSON.parse(data) || data
     io.to(result.socketid).emit("finished",result)
-    console.log(result)
+   
   })
 
 
@@ -95,15 +94,15 @@ export { io, sock };
 
 connectDB().connect(function (err) {
   if (err) return console.log(err, err.message);
- "db connected 🔥🔥🔥");
+console.log("db connected 🔥🔥🔥");
 });
 
 // process.env.NODE_ENV = "development";
 process.env.NODE_ENV = "production";
 
 process.on("unhandledRejection", (err) => {
-err.name, err.message);
- "UNHANDLED REJECTION! 🚫 downing server... ");
+console.log(err.name, err.message);
+ console.log("UNHANDLED REJECTION! 🚫 downing server... ");
   server.close(() => {
     process.exit(1);
   });
