@@ -37,7 +37,7 @@ const register = catchAsync(async (req, res, next) => {
     if (err) return next(new AppError(err.message, 400));
 
     if(type == "driver") {
-      sendPhoneVerification(data.phonenumber, next);
+      sendPhoneVerification(data.phonenumber, next,res);
       
     }
 
@@ -85,7 +85,7 @@ const login = catchAsync(async (req, res, next) => {
       return next(new AppError("incorrect password", 400));
     // If everything ok, send token to client
     } else{ 
-       sendPhoneVerification(phonenumber, next)
+       sendPhoneVerification(phonenumber, next,res)
        return  res.json({
           user
         })
@@ -95,13 +95,13 @@ const login = catchAsync(async (req, res, next) => {
   });
 });
 
-function sendPhoneVerification(phonenumber, next) {
+function sendPhoneVerification(phonenumber, next,res) {
   twillioClient
   .verify
   .services(TWILIO_SERVICE_ID)
   .verifications
   .create({ to: "+251" + phonenumber , channel: 'sms'})
-  .then(data)
+  .then(data =>  res.json({data,"status":"success"}))
   .catch(er => {
     console.log(er)
     next(new AppError(er.message, 400))})
