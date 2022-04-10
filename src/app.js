@@ -33,7 +33,7 @@ let sock;
 
 io.on("connection", (socket) => {
   sock = socket;
-
+  
   socket.on("message", (message) => {
   });
 
@@ -87,6 +87,7 @@ io.on("connection", (socket) => {
   socket.on("test", (msg) => console.log(msg))
   
   socket.on("disconnect", (reason) => { 
+    console.log(reason)
   });
 });
 
