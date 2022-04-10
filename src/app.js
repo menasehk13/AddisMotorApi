@@ -27,7 +27,7 @@ app.set("view engine", "ejs")
 
 const server = http.createServer(app);
 
-const io = new Server(server,{'pingTimeout': 180000, 'pingInterval': 25000,cors: { origin: '*' }});
+const io = new Server(server,{cors: {origin: "*"}});
 
 let sock;
 
