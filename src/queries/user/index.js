@@ -119,7 +119,7 @@ export function requestDriver(data) {
 	servicetype,
 	(6371 * acos(cos(radians(${data.pickLat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.pickLng})) + sin(radians(${data.pickLat})) * sin(radians(driver.lat)))) AS distance
 FROM
-	Driver
+	driver
 	JOIN cardetail ON driver.cardetailid = cardetail.id
 	JOIN service ON driver.serviceid = service.serviceid
 WHERE
