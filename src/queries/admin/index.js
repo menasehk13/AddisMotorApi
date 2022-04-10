@@ -1,12 +1,12 @@
 export function getadmins() {
   return `
-    SELECT * FROM Admin 
+    SELECT * FROM admin 
   `;
 }
 
 export function getadmin(email) {
   return `
-    SELECT * FROM Admin WHERE email=${email}
+    SELECT * FROM admin WHERE email=${email}
   `;
 }
 
@@ -15,7 +15,7 @@ export function login(data) {
   SELECT 
     *
   FROM
-   Admin
+   admin
   Where
    email = '${data.email}',
    password = '${data.password}'
@@ -25,7 +25,7 @@ export function login(data) {
 export function addadmin() {
   return `
      INSERT INTO
-        Admin
+        admin
       SET ?
     ;
     `;
@@ -63,7 +63,7 @@ export function drivers() {
      SELECT 
        *
      FROM
-        Driver;
+        driver;
     `;
 }
 
@@ -86,7 +86,7 @@ export function activeDriver(status){
     lat,
     lng
     FROM 
-     Driver
+     driver
      where activeid = 1 and status = "${status}";
      ;
   
@@ -96,7 +96,7 @@ export function activeDriver(status){
 export function addnewdriver(data) {
   return `
     INSERT INTO
-        CarDetail
+        cardetail
     Set
         productionyear='${data.year}'
         model='${data.model}',
@@ -123,7 +123,7 @@ export function addnewdriver(data) {
 export function addnewdocument(data) {
   return `
       UPDATE
-       Driver
+       driver
       SET
        userdocuments='${data.userdocument}',
        cardocuments='${data.cardocument}'
@@ -185,7 +185,7 @@ function driverorderDetail(id){
   paymnet.price - paymnet.price * price.tax as earning 
   
   From 
-   History
+   history
    
    JOIN user on history.userid = user.id
    JOIN booking on history.bookingid = booking.bookingid
@@ -203,7 +203,7 @@ export function driverdetailreview(data) {
         rating,
         review
       FROM 
-        Rating,Users
+        rating,user
       where 
         driverid=${data.id}
 
@@ -217,7 +217,7 @@ export function driverdetaildocument(data) {
       userdocuments,
       cardocuments,
     FROM
-      Driver
+      driver
     WHERE
       driverid=${data.id}  
     `;
@@ -227,7 +227,7 @@ export function dispatcher(data) {
   return `
      SELECT *
      FROM
-        Driver
+        driver
      WHERE
        status='avaliable' AND activeid=1;
     `;
@@ -243,12 +243,12 @@ export function accounting() {
      SELECT
       Count(id) as drivers
       FROM
-       Driver
+       driver
       OrderBy addeddate;
     SELECT
      Count(id) as users
     FROM
-     User
+     dser
      OrderBy date;   
     `;
 }
@@ -256,7 +256,7 @@ export function accountingdrivers() {
   return `
     SELECT *
     FROM
-      Driver
+      driver
     OrderBy addeddate;  
     `;
 }
@@ -264,7 +264,7 @@ export function accountingriders() {
   return `
     SELECT *
     FROM
-     User
+     user
     OrderBy date; 
     `;
 }
@@ -273,7 +273,7 @@ export function accountingservice() {
   return `
      SELECT *
       FROM 
-     Service,Price,SearchRadious
+     service,price,searchradious
 
       
     `;
@@ -282,7 +282,7 @@ export function accountingservice() {
 export function accountingaddservice(data) {
   return `
      INSERT INTO 
-      Service
+      service
      SET 
     `;
 }
@@ -291,7 +291,7 @@ export function marketingcoupon() {
     SELECT 
      *
     FROM 
-     Marketing
+     marketing
     `;
 }
 
@@ -313,7 +313,7 @@ export function complaints() {
      content,
      status
     FROM 
-     Complaints
+     complaints
     OrderBy date ASC ;
     `;
 }
@@ -348,7 +348,7 @@ export function complaintsdetail(data) {
      status,
      date
     FROM
-     Complaints
+     complaints
     WHERE
      complaintid = ${data.id} 
     `;
@@ -356,7 +356,7 @@ export function complaintsdetail(data) {
 export function updateComplaints(data) {
   return `
      UPDATE
-      Complaints
+      complaints
      SET
       status='${data.status}'
      WHERE
