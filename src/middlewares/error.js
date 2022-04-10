@@ -16,7 +16,6 @@ function sendErrorProd(err, res) {
       message: err.message,
     });
   else {
-    console.log(err);
     res.status(err.statusCode).json({
       status: err.status,
       message: "something went wrong",

@@ -32,28 +32,22 @@ const io = new Server(server,{'pingTimeout': 180000, 'pingInterval': 25000,cors:
 let sock;
 
 io.on("connection", (socket) => {
-  console.log("A user is connected");
   sock = socket;
 
   socket.on("message", (message) => {
-    console.log(`message from ${socket.id} : ${message}`);
   });
 
   // socket.on("")
   socket.on("dispatchDriver",(data)=>{
-    console.log(data.driverid)
     io.to(data.driverid).emit("userfound",data)
-    console.log(data)
   })
 
   socket.on("cancel",(msg)=>{
-    console.log(msg)
     const result = JSON.parse(msg)
     io.to(result.socketid).emit("canceled",result) 
   });
   
   socket.on("test", (msg) => {
-    console.log(msg);
    // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   })
   socket.on("data",(d) =>{
@@ -101,15 +95,15 @@ export { io, sock };
 
 connectDB().connect(function (err) {
   if (err) return console.log(err, err.message);
-  console.log("db connected 🔥🔥🔥");
+ "db connected 🔥🔥🔥");
 });
 
 // process.env.NODE_ENV = "development";
 process.env.NODE_ENV = "production";
 
 process.on("unhandledRejection", (err) => {
-  console.log(err.name, err.message);
-  console.log("UNHANDLED REJECTION! 🚫 downing server... ");
+err.name, err.message);
+ "UNHANDLED REJECTION! 🚫 downing server... ");
   server.close(() => {
     process.exit(1);
   });

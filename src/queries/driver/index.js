@@ -14,7 +14,7 @@ function getdrivers() {
   activeid,
   service.servicetype 
   FROM
-   Driver
+   driver
    JOIN service on driver.serviceid = service.serviceid
    WHERE driver.activeid = 1
    ;
@@ -26,7 +26,7 @@ function getdriver(id) {
   SELECT
     *
 FROM
-	Driver
+	driver
 
 WHERE
 	driver.id = ${id};
