@@ -13,12 +13,8 @@ import userQuery from "./queries/user";
 import driverQuery from "./queries/driver"
 
 const app = express();
-const corsOptions ={
-  origin:'http://localhost:3000', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200
-}
-app.use(cors(corsOptions));
+
+app.use(cors());
 app.use(
   "static",
   express.static(path.join(__dirname.replace("\\src", ""), "public"))
@@ -27,7 +23,12 @@ app.set("view engine", "ejs")
 
 const server = http.createServer(app);
 
-const io = new Server(server,{cors: {origin: "http://localhost:3000"}});
+const io = new Server(server,
+  {cors:{
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials:true
+  }});
 
 let sock;
 
