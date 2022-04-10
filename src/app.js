@@ -39,6 +39,8 @@ io.on("connection", (socket) => {
 
   // socket.on("")
   socket.on("dispatchDriver",(data)=>{
+    console.log(data)
+    //data to be shown
     io.to(data.driverid).emit("userfound",data)
   })
 
