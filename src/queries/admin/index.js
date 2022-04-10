@@ -34,19 +34,7 @@ export function dashboard(limit) {
   return `
     SELECT *
     FROM
-<<<<<<< HEAD
-         Driver; 
-    orderby ${data} ASC;
-    SELECT 
-      COUNT(id) as drivers,
-      COUNT (id) as riders,
-    FROM 
-      Journey 
-    WHERE
-       status = 'started'  ;      
-    `;
-=======
-         Driver
+         driver
          LIMIT ${limit}
          `;
   // orderby ${data} ASC
@@ -57,7 +45,6 @@ export function dashboard(limit) {
   //   Journey
   // WHERE
   //    status = 'started'  ;
->>>>>>> ba9425025d29c2a8ae5ecda7e87bb5e4540bb5f7
 }
 
 // dulpacate data

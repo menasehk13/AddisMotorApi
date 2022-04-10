@@ -1,7 +1,7 @@
 export function adduser() {
   return `
      INSERT INTO
-     User
+     user
      SET ?
      `;
 }
@@ -9,7 +9,7 @@ export function adduser() {
 export function edituser(data) {
   return `
     UPDATE
-        User
+        user
     SET
         firstname='${data.firstname}',
         lastname='${data.lastname}',
@@ -23,7 +23,7 @@ export function getusers() {
   return `
         SELECT *
             FROM
-        User 
+        user 
     `;
 }
 
@@ -31,7 +31,7 @@ export function getuser(id) {
   return `
         SELECT *
             FROM
-        User 
+        user 
             WHERE id = '${id}'
     `;
 }
@@ -40,7 +40,7 @@ export function getuserbyphone(number) {
   return `
         SELECT *
             FROM
-        User 
+        user 
             WHERE phonenumber = '${number}'
     `;
 }
@@ -176,7 +176,7 @@ export function journeystarted(data) {
         SET
         status='started';
     INSERT INTO
-        Journey
+        journey
     SET 
         lattitude='${data.lattitude}',
         longittude='${data.longittude}',
@@ -189,7 +189,7 @@ export function journeystarted(data) {
 export function journeylocation(data) {
   return `
 UPDATE 
-    Journey
+    journey
 SET
 lattitude='${data.lattitude}',
 longittude='${data.longittude}',
@@ -208,7 +208,7 @@ WHERE
 export function payment(data) {
   return `
     INSERT INTO
-        Payment
+        payment
     SET 
         price='${data.price}',
         distance='${data.distance}',
@@ -238,7 +238,7 @@ function ratingReview(){
 export function driverfound(data) {
   return `
 INSERT INTO  
-   Booking
+   booking
  SET
    startinglocation='${data.origin}',
    arrivinglocation='${data.destination},
