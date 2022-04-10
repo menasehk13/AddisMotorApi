@@ -4,9 +4,9 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "babel-node src/app.js",
     "babel-node": "babel-node --presets=@babel/preset-env",
-    "dev": "nodemon --exec npm run babel-node src/app.js"
+    "dev": "npx kill-port 5000 && nodemon --exec npm run babel-node src/app.js"
   },
   "keywords": [],
   "author": "",
@@ -21,10 +21,16 @@
     "graphql": "^15.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.10",
+    "multer": "^1.4.4",
     "mysql2": "^2.3.3",
     "socket.io": "^4.4.1",
+    "twilio": "^3.75.0",
     "util": "^0.12.4"
   },
+  "engines": {
+ "node": "16.x",
+ "npm": "8.x"
+},
   "devDependencies": {
     "@babel/core": "^7.17.2",
     "@babel/node": "^7.16.8",

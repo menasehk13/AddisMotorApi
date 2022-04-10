@@ -1,7 +1,11 @@
+import multer from "multer";
 import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
-import userQuery from "../queries/user";
+import userQuery, { getService } from "../queries/user";
 import AppError from "../helpers/appError";
+import { staticFilePath } from "../helpers/utils";
+import { url } from "../helpers/constants";
+import jwt from "jsonwebtoken"
 
 const DB = connectDB();
 
@@ -15,23 +19,69 @@ const getUsers = catchAsync(async (req, res, next) => {
 
 // get user
 const getUser = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.getuser(req.params.id), function (err, results, fields) {
+  DB.query(userQuery.getuser(req.query.id), function (err, results, fields) {
     if (err) return next(new AppError(err.message, 400));
-    return res.json({ user: results });
+    return res.json(results[0]);
   });
+});
+
+const createUserForm = catchAsync(async (req, res, next) => {
+  res.send(`
+    <form action="${url}/users" method="post" enctype="multipart/form-data">
+    <input type="text" name="firstname">
+    <input type="text" name="lastname">
+    <input type="email" name="email">
+    <input type="file" name="userprofile">
+    <input type="submit" value="Upload">
+    </form>
+`);
 });
 
 // create/register user [implemented on authController.js]
 const createUser = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.adduser(req.body), (err, results) => {
+  const data = req.body;
+
+  console.log(data);
+
+  if(data.profile) data.profile = staticFilePath(req.file.filename);
+  
+  DB.query(userQuery.adduser(), req.body, (err, results, fields) => {
     if (err) return next(new AppError(err.message, 400));
-    return res.json({ message: Succsess, user: results });
+
+    return res.json({
+      message: "Success",
+    // user: results,
+     id:results.insertId });
   });
 });
+
+// history
+const historyView = catchAsync(async (req,res,next)=>{
+  DB.query(userQuery.history(req.query.userid),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+}) 
+// view rated driver 
+
+const ratingView = catchAsync(async (req,res,next)=>{
+  DB.query(userQuery.viewRating(req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results[0])
+  })
+})
+// rate driver 
+const rating = catchAsync(async (req,res,next)=>{
+  DB.query(userQuery.ratingReview(),req.body,(err,results,fields) => {
+    if(err) return next(new AppError(err.message,400));
+    return res.json({ message: "Success"})
+  })
+})
 // update user
 const updateUser = catchAsync(async (req, res, next) => {
+  console.log(req.query.id)
   DB.query(
-    userQuery.edituser({ ...req.body, ...req.params.id }),
+    userQuery.edituser({ ...req.body, id:req.query.id }),
     (err, results) => {
       console.log(err);
       if (err) return next(new AppError(err.message, 400));
@@ -42,9 +92,22 @@ const updateUser = catchAsync(async (req, res, next) => {
 
 // nearby driver -> NOT DONE
 const nearbyDriver = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.nearbyDriver(req.body), (err, results) => {
-    if (err) return next(new AppError(err.message, 400));
-    return res.json({ drivers: results });
+  DB.query(userQuery.viewDrivers(req.body), (err, results) => {
+    if (err) {
+      console.log(err);
+      return next(new AppError(err.message, 400));
+    }
+    return res.json({ user: results });
+  });
+});
+// Driver Information
+const driverinfo=catchAsync(async(req,res,next)=>{
+  
+  DB.query(userQuery.driverInfo(req.query.id),(err,results)=>{
+    if(err){
+      return next(new AppError(err.message,400))
+    }
+    return res.json(results[0])
   });
 });
 
@@ -68,31 +131,88 @@ const journeyLocation = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
-// cancel drive
-
-const journeyStarted = catchAsync(async (req, res, next) => {
-  DB.query(userQuery.journeystarted, (err, results) => {
+//get service
+const Service = catchAsync(async (req, res, next) => {
+  DB.query(userQuery.getService(), function (err, results, fields) {
     if (err) return next(new AppError(err.message, 400));
-    return res.json(results);
+    return res.json( results );
   });
 });
 // payment
-const payment = catchAsync(async (req, res, mext) => {
+const payment = catchAsync(async (req, res, next) => {
   DB.query(userQuery.payment(req.body), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
 });
+// socketupdate
+const socket = catchAsync(async (req,res,next)=>{
+  
+  DB.query(userQuery.updateSocket(req.query.id,req.body.socketid),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({status:"updated"})
+  })
+})
+
+//socket value
+const requestDriver = catchAsync( async (req,res,next)=>{
+    const data = req.body
+    DB.query(userQuery.requestDriver(data),(err,results)=>{
+      if(err) return next(new AppError(err.message,400))
+      return res.json(results)
+    })
+})
+// send  drivers location
+const displayDriverLocation = catchAsync(async (req, res, next) => {
+  const data  = req.body
+  console.log(data)
+  DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
+    if(err) return next(new AppError(err.message, 400));
+    return res.json(drivers)
+  })
+}) 
+  const cancelService = catchAsync(async (req,res,next)=>{
+ 
+  DB.query(userQuery.cancelReason(req.body),(err,results)=>{
+    if(err) return next(new AppError(err.message,400));
+    return res.json(results)
+  })
+  
+  })
+
+  const reasons = catchAsync(async (req,res,next)=>{
+    DB.query(userQuery.Reasons(),(err,results)=>{
+      if(err) return next(new AppError(err.message,400))
+      return res.json(results)
+    })
+  })
+  const UpdateFirstDrive = catchAsync(async (req,res,next)=>{
+    DB.query(userQuery.updateFirsttime(req.query.id),(err,results)=>{
+      if(err) return next(new AppError(err.message,400))
+      return res.json({"status":"updated"})
+    })
+  })
 // delete user
 
 export default {
   getUsers,
   getUser,
+  createUserForm,
   createUser,
   updateUser,
-  // nearbyDriver,
+  nearbyDriver,
+  driverinfo,
   foundDriver,
   journeyLocation,
-  journeyStarted,
   payment,
-};
+  Service,
+  displayDriverLocation,
+  rating,
+  historyView,
+  ratingView,
+  cancelService,
+  reasons,
+  socket,
+  requestDriver,
+  UpdateFirstDrive
+}

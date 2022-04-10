@@ -3,63 +3,147 @@
 import bcrypt from "bcryptjs";
 import AppError from "../helpers/appError";
 import { DB } from "../helpers/connection";
-import { JWTSecretKey } from "../helpers/constants";
-import { signToken, createSendToken, simpleGetUser } from "../helpers/utils";
+import {  JWTSecretKey, TWILIO_ACCOUNTSID, TWILIO_ACCOUNT_SID,TWILIO_SERVICE_ID } from "../helpers/constants";
+import { signToken, createSendToken, simpleGetUser, staticFilePath } from "../helpers/utils";
 import { catchAsync } from "../middlewares/error";
 import jwt from "jsonwebtoken";
 import userQuery from "../queries/user";
+import driverQuery from "../queries/driver";
+import adminQuery from "../queries/admin";
+import { promisify } from "util";
+import twillioClient from "../helpers/twillioClient";
+import res from "express/lib/response";
 
 const register = catchAsync(async (req, res, next) => {
   const data = req.body;
-  data.password = await bcrypt.hash(data.password, 12);
+  const type = req.query.type || "driver";
 
-  DB.query(
-    userQuery.adduser(data, function (err, results, fields) {
-      if (err) return next(new AppError(err.message, 400));
+  if(type != "user" ) data.password = await bcrypt.hash(data.password, 12);
 
-      createSendToken(data, 200, res);
+  
+  if(req.file?.fieldname == "profile") data.photo = staticFilePath(req.file.filename)
 
-      res.json({
-        status: "success",
-        message: "user registered successfully",
-        data: {
-          user: results,
-        },
-        token,
-      });
-    })
-  );
+  let query;
+  if (type == "driver") {
+    query = driverQuery.add_driver();
+  }
+  else if (type == "admin") query = adminQuery.addadmin();
+  else if(type == "user") query = userQuery.adduser();
+
+  else return next(new AppError("Invalid user type", 400));
+
+  DB.query(query, data, function (err, results, fields) {
+    console.log(err, data, fields);
+
+    if (err) return next(new AppError(err.message, 400));
+
+    if(type == "driver") {
+      sendPhoneVerification(data.phonenumber, next,res);
+      
+    }
+
+    createSendToken(data, results, 200, res);
+  });
 });
 
 const login = catchAsync(async (req, res, next) => {
   // get user credentials from req.body
-  const { email, password } = req.body;
+  const { email, password, phonenumber } = req.body;
+
+  let type = req.query.type || "user";
 
   // check that auth is for admin or driver
-  const query = simpleGetUser(req, email);
 
+  let query = `SELECT * FROM ${type} WHERE phonenumber='${phonenumber}'`
+
+  if(type == 'admin'){
+    query = `SELECT * FROM ${type} WHERE email='${email}'`;
+    
+    if (!email || !password) return next(new AppError("Please provide email and password", 404));
+  } else if(type == 'driver') {
+    if (!phonenumber || !password) return next(new AppError("Please provide phone number and password", 404));
+  } else {
+    if(type == 'user' && !phonenumber) return  next(new AppError("Please enter your phone number", 404));
+  }
+    
   // check if fields are not empty
-  if (!email || !password)
-    return next(new AppError("Please provide email and password", 404));
-
-  DB.query(query(email), async function (err, data, fields) {
-    const user = data[0];
+  
+  DB.query(query, async function (err, data, fields) {
     if (err) return next(new AppError(err.message, 400));
 
+    const user = data[0];
+
     // check if email is in the db
-    if (!user || user.length == 0)
-      return next(new AppError("sorry, unregistered email"));
+    if (!data[0] && type!="user") return next(new AppError("sorry, unregistered account"));
 
     // compare the password associated with the email and password from request
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    let isPasswordCorrect;
+    if(type != "user" ) {
+      isPasswordCorrect = await bcrypt.compare(password, user.password);
+    // await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect)
       return next(new AppError("incorrect password", 400));
     // If everything ok, send token to client
-
-    createSendToken(user, 200, res);
+    } else{ 
+      console.log("else part ......");
+       sendPhoneVerification(phonenumber, next,res)
+       return  res.json({
+          user
+        })
+        
+    }
+    createSendToken(user, data, 200, res);
   });
 });
+
+function sendPhoneVerification(phonenumber, next,res) {
+  twillioClient
+  .verify
+  .services(TWILIO_SERVICE_ID)
+  .verifications
+  .create({ to: "+251" + phonenumber , channel: 'sms'})
+  .then(data => res.json({data, msg:"succes"}))
+  .catch(er => {
+    console.log(er)
+    next(new AppError(er.message, 400))})
+}
+
+const verify = catchAsync(async (req, res, next) => {
+  const {code, phonenumber} = req.body;
+  const type = req.query.type || 'user'
+
+  console.log(req.body);
+
+  twillioClient.verify
+  .services(TWILIO_SERVICE_ID)
+  .verificationChecks.create({ to: "+251" + phonenumber, code })
+  .then(data => {
+    if(data.valid) {
+      DB.query(`SELECT * FROM ${type} WHERE phonenumber=${phonenumber} LIMIT 1`, function(err, result, fields) {
+        if(err) next(new AppError(err ,err.message));
+        const user = result[0]
+        if(user) {
+          return res.json({
+            message: `${type} verified successfully`,
+            status:`${type} Already Registered`,
+            user
+          })
+        }else{
+          return res.json({
+            message:`New ${type} Added`,
+            status:`${type} verified successfully`
+          })
+        }
+      })
+    }
+  } )  
+  .catch(err =>{
+    if(err.code == 20404) return next(new AppError("Invalid Verification code ", 400));
+    return next(new AppError(err.message, 400))
+  });
+
+})
 
 const protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
@@ -78,7 +162,7 @@ const protect = catchAsync(async (req, res, next) => {
   }
 
   // 2) Verification token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, JWTSecretKey);
   const query = simpleGetUser(req, decoded.id);
 
   // 3) Check if user still exists
@@ -117,6 +201,7 @@ const restrictTo = (...roles) => {
 
 export default {
   login,
+  verify,
   protect,
   register,
   restrictTo,

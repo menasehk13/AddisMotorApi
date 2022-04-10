@@ -1,14 +1,9 @@
-export function adduser(data) {
+export function adduser() {
   return `
      INSERT INTO
-     Users
-     SET
-       firstname='${data.firstname}',
-       lastname='${data.lastname}',
-       gender='${data.gender}'
-       phonenumber='${data.phonenumber}'
-       currency='10'
-    `;
+     User
+     SET ?
+     `;
 }
 
 export function edituser(data) {
@@ -18,10 +13,10 @@ export function edituser(data) {
     SET
         firstname='${data.firstname}',
         lastname='${data.lastname}',
-        phonenumber='${data.phonenumber}'
+        email='${data.email}'
     WHERE
-       id='${data.id}'
-    `;
+       id=${data.id};
+    `
 }
 
 export function getusers() {
@@ -49,54 +44,129 @@ export function getuserbyphone(number) {
             WHERE phonenumber = '${number}'
     `;
 }
+export function getService(){
+  return `
+  SELECT 
+    service.servicetype,
+    service.servicepicture,
+    price.bookingfee,
+    price.distance,
+    price.price
+
+    FROM carservicerelation
+    JOIN service on service.serviceid =  carservicerelation.serviceid
+    JOIn price on price.priceid =  carservicerelation.priceid
+    order by carservicerelation.relationid DESC
+    ;
+  `
+}
+
+export function displayDriverLocation(){
+  return `
+  SELECT lat,lng,id,socketid
+  from driver 
+  WHERE driver.activeid = 1 AND driver.status = "approved" ;
+  `
+}
+
+export function viewDrivers(data){
+  return `
+  SELECT 
+  driver.lat ,
+  driver.lng,
+  driver.serviceid,
+  (6371 * acos(cos(radians(${data.lat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.lng})) + sin(radians(${data.lat})) * sin(radians(driver.lat)))) AS distance
+ FROM driver
+ 
+ HAVING distance < 30;
+  `
+}
+
+export function driverInfo(id){
+  return `
+  SELECT
+    driver.firstname,
+    driver.lastname,
+    driver.phonenumber,
+    driver.photo,
+    cardetail.color,
+    cardetail.productionyear,
+    cardetail.licenseplate,
+    cardetail.model
+FROM
+    driver
+    JOIN cardetail on driver.cardetailid = cardetail.id
+WHERE
+    driver.id = ${id};
+  `
+}
 
 export function requestDriver(data) {
   return `
-    SELECT 
-        firstname,
-        lastname,
-        photo,
-        phonenumber,
-        lattitude as lat,
-        longtuide as lng,
-        (6371 * acos(cos(radians(${data.lat})) * cos(radians(Driver.lattitude)) * cos(radians(Driver.longitude) - radians(${data.lng})) + sin(radians(${data.lat})) * sin(radians(Driver.lattitude)))) AS distance    
-    From 
-        Driver,Service,Active
-    Where
-        serviceid='${data.service}' And activeid='1'
-    Having Distance < 38
-    OrderBy Distance
-    Limit 10;
-          
+  SELECT
+	driver.id,
+	firstname,
+	lastname,
+	photo,
+	phonenumber,
+	cardetail.model,
+	cardetail.productionyear,
+	cardetail.licenseplate,
+	cardetail.color,
+	lat,
+	lng,
+	socketid,
+	servicetype,
+	(6371 * acos(cos(radians(${data.pickLat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.pickLng})) + sin(radians(${data.pickLat})) * sin(radians(driver.lat)))) AS distance
+FROM
+	Driver
+	JOIN cardetail ON driver.cardetailid = cardetail.id
+	JOIN service ON driver.serviceid = service.serviceid
+WHERE
+	activeid = 1
+	AND driver.status = 'approved'
+	AND currency > 0
+	AND driver.serviceid = 4
+HAVING
+	Distance < 10
+ORDER BY
+	distance
+LIMIT 1;
+   
     `;
 }
 
+
 export function history(userid) {
   return `
-    SELECT 
-    startinglocation,
-    arrivinglocation,
-    price,
-    distance,
-From 
-    History,User,Booking,Payment
-Where
-    userid=${userid} 
-GroupBy Payment.date    
+  SELECT 
+  booking.arrivinglocation,
+  booking.startinglocation,
+  paymnet.price,
+  paymnet.distance,
+  paymnet.date,
+  paymnet.driverid,
+  service.servicetype
+  From 
+  
+   History
+   
+   JOIN driver on history.driverid = driver.id
+   JOIN booking on history.bookingid = booking.bookingid
+   JOIN paymnet on history.paymentid = paymnet.paymentid
+   JOIN service on driver.serviceid = service.serviceid 
+   WHERE history.userid = ${userid} 
+   ORDER by paymnet.date DESC   
 `;
 }
 
-export function booking(data) {
+export function updateSocket(id,socketid){
   return `
-    INSERT INTO
-        Booking
-        SET
-        arrivinglocation='${data.arriving}',
-        startinglocation='${data.starting}',
-        userid='${data.userid}',
-        driverid='${data.driverid}',
-        status='driver on the way'
-`;
+  UPDATE user
+set 
+socketid = "${socketid}"
+WHERE user.id  = ${id};
+  `
 }
 
 export function journeystarted(data) {
@@ -125,6 +195,16 @@ lattitude='${data.lattitude}',
 longittude='${data.longittude}',
 `;
 }
+export function updateFirsttime(id){
+  return `
+  UPDATE
+	user
+SET
+	firsttime = 0
+WHERE
+	id = ${id};
+  `
+}
 export function payment(data) {
   return `
     INSERT INTO
@@ -147,6 +227,14 @@ export function payment(data) {
     `;
 }
 
+function ratingReview(){
+  return `
+  INSERT INTO 
+      ratingandreview 
+  SET ? ;
+  `
+}
+
 export function driverfound(data) {
   return `
 INSERT INTO  
@@ -160,7 +248,31 @@ INSERT INTO
    ;
 `;
 }
-
+function viewRating(id){
+  return`
+  SELECT AVG(ratingandreview.rating) rating
+FROM 
+ratingandreview 
+WHERE
+ratingandreview.driverid = ${id};
+  `
+}
+function cancelReason(data){
+  return `
+  UPDATE 
+  booking 
+  SET 
+  reason = ${data.reasonid}
+  where booking.bookingid = ${data.bookingid};
+  `
+}
+function Reasons(){
+  return `
+  SELECT
+	*
+FROM
+	reason;`
+}
 export default {
   adduser,
   edituser,
@@ -168,10 +280,19 @@ export default {
   getuser,
   getuserbyphone,
   requestDriver,
+  driverInfo,
   history,
-  booking,
   journeylocation,
   journeystarted,
   payment,
   driverfound,
+  getService,
+  displayDriverLocation,
+  viewDrivers,
+  ratingReview,
+  viewRating,
+  cancelReason,
+  Reasons,
+  updateSocket,
+  updateFirsttime
 };

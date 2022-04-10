@@ -2,36 +2,74 @@ import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
 import adminQuery from "../queries/admin";
 import AppError from "../helpers/appError";
+import jwt from "jsonwebtoken";
 
 const DB = connectDB();
 
+
+// get users
+const currentAdmin = catchAsync(async (req, res, next) => {
+  const {id} = jwt.decode(req.query.token);
+console.log(id);
+  DB.query(`SELECT * FROM Admin WHERE id=${id} LIMIT 1`, function (err, results, fields) {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json({ user: results });
+  });
+});
+
+// get admins [just if needed]
+const getAdmins = catchAsync(async (req, res, next) => {
+  DB.query(adminQuery.getadmins(), function (err, admins) {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json({
+      status: "success",
+      admins,
+    });
+  });
+});
 // get admin by email [just if needed]
 const getAdmin = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.getadmin(req.body.email), function (err, admin) {
+  DB.query(adminQuery.getadmin(req.params.email), function (err, admin) {
     if (err) return next(new AppError(err.message, 400));
+
+    if (!admin) return next(new AppError("No admin found", 404));
     return res.json(results);
   });
 });
 
 // dashboard overview
 const dashboard = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.dashboard(req.body), (err, results) => {
+  DB.query(adminQuery.dashboard(req.query.limit), (err, drivers) => {
+    if (err) return next(new AppError(err.message, 400));
+    return res.json(
+        drivers);
+  });
+});
+const activeDriver = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.activeDriver(req.query.status),(err,drivers)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(drivers)
+  })
+})
+// getdrivers
+const getDrivers = catchAsync(async (req, res, next) => {
+  DB.query(adminQuery.drivers(), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
 });
 
-// getdrivers
-const getDrivers = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.drivers, (err, results) => {
-    if (err) return next(new AppError(err.message, 400));
-    return res.json(results);
-  });
-});
+const getUsers = catchAsync(async (req,res,next) =>{
+DB.query(adminQuery.users(),(err,results)=>{
+  if(err) return next(new AppError(err.message,400))
+  return res.json(results)
+})
+
+})
 
 // getdriver
 const getDriver = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.driverdetail(req.params.id), (err, results) => {
+  DB.query(adminQuery.driverdetail(req.query.id), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
@@ -55,12 +93,18 @@ const driverReview = catchAsync(async (req, res, next) => {
 
 // getdriverOrders
 const driverOrder = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.driverdetailorder(req.params.id), (err, results) => {
+  DB.query(adminQuery.driverdetailorder(req.query.id), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });
 });
-
+// get order details
+const driverOrderDetail = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.driverorderDetail(req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+})
 // getaccounting
 const accounting = catchAsync(async (req, res, next) => {
   DB.query(adminQuery.accountingdrivers(), (err, results) => {
@@ -129,6 +173,22 @@ const selectedComplaints = catchAsync(async (req, res, next) => {
     return res.json(results);
   });
 });
+// car service
+const carServices = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.carService(),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+
+})
+// dispatch service 
+const selectDispatch = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.dispatchService(req.body),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+})
+
 // updateComplaints
 const updateComplaints = catchAsync(async (req, res, next) => {
   DB.query(
@@ -143,8 +203,9 @@ const updateComplaints = catchAsync(async (req, res, next) => {
 export default {
   dashboard,
   getAdmin,
-  //   getDriver,
-  //   getDrivers,
+  getAdmins,
+  getDriver,
+  getDrivers,
   driverDocument,
   driverReview,
   driverOrder,
@@ -158,4 +219,10 @@ export default {
   userComplaints,
   selectedComplaints,
   updateComplaints,
+  activeDriver,
+  driverOrderDetail,
+  getUsers,
+  carServices,
+  selectDispatch,
+  currentAdmin
 };

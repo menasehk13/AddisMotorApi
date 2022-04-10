@@ -1,14 +1,30 @@
 import { Router } from "express";
+import { route } from "express/lib/router";
 import adminController from "../controllers/adminController";
+import jwt from "jsonwebtoken"
 
 const router = Router();
 
-router.route("/").get(adminController.getAdmin);
+router.get("/me", adminController.currentAdmin)
 
-router.route("/dashboard").get(adminController.dashboard);
+router.route("/").get(adminController.getAdmins);
+router.route("/admin/:email").get(adminController.getAdmin);
+
+router
+  .route("/dashboard")
+  .get(adminController.dashboard);
+  router.route("/drivers").get(adminController.getDrivers)
+  router.route("/users").get(adminController.getUsers)
+  router.route("/service").get(adminController.carServices)
+  router.route("/driver").get(adminController.getDriver)
+  router.route("/dispatch/select").post(adminController.selectDispatch)
+  router.route("/driver/order").get(adminController.driverOrder);
+  router.route("/driver/order/detail").get(adminController.driverOrderDetail)
 router.route("/driver/:id").get(adminController.driverDocument);
-router.route("/driver/:id/order").get(adminController.driverOrder);
 
+
+router.route("/dashboard/activedrivers").get(adminController.activeDriver)
+router.route("/dashboard/inservice").get(adminController.activeDriver)
 router.route("/accounting").get(adminController.accounting);
 router.route("/accounting/drivers").get(adminController.accountingDrivers);
 router.route("/accounting/riders").get(adminController.accountingRiders);

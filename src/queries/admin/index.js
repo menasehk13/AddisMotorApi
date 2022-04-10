@@ -1,3 +1,9 @@
+export function getadmins() {
+  return `
+    SELECT * FROM Admin 
+  `;
+}
+
 export function getadmin(email) {
   return `
     SELECT * FROM Admin WHERE email=${email}
@@ -12,24 +18,23 @@ export function login(data) {
    Admin
   Where
    email = '${data.email}',
-   password = '${data.password}' 
+   password = '${data.password}'
   `;
 }
-export function adduser(data) {
+
+export function addadmin() {
   return `
      INSERT INTO
         Admin
-      SET
-       email='${data.username}',
-       password='${data.password}',
-       role='${data.role}'  
+      SET ?
     ;
     `;
 }
-export function dashboard(data) {
+export function dashboard(limit) {
   return `
     SELECT *
     FROM
+<<<<<<< HEAD
          Driver; 
     orderby ${data} ASC;
     SELECT 
@@ -40,7 +45,21 @@ export function dashboard(data) {
     WHERE
        status = 'started'  ;      
     `;
+=======
+         Driver
+         LIMIT ${limit}
+         `;
+  // orderby ${data} ASC
+  // SELECT
+  //   COUNT(driverid) as drivers,
+  //   COUNT (userid) as riders,
+  // FROM
+  //   Journey
+  // WHERE
+  //    status = 'started'  ;
+>>>>>>> ba9425025d29c2a8ae5ecda7e87bb5e4540bb5f7
 }
+
 // dulpacate data
 // export function dashboardicons(data) {
 //   return `
@@ -55,14 +74,38 @@ export function dashboard(data) {
 export function drivers() {
   return `
      SELECT 
-        photo,
-        CONCAT(firstname," ",lastname) as name,
-        phonenumber,
-        status,
+       *
      FROM
         Driver;
     `;
 }
+
+export function users(){
+  return `
+  SELECT 
+    *
+  FROM 
+    user;
+  `
+}
+
+export function activeDriver(status){
+  return `
+   select 
+    photo,
+    CONCAT(firstname," ", lastname) as name,
+    phonenumber,
+    status,
+    lat,
+    lng
+    FROM 
+     Driver
+     where activeid = 1 and status = "${status}";
+     ;
+  
+  `
+}
+
 export function addnewdriver(data) {
   return `
     INSERT INTO
@@ -86,7 +129,7 @@ export function addnewdriver(data) {
         activeid=1,
         addeddate='${Date.now()}',
         status='missing'
-        cardetailid=scope_identity()
+        cardetailid=LAST_INSERT_ID()
       ;
     `;
 }
@@ -102,31 +145,69 @@ export function addnewdocument(data) {
     `;
 }
 
-export function driverdetail(data) {
+export function driverdetail(id) {
   return `
-     SELECT *
-     FROM 
-        Driver,CarDetail,Service
-     WHERE
-       driverid=${data.driverid};
-
-     SELECT AVG(rating) as rating
-     FROM
-       RatingAndReview
-     Where
-         driverid=${data.driverid}
+  SELECT 
+  firstname,
+  lastname,
+  email,
+  phonenumber,
+  photo,
+  gender,
+  cardetail.productionyear,
+  cardetail.model,
+  cardetail.licenseplate,
+  cardetail.color,
+  service.servicetype,
+  AVG(ratingandreview.rating) as rating
+  from driver 
+  left OUTER JOIN cardetail on cardetail.id= driver.cardetailid
+  left OUTER JOIN service on service.serviceid = driver.serviceid
+   left OUTER JOIN ratingandreview on ratingandreview.driverid = driver.id
+  WHERE driver.id = ${id};
     `;
 }
-export function driverdetailorder(data) {
+export function driverdetailorder(id) {
   return `
-    SELECT 
-     CONCAT(driver.firstname," ",driver.lastname) as name,
-     startinglocation as startpoint ,
-     arrivinglocation as destination,
-     date ,
-     price 
-    FROM History,Driver,Payment,Booking;
+  SELECT 
+history.historyid as id,  
+CONCAT(user.firstname," ",user.lastname) as name,
+booking.startinglocation,
+booking.arrivinglocation,
+history.date,
+paymnet.price 
+from 
+history 
+LEFT OUTER JOIN user on user.id = history.userid
+LEFT OUTER JOIN booking on  booking.bookingid = history.bookingid
+LEFT OUTER JOIN paymnet on paymnet.paymentid = history.paymentid
+WHERE history.driverid= ${id};
     `;
+}
+function driverorderDetail(id){
+  return `
+  SELECT 
+  booking.bookingid as id,
+  booking.arrivinglocation,
+  booking.startinglocation,
+  paymnet.price,
+  paymnet.distance,
+  paymnet.date,
+  price.bookingfee,
+  paymnet.price * price.tax as tax,
+  paymnet.price - paymnet.price * price.tax as earning 
+  
+  From 
+   History
+   
+   JOIN user on history.userid = user.id
+   JOIN booking on history.bookingid = booking.bookingid
+   JOIN paymnet on history.paymentid = paymnet.paymentid 
+   JOIN price on price.priceid = paymnet.priceid
+   WHERE history.historyid = ${id}
+   ORDER by paymnet.date ASC
+   ;
+  `
 }
 export function driverdetailreview(data) {
   return `
@@ -249,6 +330,28 @@ export function complaints() {
     OrderBy date ASC ;
     `;
 }
+function dispatchService(data){
+  return `
+  SELECT
+	*,
+  cardetail.licenseplate,
+	cardetail.model,
+	cardetail.color,
+	service.servicetype,
+	(6371 * acos(cos(radians(${data.lat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.lng})) + sin(radians(${data.lat})) * sin(radians(driver.lat)))) AS distance
+FROM
+	driver
+	JOIN service ON service.serviceid = driver.serviceid
+  JOIN cardetail on cardetail.id = driver.cardetailid
+WHERE
+	service.servicetype = "${data.service}"
+	AND driver.status = "approved"
+HAVING
+	distance < 10
+ORDER BY
+	distance;
+  `
+}
 export function complaintsdetail(data) {
   return `
     SELECT
@@ -273,13 +376,32 @@ export function updateComplaints(data) {
       complaintsid=${data.id}  
     `;
 }
+function carService(){
+  return `
+  SELECT
+service.servicetype,
+carservicerelation.maxCapacity,
+paymentmethod.paymentmethod,
+searchradius.radius,
+price.price,
+service.servicepicture
+
+FROM carservicerelation
+JOIN service on carservicerelation.serviceid = service.serviceid
+JOIN paymentmethod on paymentmethod.paymentmethodid = carservicerelation.paymentmethodid
+JOIN searchradius on searchradius.searchradiusid = carservicerelation.searchradiusid
+JOIN price on price.priceid = carservicerelation.priceid;
+  `
+}
 
 export default {
   getadmin,
+  getadmins,
   login,
-  adduser,
+  addadmin,
   dashboard,
   drivers,
+  users,
   addnewdriver,
   addnewdocument,
   driverdetail,
@@ -298,4 +420,8 @@ export default {
   complaints,
   complaintsdetail,
   updateComplaints,
+  activeDriver,
+  driverorderDetail,
+  carService,
+  dispatchService
 };
