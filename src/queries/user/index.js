@@ -148,15 +148,13 @@ export function history(userid) {
   paymnet.driverid,
   service.servicetype
   From 
-  
    history
-   
    JOIN driver on history.driverid = driver.id
    JOIN booking on history.bookingid = booking.bookingid
    JOIN paymnet on history.paymentid = paymnet.paymentid
    JOIN service on driver.serviceid = service.serviceid 
-   WHERE history.userid = ${userid} 
-   ORDER by paymnet.date DESC   
+   WHERE history.userid = 75
+   ORDER by paymnet.date DESC  ;   
 `;
 }
 
