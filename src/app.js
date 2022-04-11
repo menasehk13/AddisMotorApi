@@ -1,6 +1,6 @@
 import "./helpers/config"
 import express from "express";
-import AppError from "./helpers/AppError";
+import AppError from "./helpers/appError";
 import connectDB, { DB } from "./helpers/connection";
 import { apiV1Prefix, API_KEY, PORT } from "./helpers/constants";
 import { appConfig } from "./helpers/utils";
