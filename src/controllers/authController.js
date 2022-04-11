@@ -140,7 +140,9 @@ const verify = catchAsync(async (req, res, next) => {
   });
 
 })
-
+const rsendCode = catchAsync(async (req,res,next)=>{
+  sendPhoneVerification(req.query.phonenumber,next,res)
+})
 const protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
   let token;
@@ -201,4 +203,5 @@ export default {
   protect,
   register,
   restrictTo,
+  rsendCode
 };

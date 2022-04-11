@@ -281,9 +281,8 @@ export function accountingservice() {
 export function addDriverSales(data){
   return `
   INSERT INTO 
-cardetail 
-SET
-
+  cardetail 
+  SET
 cardetail.productionyear="${data.year}",
 cardetail.model="${data.model}",
 cardetail.color="${data.color}"
@@ -311,7 +310,6 @@ driverdocument.driverlicence="${data.licencepic}",
 driverdocument.Inscurance="${data.insurancepic}",
 driverdocument.driverid = LAST_INSERT_ID(),
 driverdocument.registration = "${data.registration}";
-
   `
 }
 // need some modification

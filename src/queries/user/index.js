@@ -149,7 +149,7 @@ export function history(userid) {
   service.servicetype
   From 
   
-   History
+   history
    
    JOIN driver on history.driverid = driver.id
    JOIN booking on history.bookingid = booking.bookingid
@@ -217,7 +217,7 @@ export function payment(data) {
         driverid='${data.driverid}',
         journeyid='${data.journeyid}';
     INSERT INTO 
-            RattingAndReview
+            rattingandreview
     SET
         driverid='${data.userid}',
         userid='${data.driverid}',

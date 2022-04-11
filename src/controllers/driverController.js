@@ -195,7 +195,17 @@ const carDetail = catchAsync(async (req,res,next)=>{
   })
 })
 
-
+const checkUserexsist = catchAsync(async (req,res,next)=>{
+  DB.query(driverQuery.checkUser(req.query.phonenumber),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    return res.json({user:results})
+  })
+})
+const updatePassword = catchAsync(async(req,res,next)=>{
+  let hashpassword = req.query.password
+  var password=  await bcrypt.hash(hashpassword, 12); 
+  DB.query(driverQuery.updatePassword(password,req.query.id))
+})
 export default {
   getDrivers,
   getDriver,
@@ -213,5 +223,7 @@ export default {
   addhistory,
   rating,
   carDetail,
-  driverstatus, 
+  driverstatus,
+  checkUserexsist,
+  updatePassword
 };

@@ -238,6 +238,25 @@ WHERE
 	id = ${id};
   `
 }
+function checkUser(phonenumber){
+  return `
+  SELECT
+	*
+FROM
+	driver
+WHERE
+	phonenumber = "${phonenumber}";
+  `
+}
+function updatePassword(password,id){
+  return `
+  UPDATE 
+driver 
+SET
+password = "${password}"
+WHERE id = ${id};
+  `
+}
 export default {
   getdriver,
   getdrivers,
@@ -257,5 +276,7 @@ export default {
   carInfo,
   viewRating,
   driverStatus,
-  currencyView
+  currencyView,
+  checkUser,
+  updatePassword
 };
