@@ -11,6 +11,7 @@ import {Server} from "socket.io";
 import path from "path";
 import userQuery from "./queries/user";
 import driverQuery from "./queries/driver"
+import bodyParser from "body-parser"
 
 const app = express();
 const corsOptions ={
@@ -23,7 +24,8 @@ app.use(
   "static",
   express.static(path.join(__dirname.replace("\\src", ""), "public"))
 );
-app.set("view engine", "ejs")
+app.set("view engine", "ejs");
+app.use(express.urlencoded({extended:false}))
 
 const server = http.createServer(app);
 

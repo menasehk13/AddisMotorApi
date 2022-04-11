@@ -3,6 +3,9 @@ import connectDB from "../helpers/connection";
 import adminQuery from "../queries/admin";
 import AppError from "../helpers/appError";
 import jwt from "jsonwebtoken";
+import { staticFilePath } from "../helpers/utils";
+
+
 
 const DB = connectDB();
 
@@ -27,6 +30,39 @@ const getAdmins = catchAsync(async (req, res, next) => {
     });
   });
 });
+
+// register user from web
+const addDriverweb = catchAsync(async (req,res,next)=>{
+  const data = req.body
+  // const {data} = req.body
+  console.log(req.body);
+  if(req.file?.fieldname == "profile") data.photo = staticFilePath(req.file.filename)
+
+  DB.query(adminQuery.addDriverSales(data),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+      let id = results.insertId
+      DB.query(adminQuery.addNewUser(data,id),(err,results)=>{
+        if(err) return next(new AppError(err.message,400))
+        res.json({"status":"user registered successfully"})
+      })
+  })
+})
+
+const addDriverDocuments = catchAsync(async (req, res, next) => {
+  const data = req.body
+  const id = req.query.id;
+  console.log(req.file, req.query);
+
+  // res.json({ hmm : req.files})
+  if(req.files["licencepic"]?.fieldname) data.licencepic= staticFilePath(req.files["licencepic"].filename)
+  if(req.files["insurancepic"]?.fieldname) data.insurancepic = staticFilePath(req.files["insurancepic"].filename)
+  if(req.files["registration"]?.fieldname ) data.registration = staticFilePath(req.files["registration"].filename)
+  DB.query(adminQuery.addDriverDocumentSales(id,data),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({"status":"Driver Successfully Registered"})
+  })
+})
+
 // get admin by email [just if needed]
 const getAdmin = catchAsync(async (req, res, next) => {
   DB.query(adminQuery.getadmin(req.params.email), function (err, admin) {
@@ -224,5 +260,7 @@ export default {
   getUsers,
   carServices,
   selectDispatch,
-  currentAdmin
+  currentAdmin,
+  addDriverweb,
+  addDriverDocuments
 };

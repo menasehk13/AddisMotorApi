@@ -2,10 +2,13 @@ import { Router } from "express";
 import { route } from "express/lib/router";
 import adminController from "../controllers/adminController";
 import jwt from "jsonwebtoken"
+import upload from "../utils/multer";
 
 const router = Router();
 
 router.get("/me", adminController.currentAdmin)
+router.route("/addDriver").post(upload.single("profile"),adminController.addDriverweb)
+router.route("/addDriverDocuments").post(upload.fields([{name: "licencepic", maxCount:1},{name:"insurancepic", maxCount:1},{name:"registration", maxCount:1}]),adminController.addDriverDocuments)
 
 router.route("/").get(adminController.getAdmins);
 router.route("/admin/:email").get(adminController.getAdmin);
