@@ -204,7 +204,10 @@ const checkUserexsist = catchAsync(async (req,res,next)=>{
 const updatePassword = catchAsync(async(req,res,next)=>{
   let hashpassword = req.query.password
   var password=  await bcrypt.hash(hashpassword, 12); 
-  DB.query(driverQuery.updatePassword(password,req.query.id))
+  DB.query(driverQuery.updatePassword(password,req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({"status":"updated"})
+  })
 })
 export default {
   getDrivers,

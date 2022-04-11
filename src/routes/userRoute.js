@@ -9,13 +9,13 @@ router
   .route("/")
   .get(userController.getUsers)
   .post(upload.single("userprofile"), userController.createUser);
+  router.route("/totalprice").get(userController.totalDistance)
   router.route("/updatefirsttime").post(userController.UpdateFirstDrive)
   router.route("/history").get(userController.historyView)
   router.post("/rateDriver",userController.rating)
   router.get("/nearby",userController.nearbyDriver)
   router.get("/driverinfo",userController.driverinfo)
   router.route("/reasons").get(userController.reasons)
-  router.route("/totalprice").get(userController.totalDistance)
 router.route("/cancelService").post(userController.cancelService)
 router.get("/service",userController.Service)
 router.route("/user").get(userController.getUser).patch(userController.updateUser);

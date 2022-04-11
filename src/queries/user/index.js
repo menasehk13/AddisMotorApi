@@ -166,7 +166,7 @@ export function totaldistancePrice(data){
 
     JOIN price on carservicerelation.priceid = price.priceid
 
-WHERE carservicerelation.serviceid=${serviceid};
+WHERE carservicerelation.serviceid=${data.serviceid};
   `
 }
 export function updateSocket(id,socketid){

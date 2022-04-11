@@ -29,5 +29,5 @@ router.route("/rating").get(driverController.rating)
 router.route("/cardetail").get(driverController.carDetail)
 router.route("/driverstatus").get(driverController.driverstatus)
 router.route("/checkuser").get(driverController.checkUserexsist)
-route.route("/newpassword").post(driverController.updatePassword)
+router.route("/newpassword").post(driverController.updatePassword)
 export default router;
