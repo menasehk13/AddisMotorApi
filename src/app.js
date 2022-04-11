@@ -14,12 +14,8 @@ import driverQuery from "./queries/driver"
 import bodyParser from "body-parser"
 
 const app = express();
-const corsOptions ={
-  origin:'http://localhost:3000', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200
-}
-app.use(cors(corsOptions));
+
+app.use(cors());
 app.use(
   "static",
   express.static(path.join(__dirname.replace("\\src", ""), "public"))
@@ -29,41 +25,43 @@ app.use(express.urlencoded({extended:false}))
 
 const server = http.createServer(app);
 
-const io = new Server(server,{'pingTimeout': 180000, 'pingInterval': 25000,cors: { origin: '*' }});
+const io = new Server(server,
+  {cors:{
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials:true
+  }});
 
 let sock;
 
 io.on("connection", (socket) => {
-  console.log("A user is connected");
   sock = socket;
-
+  
   socket.on("message", (message) => {
-    console.log(`message from ${socket.id} : ${message}`);
   });
 
   // socket.on("")
   socket.on("dispatchDriver",(data)=>{
-    console.log(data.driverid)
-    io.to(data.driverid).emit("userfound",data)
     console.log(data)
+    //data to be shown
+    io.to(data.driverid).emit("userfound",data)
   })
 
   socket.on("cancel",(msg)=>{
-    console.log(msg)
     const result = JSON.parse(msg)
     io.to(result.socketid).emit("canceled",result) 
   });
   
   socket.on("test", (msg) => {
-    console.log(msg);
    // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   })
   socket.on("data",(d) =>{
-    console.log(d);
     const data = JSON.parse(d) || d
     DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
       if(err) console.log(err.message)
+     console.log(drivers)
       if(drivers.length>0){
+        console.log(drivers)
         io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
       }else{
         return console.log("No User Found")
@@ -75,26 +73,26 @@ io.on("connection", (socket) => {
       const result = JSON.parse(data)
         io.to(result.socketid
           ).emit("driverfound",result) 
-        console.log(result)
+       
       });
 
   socket.on("journeystarted",(data)=>{
     const result = JSON.parse(data)
       io.to(result.socketid).emit("started",result)
-      console.log(result)
+      
   })
 
   socket.on("journeyfinished",(data)=>{
     const result = JSON.parse(data) || data
     io.to(result.socketid).emit("finished",result)
-    console.log(result)
+   
   })
 
 
   socket.on("test", (msg) => console.log(msg))
   
   socket.on("disconnect", (reason) => { 
-    console.log(`socket ${socket.id} disconnected for reason ${reason}`);
+
   });
 });
 
@@ -103,15 +101,15 @@ export { io, sock };
 
 connectDB().connect(function (err) {
   if (err) return console.log(err, err.message);
-  console.log("db connected 🔥🔥🔥");
+console.log("db connected 🔥🔥🔥");
 });
 
 // process.env.NODE_ENV = "development";
 process.env.NODE_ENV = "production";
 
 process.on("unhandledRejection", (err) => {
-  console.log(err.name, err.message);
-  console.log("UNHANDLED REJECTION! 🚫 downing server... ");
+console.log(err.name, err.message);
+ console.log("UNHANDLED REJECTION! 🚫 downing server... ");
   server.close(() => {
     process.exit(1);
   });

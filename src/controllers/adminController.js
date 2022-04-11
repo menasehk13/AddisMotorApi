@@ -1,11 +1,11 @@
 import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
-import adminQuery from "../queries/admin";
+import adminQuery, { addDriverSales } from "../queries/admin";
 import AppError from "../helpers/appError";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import { staticFilePath } from "../helpers/utils";
-
-
+import { json } from 'express/lib/response';
 
 const DB = connectDB();
 
@@ -13,7 +13,6 @@ const DB = connectDB();
 // get users
 const currentAdmin = catchAsync(async (req, res, next) => {
   const {id} = jwt.decode(req.query.token);
-console.log(id);
   DB.query(`SELECT * FROM Admin WHERE id=${id} LIMIT 1`, function (err, results, fields) {
     if (err) return next(new AppError(err.message, 400));
     return res.json({ user: results });
@@ -31,7 +30,7 @@ const getAdmins = catchAsync(async (req, res, next) => {
   });
 });
 
-// register user from web
+//register user from web
 const addDriverweb = catchAsync(async (req,res,next)=>{
   const data = req.body
   // const {data} = req.body
@@ -81,6 +80,20 @@ const dashboard = catchAsync(async (req, res, next) => {
         drivers);
   });
 });
+// register user from web
+// const addDriverweb = catchAsync(async (req,res,next)=>{
+//   const {data} = req.body
+//   if(req.file?.fieldname == "profile") data.photo = staticFilePath(req.file.filename)
+//   if(req.file?.fieldname == "licencepic") data.licencepic= staticFilePath(req.file.filename)
+//   if(req.file?.fieldname == "insurancepic") data.insurancepic = staticFilePath(req.file.filename)
+//   if(req.file?.fieldname == "registration") data.registration = staticFilePath(req.file.filename)
+
+
+//   DB.query(adminQuery.addDriverSales(data),(err,results)=>{
+//     if(err) return next(new AppError(err.message,400))
+//     return res.json({"status":"Driver Successfully Registered"})
+//   })
+// })
 const activeDriver = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.activeDriver(req.query.status),(err,drivers)=>{
     if(err) return next(new AppError(err.message,400))

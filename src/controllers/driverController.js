@@ -25,12 +25,6 @@ const getDriver = catchAsync(async function (req, res, next) {
 
       if(!driver) return next(new AppError(`Found No Driver with id [${id}] `))
 
-      console.log(driver, id );
-      
-      // sock.emit("driver", driver);
-
-      // sock.on("test", msg => console.log(msg))
-
       return res.json({
         status: "success",
         user: driver,
@@ -53,7 +47,6 @@ const addDriver = catchAsync(async (req, res, next) => {
   DB.query(driverQuery.add_driver(), data, function (err, result) {
     if (err) return next(new AppError(err.message, 400));
 
-    // console.log();
 
     return res.json({
       status: "success",
@@ -169,13 +162,11 @@ const bookingData = catchAsync(async (req,res,next)=>{
 const updateDriverSocket = catchAsync(async function (req, res, next) {
   const data = req.body;
   const { id } = req.query;
-  console.log(req.body, req.query);
   
   DB.query(
     driverQuery.updateDriverSocket({ ...data, id }),
     function (err, result, fields) {
       if (err) {
-        console.log(err);
         return next(new AppError(err.message, 400));
       }
       return res.json({

@@ -12,7 +12,7 @@ router.route("/addDriverDocuments").post(upload.fields([{name: "licencepic", max
 
 router.route("/").get(adminController.getAdmins);
 router.route("/admin/:email").get(adminController.getAdmin);
-
+router.route("/admin/addDriver").post(upload.single("profile"),upload.single("licencepic"),upload.single("insurancepic"),upload.single("registration"),adminController.addDriverweb)
 router
   .route("/dashboard")
   .get(adminController.dashboard);

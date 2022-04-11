@@ -32,7 +32,6 @@ const register = catchAsync(async (req, res, next) => {
   else return next(new AppError("Invalid user type", 400));
 
   DB.query(query, data, function (err, results, fields) {
-    console.log(err, data, fields);
 
     if (err) return next(new AppError(err.message, 400));
 
@@ -85,7 +84,6 @@ const login = catchAsync(async (req, res, next) => {
       return next(new AppError("incorrect password", 400));
     // If everything ok, send token to client
     } else{ 
-      console.log("else part ......");
        sendPhoneVerification(phonenumber, next,res)
        return  res.json({
           user
@@ -102,7 +100,7 @@ function sendPhoneVerification(phonenumber, next,res) {
   .services(TWILIO_SERVICE_ID)
   .verifications
   .create({ to: "+251" + phonenumber , channel: 'sms'})
-  .then(data => res.json({data, msg:"succes"}))
+  .then(data =>  res.json({data,"status":"success"}))
   .catch(er => {
     console.log(er)
     next(new AppError(er.message, 400))})
@@ -117,9 +115,6 @@ const resendVerification = catchAsync(async (req, res , next) => {
 const verify = catchAsync(async (req, res, next) => {
   const {code, phonenumber} = req.body;
   const type = req.query.type || 'user'
-
-  console.log(req.body);
-
   twillioClient.verify
   .services(TWILIO_SERVICE_ID)
   .verificationChecks.create({ to: "+251" + phonenumber, code })
@@ -144,6 +139,7 @@ const verify = catchAsync(async (req, res, next) => {
     }
   } )  
   .catch(err =>{
+    console.log(err)
     if(err.code == 20404) return next(new AppError("Invalid Verification code ", 400));
     return next(new AppError(err.message, 400))
   });

@@ -14,7 +14,7 @@ function getdrivers() {
   activeid,
   service.servicetype 
   FROM
-   Driver
+   driver
    JOIN service on driver.serviceid = service.serviceid
    WHERE driver.activeid = 1
    ;
@@ -26,7 +26,7 @@ function getdriver(id) {
   SELECT
     *
 FROM
-	Driver
+	driver
 
 WHERE
 	driver.id = ${id};
@@ -36,14 +36,14 @@ WHERE
 function add_driver() {
   return `  
           INSERT INTO
-          Driver
+          driver
           SET ?
         `;
 }
 function updatecurrentlocation(data) {
   return `
      UPDATE
-        Driver
+        driver
       SET
        lat=${Number(data.lat)},
        lng=${Number(data.lng)}
@@ -118,7 +118,7 @@ function history(driverid) {
   paymnet.price - paymnet.price * price.tax as earning 
   
   From 
-   History
+   history
    
    JOIN user on history.userid = user.id
    JOIN booking on history.bookingid = booking.bookingid
@@ -137,7 +137,7 @@ function displaystatus(driverid) {
        Sum(price) as Price ,
        count(driverid) as Job
     From
-      Payment
+      payment
     Where
       driverid = ${driverid}
     GroupBy date      
@@ -148,7 +148,7 @@ export function getOnlineDrivers() {
   return `
      SELECT *   
      FROM 
-        Driver,Active
+        driver,active
      Where
      activeid=1 AND status = 'approved'   
     `;
@@ -209,7 +209,7 @@ SET
 export function booking() {
   return `
     INSERT INTO
-        Booking
+        booking
         SET
          ?
         ;
