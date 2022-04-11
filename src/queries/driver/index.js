@@ -119,7 +119,6 @@ function history(driverid) {
   
   From 
    history
-   
    JOIN user on history.userid = user.id
    JOIN booking on history.bookingid = booking.bookingid
    JOIN paymnet on history.paymentid = paymnet.paymentid 
