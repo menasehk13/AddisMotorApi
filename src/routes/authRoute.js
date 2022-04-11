@@ -5,6 +5,9 @@ const router = Router();
 
 router.route("/login").post(authController.login);
 router.route("/verify").post(authController.verify);
+router.route("/resendVerification").post(authController.resendVerification);
 router.route("/register").post(upload.single("profile"), authController.register);
+
+router.patch("/updatePassword", authController.updatePassword)
 
 export default router;
