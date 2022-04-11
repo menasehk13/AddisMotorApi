@@ -61,6 +61,14 @@ const historyView = catchAsync(async (req,res,next)=>{
     return res.json(results)
   })
 }) 
+// total price view
+const totalDistance = catchAsync(async (req,res,next)=>{
+  let data = req.body
+  DB.query(userQuery.totaldistancePrice(data),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    return res.json(results[0])
+  })
+})
 // view rated driver 
 
 const ratingView = catchAsync(async (req,res,next)=>{
@@ -209,5 +217,6 @@ export default {
   reasons,
   socket,
   requestDriver,
-  UpdateFirstDrive
+  UpdateFirstDrive,
+  totalDistance
 }

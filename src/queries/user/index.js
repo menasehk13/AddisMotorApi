@@ -157,7 +157,18 @@ export function history(userid) {
    ORDER by paymnet.date DESC  ;   
 `;
 }
+export function totaldistancePrice(data){
+  return `
+  SELECT 
+    price.price + ${data.distance} + price.bookingfee as totalprice
+      from 
+    carservicerelation
 
+    JOIN price on carservicerelation.priceid = price.priceid
+
+WHERE carservicerelation.serviceid=${serviceid};
+  `
+}
 export function updateSocket(id,socketid){
   return `
   UPDATE user
@@ -292,5 +303,6 @@ export default {
   cancelReason,
   Reasons,
   updateSocket,
-  updateFirsttime
+  updateFirsttime,
+  totaldistancePrice
 };
