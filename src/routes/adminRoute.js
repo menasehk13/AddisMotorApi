@@ -2,6 +2,7 @@ import { Router } from "express";
 import { route } from "express/lib/router";
 import adminController from "../controllers/adminController";
 import jwt from "jsonwebtoken"
+import upload from "../utils/multer";
 
 const router = Router();
 
@@ -9,7 +10,7 @@ router.get("/me", adminController.currentAdmin)
 
 router.route("/").get(adminController.getAdmins);
 router.route("/admin/:email").get(adminController.getAdmin);
-
+router.route("/admin/addDriver").post(upload.single("profile"),upload.single("licencepic"),upload.single("insurancepic"),upload.single("registration"),adminController.addDriverweb)
 router
   .route("/dashboard")
   .get(adminController.dashboard);

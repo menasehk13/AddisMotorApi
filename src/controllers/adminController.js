@@ -1,8 +1,11 @@
 import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
-import adminQuery from "../queries/admin";
+import adminQuery, { addDriverSales } from "../queries/admin";
 import AppError from "../helpers/appError";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { staticFilePath } from "../helpers/utils";
+import { json } from 'express/lib/response';
 
 const DB = connectDB();
 
@@ -44,6 +47,20 @@ const dashboard = catchAsync(async (req, res, next) => {
         drivers);
   });
 });
+// register user from web
+const addDriverweb = catchAsync(async (req,res,next)=>{
+  const {data} = req.body
+  if(req.file?.fieldname == "profile") data.photo = staticFilePath(req.file.filename)
+  if(req.file?.fieldname == "licencepic") data.licencepic= staticFilePath(req.file.filename)
+  if(req.file?.fieldname == "insurancepic") data.insurancepic = staticFilePath(req.file.filename)
+  if(req.file?.fieldname == "registration") data.registration = staticFilePath(req.file.filename)
+
+
+  DB.query(adminQuery.addDriverSales(data),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({"status":"Driver Successfully Registered"})
+  })
+})
 const activeDriver = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.activeDriver(req.query.status),(err,drivers)=>{
     if(err) return next(new AppError(err.message,400))
@@ -223,5 +240,6 @@ export default {
   getUsers,
   carServices,
   selectDispatch,
-  currentAdmin
+  currentAdmin,
+  addDriverweb
 };

@@ -278,6 +278,42 @@ export function accountingservice() {
       
     `;
 }
+export function addDriverSales(data){
+  return `
+  INSERT INTO 
+cardetail 
+SET
+
+cardetail.productionyear="${data.year}",
+cardetail.model="${data.model}",
+cardetail.color="${data.color}"
+cardetail.licenseplate="${data.licenceplate}"
+;
+
+INSERT INTO 
+driver 
+SET
+driver.firstname="${data.firstname}",
+driver.lastname="${data.lastname}",
+driver.email="${data.email}",
+driver.phonenumber="${data.phone}",
+driver.serviceid=${data.service},
+driver.cardetailid = LAST_INSERT_ID(),
+driver.status="pending",
+driver.activeid=1,
+driver.gender="${data.gender}",
+driver.photo="${data.photo}"
+;
+INSERT INTO 
+driverdocument 
+SET 
+driverdocument.driverlicence="${data.licencepic}",
+driverdocument.Inscurance="${data.insurancepic}",
+driverdocument.driverid = LAST_INSERT_ID(),
+driverdocument.registration = "${data.registration}";
+
+  `
+}
 // need some modification
 export function accountingaddservice(data) {
   return `
@@ -410,5 +446,6 @@ export default {
   activeDriver,
   driverorderDetail,
   carService,
-  dispatchService
+  dispatchService,
+  addDriverSales
 };
