@@ -12,7 +12,6 @@ import driverQuery from "../queries/driver";
 import adminQuery from "../queries/admin";
 import { promisify } from "util";
 import twillioClient from "../helpers/twillioClient";
-import res from "express/lib/response";
 
 const register = catchAsync(async (req, res, next) => {
   const data = req.body;
@@ -107,6 +106,12 @@ function sendPhoneVerification(phonenumber, next,res) {
     next(new AppError(er.message, 400))})
 }
 
+const resendVerification = catchAsync(async (req, res , next) => {
+  const {phonenumber} = req.query;
+
+  sendPhoneVerification(phonenumber, next, res)
+})
+
 const verify = catchAsync(async (req, res, next) => {
   const {code, phonenumber} = req.body;
   const type = req.query.type || 'user'
@@ -196,6 +201,27 @@ const restrictTo = (...roles) => {
     next();
   };
 };
+
+const updatePassword = catchAsync(async (req, res, next) => {
+    const {id, type="driver"} = req.query;
+    const {newPassword,} = req.body;
+
+    if(type == "driver") {
+      DB.query(`select password from driver where id=${id} limit=1`, (error, result) => {
+         if(error) return next(new AppError(error.message,403))
+         
+      })
+    }
+
+    let query = `UPDATE 
+      ${type}
+      SET
+      phonenumber = "phonenumber"
+      WHERE id = "driver id";`
+
+    
+    DB.query("select * from ")
+})
 
 export default {
   login,

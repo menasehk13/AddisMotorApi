@@ -89,7 +89,6 @@ export function activeDriver(status){
      driver
      where activeid = 1 and status = "${status}";
      ;
-  
   `
 }
 
@@ -351,6 +350,49 @@ export function complaints() {
     OrderBy date ASC ;
     `;
 }
+export function addDriverSales(data){
+  return `
+  INSERT INTO 
+cardetail 
+SET
+
+cardetail.productionyear="${data.year}",
+cardetail.model="${data.model}",
+cardetail.color="${data.color}",
+cardetail.licenseplate="${data.licenceplate}"
+;
+`
+}
+function addNewUser(data,id){
+return `
+INSERT INTO 
+driver 
+SET
+driver.firstname="${data.firstname}",
+driver.lastname="${data.lastname}",
+driver.email="${data.email}",
+driver.phonenumber="${data.phone}",
+driver.serviceid= 4,
+driver.cardetailid =${id},
+driver.status="pending",
+driver.activeid=1,
+driver.gender="${data.gender}",
+driver.photo="${data.photo}"
+;
+`
+}
+
+function addDriverDocumentSales(id,data) {
+  return `INSERT INTO 
+  driverdocument 
+  SET 
+  driverdocument.driverlicence="${data.licencepic}",
+  driverdocument.Inscurance="${data.insurancepic}",
+  driverdocument.driverid = ${id},
+  driverdocument.registration = "${data.registration}";
+    `
+}
+
 function dispatchService(data){
   return `
   SELECT
@@ -445,5 +487,7 @@ export default {
   driverorderDetail,
   carService,
   dispatchService,
-  addDriverSales
+ addDriverSales,
+ addDriverDocumentSales,
+ addNewUser
 };
