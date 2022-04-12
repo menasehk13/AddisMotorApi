@@ -219,7 +219,8 @@ function priceId(id){
   SELECT
 	carservicerelation.priceid AS priceId,
 	price.price AS price,
-    price.bookingfee
+ price.bookingfee,
+ price.initialprice
 FROM
 	carservicerelation
 	JOIN price ON carservicerelation.priceid = price.priceid
