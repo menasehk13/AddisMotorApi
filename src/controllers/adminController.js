@@ -51,7 +51,7 @@ const addDriverDocuments = catchAsync(async (req, res, next) => {
   const data = req.body
   const id = req.query.id;
   console.log(req.file, req.query);
-
+  console.log(req.files["insurancepic"]?.fieldname)
   // res.json({ hmm : req.files})
   if(req.files["licencepic"]?.fieldname) data.licencepic= staticFilePath(req.files["licencepic"].filename)
   if(req.files["insurancepic"]?.fieldname) data.insurancepic = staticFilePath(req.files["insurancepic"].filename)
