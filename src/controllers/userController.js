@@ -63,8 +63,8 @@ const historyView = catchAsync(async (req,res,next)=>{
 }) 
 // total price view
 const totalDistance = catchAsync(async (req,res,next)=>{
-  let data = req.body
-  DB.query(userQuery.totaldistancePrice(data),(err,results)=>{
+  
+  DB.query(userQuery.totaldistancePrice(req.query.serviceid,req.query.distance),(err,results)=>{
     if(err) next(new AppError(err.message,400))
     return res.json(results[0])
   })
