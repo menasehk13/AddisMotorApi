@@ -51,8 +51,9 @@ export function getService(){
     service.servicepicture,
     price.bookingfee,
     price.distance,
-    price.price
-
+    price.price,
+    price.initialprice
+    
     FROM carservicerelation
     JOIN service on service.serviceid =  carservicerelation.serviceid
     JOIn price on price.priceid =  carservicerelation.priceid
