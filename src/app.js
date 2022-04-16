@@ -28,11 +28,12 @@ const server = http.createServer(app);
 const io = new Server(server,
   {cors:{
     origin: "*",
-  }});
+  },
+  transports: ['websocket']});
 
 let sock;
 
-io.on("connection", (socket) => {
+io.on("connection",async (socket) => {
   sock = socket;
   
   socket.on("message", (message) => {
