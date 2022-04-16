@@ -185,7 +185,8 @@ cardetail.licenseplate,
 cardetail.color,
 service.servicetype,
 driverdocument.registration,
-driverdocument.Inscurance
+driverdocument.Inscurance,
+driverdocument.criminalclearance,
 FROM 
 driver 
 Left outer JOIN cardetail on cardetail.id = driver.cardetailid
