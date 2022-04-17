@@ -123,11 +123,7 @@ process.on("uncaughtException", (err) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
-
-app.get("/form", (req, res) => {
-  res.render("index");
+  res.send("API>>>> CONNECTED>:");
 });
 
 // configuring app
