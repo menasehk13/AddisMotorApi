@@ -52,7 +52,7 @@ const addDriverDocuments = catchAsync(async (req, res, next) => {
   console.log(req.files["insurancepic"]?.fieldname)
   // res.json({ hmm : req.files})
  data.licencepic= staticFilePath(req.files["licencepic"][0].filename)
-  data.insurancepic = staticFilePath(req.files["insurancepic"][0].filename)
+data.insurancepic = staticFilePath(req.files["insurancepic"][0].filename)
 data.registration = staticFilePath(req.files["registration"][0].filename)
   DB.query(adminQuery.addDriverDocumentSales(id,data),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
@@ -78,20 +78,7 @@ const dashboard = catchAsync(async (req, res, next) => {
         drivers);
   });
 });
-// register user from web
-// const addDriverweb = catchAsync(async (req,res,next)=>{
-//   const {data} = req.body
-//   if(req.file?.fieldname == "profile") data.photo = staticFilePath(req.file.filename)
-//   if(req.file?.fieldname == "licencepic") data.licencepic= staticFilePath(req.file.filename)
-//   if(req.file?.fieldname == "insurancepic") data.insurancepic = staticFilePath(req.file.filename)
-//   if(req.file?.fieldname == "registration") data.registration = staticFilePath(req.file.filename)
 
-
-//   DB.query(adminQuery.addDriverSales(data),(err,results)=>{
-//     if(err) return next(new AppError(err.message,400))
-//     return res.json({"status":"Driver Successfully Registered"})
-//   })
-// })
 const activeDriver = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.activeDriver(req.query.status),(err,drivers)=>{
     if(err) return next(new AppError(err.message,400))
@@ -154,7 +141,7 @@ const driverOrderDetail = catchAsync(async (req,res,next)=>{
 })
 // getaccounting
 const accounting = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.accountingdrivers(), (err, results) => {
+  DB.query(adminQuery.accounting(), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     return res.json(results);
   });

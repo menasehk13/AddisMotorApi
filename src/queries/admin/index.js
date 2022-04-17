@@ -92,44 +92,6 @@ export function activeDriver(status){
   `
 }
 
-export function addnewdriver(data) {
-  return `
-    INSERT INTO
-        cardetail
-    Set
-        productionyear='${data.year}'
-        model='${data.model}',
-        licenceplate='${data.licenceplate}',
-        color='${data.color}';
-
-    INSERT INTO
-        DRIVER
-    SET
-        firsrname='${data.firstname}',
-        lastname='${data.lastname},
-        photo='${data.picture}',
-        gender='${data.gender},
-        phonenumber='${data.phonenumber}',
-        email='${data.email}',
-        serviceid='${data.serviceid}',
-        activeid=1,
-        addeddate='${Date.now()}',
-        status='missing'
-        cardetailid=LAST_INSERT_ID()
-      ;
-    `;
-}
-export function addnewdocument(data) {
-  return `
-      UPDATE
-       driver
-      SET
-       userdocuments='${data.userdocument}',
-       cardocuments='${data.cardocument}'
-      WHERE
-       driverid=${data.driverid}  
-    `;
-}
 
 export function driverdetail(id) {
   return `
@@ -239,16 +201,20 @@ export function sendDriver(data) {
 }
 export function accounting() {
   return `
-     SELECT
-      Count(id) as drivers
-      FROM
-       driver
-      OrderBy addeddate;
-    SELECT
-     Count(id) as users
-    FROM
-     dser
-     OrderBy date;   
+  SELECT
+	MONTHNAME(driver.addeddate) AS Month,
+	count(driver.id) drivers
+FROM
+	driver
+GROUP BY
+	Month
+ORDER BY
+	FIELD(MONTH, 'January', 'February', 'March','April','May','June','July','Augest','September','October' 'December');
+  
+  SELECT 
+  count(driver.id) as drivers
+  from 
+  driver;
     `;
 }
 export function accountingdrivers() {
@@ -356,7 +322,7 @@ function addDriverDocumentSales(id,data) {
   driverdocument.driverlicence="${data.licencepic}",
   driverdocument.Inscurance="${data.insurancepic}",
   driverdocument.driverid = ${id},
-  driverdocument.registration = "${data.registration}";
+  driverdocument.registration = "${data.registration}";   
     `
 }
 
@@ -374,7 +340,7 @@ FROM
 	JOIN service ON service.serviceid = driver.serviceid
   JOIN cardetail on cardetail.id = driver.cardetailid
 WHERE
-	service.servicetype = "${data.service}"
+	service.servicetype   = "${data.service}"
 	AND driver.status = "approved"
 HAVING
 	distance < 10
@@ -432,8 +398,6 @@ export default {
   dashboard,
   drivers,
   users,
-  addnewdriver,
-  addnewdocument,
   driverdetail,
   driverdetailorder,
   driverdetaildocument,
