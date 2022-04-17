@@ -26,10 +26,13 @@ app.use(express.urlencoded({extended:false}))
 const server = http.createServer(app);
 
 const io = new Server(server,
-  {cors:{
+  { cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+    credentials: true,
+    transports: ['websocket', 'polling'],
+},
+allowEIO3: true
 });
 
 let sock;
