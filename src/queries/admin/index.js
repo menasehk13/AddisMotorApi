@@ -203,7 +203,7 @@ export function accounting() {
   return `
   SELECT
 	MONTHNAME(driver.addeddate) AS Month,
-	count(driver.id) drivers
+	count(driver.id) as  drivers
 FROM
 	driver
 GROUP BY
