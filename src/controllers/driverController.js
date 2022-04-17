@@ -209,6 +209,15 @@ const updatePassword = catchAsync(async(req,res,next)=>{
     return res.json({"status":"updated"})
   })
 })
+// update notification controll 
+const updateNotification = catchAsync(async (req,res,next)=>{
+  const id = req.query.id
+  const notificationid = req.query.notificationid
+  DB.query(driverQuery.updateNotification(id,notificationid),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({"status":"updatedNotification"})
+  })
+})
 export default {
   getDrivers,
   getDriver,
@@ -228,5 +237,6 @@ export default {
   carDetail,
   driverstatus,
   checkUserexsist,
-  updatePassword
+  updatePassword,
+  updateNotification
 };

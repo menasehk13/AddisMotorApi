@@ -258,6 +258,18 @@ password = "${password}"
 WHERE id = ${id};
   `
 }
+// update notification id 
+function updateNotification(id,notificationid){
+  return `
+UPDATE
+driver
+SET
+driver.notificationid = "${notificationid}"
+WHERE
+driver.id = ${id};
+  `
+}
+
 export default {
   getdriver,
   getdrivers,
@@ -279,5 +291,6 @@ export default {
   driverStatus,
   currencyView,
   checkUser,
-  updatePassword
+  updatePassword,
+  updateNotification
 };

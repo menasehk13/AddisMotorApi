@@ -123,6 +123,7 @@ process.on("uncaughtException", (err) => {
 });
 
 app.get("/", (req, res) => {
+  
   res.send("API>>>> CONNECTED>:");
 });
 
