@@ -206,15 +206,8 @@ export function accounting() {
 	count(driver.id) as  drivers
 FROM
 	driver
-GROUP BY
-	Month
-ORDER BY
-	FIELD(MONTH, 'January', 'February', 'March','April','May','June','July','Augest','September','October' 'December');
-  
-  SELECT 
-  count(driver.id) as drivers
-  from 
-  driver;
+GROUP BY Month
+ORDER BY FIELD(MONTH, 'January', 'February', 'March','April','May','June','July','Augest','September','October' 'December');
     `;
 }
 export function accountingdrivers() {
