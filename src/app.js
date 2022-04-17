@@ -12,6 +12,7 @@ import path from "path";
 import userQuery from "./queries/user";
 import driverQuery from "./queries/driver";
 import bodyParser from "body-parser";
+import Notification from "./utils/notification";
 
 const app = express();
 
@@ -123,7 +124,7 @@ process.on("uncaughtException", (err) => {
 });
 
 app.get("/", (req, res) => {
-  
+  Notification("THIS IS IT!","HOW ARE YOU DOING","a3e04666-8b8a-4d06-bf81-52d53e392adc")
   res.send("API>>>> CONNECTED>:");
 });
 
