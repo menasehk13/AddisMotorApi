@@ -161,7 +161,7 @@ export function journey(){
 function payment(){
   return `
   INSERT INTO paymnet 
-SET 
+    SET 
   ?
  ;
   `

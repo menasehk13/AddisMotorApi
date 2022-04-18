@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { staticFilePath } from "../helpers/utils";
 import { json } from 'express/lib/response';
+import {NotificationAll} from '../utils/notification'
 
 const DB = connectDB();
 
@@ -190,6 +191,7 @@ const marketing = catchAsync(async (req, res, next) => {
 const marketingCoupon = catchAsync(async (req, res, next) => {
   DB.query(adminQuery.addmarketing(req.body), (err, results) => {
     if (err) return next(new AppError(err.message, 400));
+    NotificationAll(req.body.title,req.body.discription)
     return res.json(results);
   });
 });
@@ -233,6 +235,15 @@ const updateComplaints = catchAsync(async (req, res, next) => {
     }
   );
 });
+// rating view driver id 
+const Rating = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.ratingReview(req.query.id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json(results)
+  })
+})
+
+
 
 export default {
   dashboard,
@@ -260,5 +271,6 @@ export default {
   selectDispatch,
   currentAdmin,
   addDriverweb,
-  addDriverDocuments
+  addDriverDocuments,
+  Rating
 };

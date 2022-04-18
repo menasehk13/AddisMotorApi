@@ -18,3 +18,20 @@ export default async function Notification(title,message,id){
         new AppError(e.message, 404);
     }
 }
+
+export default async function NotificationAll(title,message){
+    const notification = {
+        heading:{
+            "en":title
+        },
+        contents :{
+            'en':message
+        },
+        included_segments: ["Subscribed Users"]
+    }
+    try {
+        await Clients.createNotification(notification);
+      } catch (e) {
+          new AppError(e.message, 404);
+      }
+}

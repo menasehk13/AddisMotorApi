@@ -115,6 +115,21 @@ export function driverdetail(id) {
   WHERE driver.id = ${id};
     `;
 }
+
+function ratingReview(id){
+  return `
+  SELECT 
+ratingandreview.rating,
+ratingandreview.review,
+ratingandreview.date,
+user.firstname
+
+from ratingandreview
+left outer JOIN user on ratingandreview.userid = user.id
+WHERE ratingandreview.driverid=${id}; 
+  `
+}
+
 export function driverdetailorder(id) {
   return `
   SELECT 
@@ -257,6 +272,8 @@ export function marketingcoupon() {
 export function addmarketing(data) {
   return `
         INSERT INTO
+        marketing
+        SET
          title='${data.title}',
          discription='${data.discription}',
          dateadded='${Date.now()}',
@@ -413,5 +430,6 @@ export default {
   dispatchService,
  addDriverSales,
  addDriverDocumentSales,
- addNewUser
+ addNewUser,
+ ratingReview
 };

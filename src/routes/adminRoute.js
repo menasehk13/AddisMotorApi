@@ -22,6 +22,7 @@ router
   router.route("/dispatch/select").post(adminController.selectDispatch)
   router.route("/driver/order").get(adminController.driverOrder);
   router.route("/driver/order/detail").get(adminController.driverOrderDetail)
+  router.route("/driver/order/review").get(adminController.Rating)
 router.route("/driver/:id").get(adminController.driverDocument);
 
 
@@ -36,7 +37,7 @@ router
   .post(adminController.addAccountingService);
 
 router.route("/marketing").get(adminController.marketing);
-router.route("/marketing/coupon").get(adminController.marketingCoupon);
+router.route("/marketing/coupon").post(adminController.marketingCoupon);
 
 router.route("/user/compliants").get(adminController.userComplaints);
 router

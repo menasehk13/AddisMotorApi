@@ -161,7 +161,7 @@ export function history(userid) {
 export function totaldistancePrice(serviceid,distance){
   return `
   SELECT 
-    price.price + ${distance} + price.bookingfee + price.initialprice as totalprice
+    (price.price * ${distance}) + price.bookingfee + price.initialprice as totalprice
       from 
     carservicerelation
 
