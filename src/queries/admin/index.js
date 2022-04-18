@@ -271,14 +271,12 @@ export function marketingcoupon() {
 
 export function addmarketing(data) {
   return `
-        INSERT INTO
-        marketing
-        SET
-         title='${data.title}',
-         discription='${data.discription}',
-         dateadded='${Date.now()}',
-         status='active',
-         adminid='${data.id}'
+  INSERT INTO 
+  marketing 
+  SET
+  ?
+  ;
+  
     `;
 }
 export function complaints() {
