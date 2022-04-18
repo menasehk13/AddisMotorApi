@@ -2,7 +2,7 @@ import * as OneSignal from 'onesignal-node';
 import AppError from '../helpers/appError'
 const Clients = new OneSignal.Client("a1c713b1-cbe1-4a6a-b898-6be47bc7cdeb","ZWMwODljNTctOGNkZi00OGFmLThkNjUtMzZmYzNhNDQ3NTRk")
 
-export default async function Notification(title,message,id){
+export  async function Notification(title,message,id){
     const notification = {
         headings:{
         'en':title
@@ -19,7 +19,7 @@ export default async function Notification(title,message,id){
     }
 }
 
-export default async function NotificationAll(title,message){
+export  async function NotificationAll(title,message){
     const notification = {
         heading:{
             "en":title
