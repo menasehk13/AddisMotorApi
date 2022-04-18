@@ -189,7 +189,7 @@ const marketing = catchAsync(async (req, res, next) => {
 });
 // add coupun
 const marketingCoupon = catchAsync(async (req, res, next) => {
-  DB.query(adminQuery.addmarketing(req.body), (err, results) => {
+  DB.query(adminQuery.addmarketing(),req.body, (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     NotificationAll(req.body.title,req.body.discription)
     return res.json(results);

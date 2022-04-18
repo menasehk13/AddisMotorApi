@@ -269,7 +269,7 @@ export function marketingcoupon() {
     `;
 }
 
-export function addmarketing(data) {
+export function addmarketing() {
   return `
   INSERT INTO 
   marketing 
