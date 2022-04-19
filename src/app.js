@@ -64,12 +64,8 @@ io.on("connection", async (socket) => {
         socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("userfound", data);
         socket.on("rideaccepted", async (data) => {
           const result = (await JSON.parse(data)) || data;
-          console.log(result)
-          const unlucky = { status: "taken" };
           drivers.splice( drivers.findIndex((item) => item.id === result.driverid),1);
           socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-          io.emit("driverfound", result);
-          console.log(result);
         });
       } else {
         return console.log("No User Found");
@@ -79,8 +75,10 @@ io.on("connection", async (socket) => {
   socket.on("rideaccepted", async (data) => {
     const result = (await JSON.parse(data)) || data;
     console.log(result)
-    const unlucky = { status: "taken" };
-    socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+    DB.query(userQuery.getuser(result.userid),(err,results)=>{
+      if(err) next(new AppError(err.message,404))
+      console.log(results)
+    })
     io.emit("driverfound", result);
     console.log(result);
   });
