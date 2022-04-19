@@ -64,16 +64,16 @@ io.on("connection", async (socket) => {
         socket.broadcast
           .to(drivers.map((driver) => driver.socketid))
           .emit("userfound", data);
-        socket.on("rideaccepted", (data) => {
-          const result = JSON.parse(data) || data;
-          // send it to the drivers who are un lucky
-          const unlucky = { status: "taken" };
-          drivers.splice(
-            drivers.findIndex((item) => item.id === result.driverid),1);
-          socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-          socket.broadcast.to(result.socketid).emit("driverfound", result);
-          console.log(result);
-        });
+        // socket.on("rideaccepted", (data) => {
+        //   const result = JSON.parse(data) || data;
+        //   // send it to the drivers who are un lucky
+        //   const unlucky = { status: "taken" };
+        //   drivers.splice(
+        //     drivers.findIndex((item) => item.id === result.driverid),1);
+        //   socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+        //   socket.broadcast.to(result.socketid).emit("driverfound", result);
+        //   console.log(result);
+        // });
       } else {
         return console.log("No User Found");
       }
