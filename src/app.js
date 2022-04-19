@@ -67,13 +67,8 @@ io.on("connection", async (socket) => {
           // send it to the drivers who are un lucky
           const unlucky = { status: "taken" };
           drivers.splice(
-            drivers.findIndex((item) => item.id === result.driverid),
-            1
-          );
+            drivers.findIndex((item) => item.id === result.driverid),1);
           socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-          DB.query(userQuery.getuser(result.userid),(err,results)=>{
-              console.log(results)
-          })
           io.emit("driverfound", result);
           console.log(result);
         });
