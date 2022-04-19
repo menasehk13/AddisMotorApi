@@ -75,11 +75,12 @@ io.on("connection", async (socket) => {
   });
   socket.on("rideaccepted", async (data) => {
     const result = (await JSON.parse(data)) || data;
-    console.log(result)
+    console.log(result.socketid)
     io.to(result.socketid).emit("driverfound", result);   
   });
   socket.on("journeystarted", (data) => {
-    const result = JSON.parse(data);
+    const result = JSON.parse(data) || data;
+    console.log(result)
     io.to(result.socketid).emit("started", result);
   });
 
