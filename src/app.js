@@ -73,8 +73,8 @@ io.on("connection", async (socket) => {
       // });
     });
   });
-  socket.on("rideaccepted", async (data) => {
-    const result = (await JSON.parse(data)) || data;
+  socket.on("rideaccepted",(data) => {
+    const result = JSON.parse(data) || data;
     console.log(result.socketid)
     socket.broadcast.to(result.socketid).emit("newdriverfound", result);   
   });
