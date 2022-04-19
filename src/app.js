@@ -62,8 +62,8 @@ io.on("connection", async (socket) => {
       console.log(drivers);
       if (drivers.length > 0) {
         socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("userfound", data);
-        socket.on("rideaccepted", (data) => {
-          const result = JSON.parse(data) || data;
+        socket.on("rideaccepted", async (data) => {
+          const result = (await JSON.parse(data)) || data;
           console.log(result)
           const unlucky = { status: "taken" };
           drivers.splice( drivers.findIndex((item) => item.id === result.driverid),1);
