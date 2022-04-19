@@ -76,10 +76,7 @@ io.on("connection", async (socket) => {
   socket.on("rideaccepted", async (data) => {
     const result = (await JSON.parse(data)) || data;
     console.log(result)
-    DB.query(userQuery.getuser(result.userid),(err,results)=>{
-    io.to(results.socketid).emit("driverfound", result);
- })
-   
+    io.to(result.socketid).emit("driverfound", result);   
   });
   socket.on("journeystarted", (data) => {
     const result = JSON.parse(data);
