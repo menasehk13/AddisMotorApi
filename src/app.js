@@ -62,25 +62,25 @@ io.on("connection", async (socket) => {
       console.log(drivers);
       if (drivers.length > 0) {
         socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("userfound", data);
-        socket.on("rideaccepted", async (data) => {
-          const result = (await JSON.parse(data)) || data;
-          drivers.splice( drivers.findIndex((item) => item.id === result.driverid),1);
-          socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-        });
       } else {
         return console.log("No User Found");
       }
+      socket.on("rideaccepted", async (data) => {
+        const result = (await JSON.parse(data)) || data;
+        console.log({"data":result})
+        drivers.splice( drivers.findIndex((item) => item.id === result.driverid),1);
+        socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+      });
     });
   });
   socket.on("rideaccepted", async (data) => {
     const result = (await JSON.parse(data)) || data;
     console.log(result)
     DB.query(userQuery.getuser(result.userid),(err,results)=>{
-      if(err) next(new AppError(err.message,404))
-      console.log(results)
+      io.to(results.socketid).emit("driverfound", result);
+      console.log(result);
     })
-    io.emit("driverfound", result);
-    console.log(result);
+   
   });
   socket.on("journeystarted", (data) => {
     const result = JSON.parse(data);
