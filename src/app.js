@@ -12,7 +12,7 @@ import path from "path";
 import userQuery from "./queries/user";
 import driverQuery from "./queries/driver";
 import bodyParser from "body-parser";
-import Notification from "./utils/notification";
+import {Notification} from "./utils/notification";
 const app = express();
 
 app.use(cors());
@@ -64,10 +64,9 @@ io.on("connection", async (socket) => {
         socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("userfound", data);
         socket.on("rideaccepted", (data) => {
           const result = JSON.parse(data) || data;
-           console.log(result)
+          console.log(result)
           const unlucky = { status: "taken" };
-          drivers.splice(
-            drivers.findIndex((item) => item.id === result.driverid),1);
+          drivers.splice( drivers.findIndex((item) => item.id === result.driverid),1);
           socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
           io.emit("driverfound", result);
           console.log(result);
