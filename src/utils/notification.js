@@ -1,5 +1,5 @@
 import * as OneSignal from 'onesignal-node';
-import AppError from '../helpers/appError'
+import AppError from '../helpers/appError';
 const Clients = new OneSignal.Client("a1c713b1-cbe1-4a6a-b898-6be47bc7cdeb","ZWMwODljNTctOGNkZi00OGFmLThkNjUtMzZmYzNhNDQ3NTRk")
 
 export  async function Notification(title,message,id){
@@ -21,17 +21,18 @@ export  async function Notification(title,message,id){
 
 export  async function NotificationAll(title,message){
     const notification = {
-        heading:{
-            "en":title
+        headings:{
+        'en':title
         },
-        contents :{
-            'en':message
+        contents:{
+            'en': message,
         },
-        included_segments: ["Subscribed Users"]
+        included_segments: ["Subscribed Users"],
+        large_icon: ["https://robohash.org/sedaccusamusdistinctio.png?size=50x50&set=set1"]
     }
-    try {
-        await Clients.createNotification(notification);
-      } catch (e) {
-          new AppError(e.message, 404);
-      }
+     try {
+      await Clients.createNotification(notification);
+    } catch (e) {
+        new AppError(e.message, 404);
+    }
 }

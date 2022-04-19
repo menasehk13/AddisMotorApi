@@ -118,15 +118,16 @@ export function driverdetail(id) {
 
 function ratingReview(id){
   return `
-  SELECT 
-ratingandreview.rating,
-ratingandreview.review,
-ratingandreview.date,
-user.firstname
-
-from ratingandreview
-left outer JOIN user on ratingandreview.userid = user.id
-WHERE ratingandreview.driverid=${id}; 
+  SELECT
+	ratingandreview.rating,
+	ratingandreview.review,
+	ratingandreview.date,
+	user.firstname
+FROM
+	ratingandreview
+	LEFT OUTER JOIN user ON ratingandreview.userid = user.id
+WHERE
+	ratingandreview.driverid = ${id}; 
   `
 }
 

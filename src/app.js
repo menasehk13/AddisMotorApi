@@ -13,7 +13,6 @@ import userQuery from "./queries/user";
 import driverQuery from "./queries/driver";
 import bodyParser from "body-parser";
 import Notification from "./utils/notification";
-
 const app = express();
 
 app.use(cors());
@@ -62,9 +61,7 @@ io.on("connection", async (socket) => {
       if (err) console.log(err.message);
       console.log(drivers);
       if (drivers.length > 0) {
-        socket.broadcast
-          .to(drivers.map((driver) => driver.socketid))
-          .emit("userfound", data);
+        socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("userfound", data);
         socket.on("rideaccepted", (data) => {
           const result = JSON.parse(data) || data;
           // send it to the drivers who are un lucky
@@ -73,9 +70,10 @@ io.on("connection", async (socket) => {
             drivers.findIndex((item) => item.id === result.driverid),
             1
           );
-          socket.broadcast
-            .to(drivers.map((driver) => driver.socketid))
-            .emit("alreadytaken", unlucky);
+          socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+          DB.query(userQuery.getuser(result.userid),(err,results)=>{
+              console.log(results)
+          })
           io.emit("driverfound", result);
           console.log(result);
         });

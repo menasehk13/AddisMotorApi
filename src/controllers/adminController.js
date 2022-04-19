@@ -239,6 +239,7 @@ const updateComplaints = catchAsync(async (req, res, next) => {
 const Rating = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.ratingReview(req.query.id),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
+    console.log(err)
     return res.json(results)
   })
 })
