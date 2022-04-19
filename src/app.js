@@ -65,12 +65,12 @@ io.on("connection", async (socket) => {
       } else {
         return console.log("No User Found");
       }
-      socket.on("rideaccepted", async (data) => {
-        const result = (await JSON.parse(data)) || data;
-        console.log({"data":result})
-        drivers.splice( drivers.findIndex((item) => item.id === result.driverid),1);
-        socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-      });
+      // socket.on("rideaccepted", async (data) => {
+      //   const result = (await JSON.parse(data)) || data;
+      //   console.log({"data":result})
+      //   drivers.splice( drivers.findIndex((item) => item.id === result.driverid),1);
+      //   socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+      // });
     });
   });
   socket.on("rideaccepted", async (data) => {
