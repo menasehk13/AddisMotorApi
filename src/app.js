@@ -76,6 +76,14 @@ io.on("connection", async (socket) => {
       }
     });
   });
+  socket.on("rideaccepted", async (data) => {
+    const result = (await JSON.parse(data)) || data;
+    console.log(result)
+    const unlucky = { status: "taken" };
+    socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+    io.emit("driverfound", result);
+    console.log(result);
+  });
   socket.on("journeystarted", (data) => {
     const result = JSON.parse(data);
     io.to(result.socketid).emit("started", result);
