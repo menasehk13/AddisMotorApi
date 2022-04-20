@@ -64,8 +64,7 @@ io.on("connection", async (socket) => {
       console.log(drivers);
       if (drivers.length > 0) {
         socket.broadcast
-          .to(drivers.map((driver) => driver.socketid))
-          .emit("userfound", data);
+          .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
       } else {
         return console.log("No User Found");
       }
