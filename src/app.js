@@ -63,7 +63,7 @@ io.on("connection",(socket) => {
       if (err) console.log(err.message);
       console.log(drivers);
       if (drivers.length > 0) {
-        driver= drivers.splice()
+        driver= drivers
         console.log(driver)
         socket.broadcast
           .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
