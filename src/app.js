@@ -74,10 +74,14 @@ io.on("connection", async (socket) => {
   });
   socket.on("rideaccepted",(data) => {
     const result = JSON.parse(data) || data;
+    if(driver !== null){
       var Drivers = driver.slice()
-
+      console.log({"drivers":Drivers})
+    }else{
+      console.log("EMPTY ARRAY")
+    }
       const unlucky = { status: "taken" };
-      console.log(Drivers)
+      
       driver.splice(driver.findIndex((item) => item.id === result.driverid),1);
       socket.broadcast.to(driver.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
       socket.broadcast.to(result.socketid).emit("newdriverfound", result);  
