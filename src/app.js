@@ -63,6 +63,7 @@ io.on("connection",(socket) => {
       console.log(drivers);
       if (drivers.length > 0) {
         driver= drivers.splice()
+        console.log(driver)
         socket.broadcast
           .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
       } else {
@@ -73,7 +74,7 @@ io.on("connection",(socket) => {
   socket.on("rideaccepted",(data) => {
     const result = JSON.parse(data) || data;
     if(driver !== null){
-      console.log({"drivers":driver})
+      console.log({"drivers....":driver})
     }else{
       console.log("EMPTY ARRAY")
     }
