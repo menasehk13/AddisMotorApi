@@ -68,6 +68,9 @@ io.on("connection", async (socket) => {
       } else {
         return console.log("No User Found");
       }
+      socket.on("test1",(msg)=>{
+        console.log(msg)
+      })
       socket.on("rideaccepted", (data) => {
         const result = JSON.parse(data) || data;
         console.log(result)
