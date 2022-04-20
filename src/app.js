@@ -57,9 +57,9 @@ io.on("connection", async (socket) => {
     // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   });
   socket.on("data", async (d) => {
-    const data = (await JSON.parse(d)) || d;
-    console.log(data)
-    DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
+    const datas = (await JSON.parse(d)) || d;
+    console.log(datas)
+    DB.query(userQuery.requestDriver(datas), (err, drivers, fields) => {
       if (err) console.log(err.message);
       console.log(drivers);
       if (drivers.length > 0) {
