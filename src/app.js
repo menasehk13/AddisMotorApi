@@ -72,17 +72,12 @@ io.on("connection",(socket) => {
       }
     });
   });
-  socket.on("rideaccepted",(data) => {
-    const result = JSON.parse(data) || data;
-    if(driver !== null){
-      console.log({"drivers....":driver})
-    }else{
-      console.log("EMPTY ARRAY")
-    }
+  socket.on("rideaccepted", async (data) => {
+    const result = await JSON.parse(data) || data;
       const unlucky = { status: "taken" };
-      
       driver.splice(driver.findIndex((item) => item.id === result.driverid),1);
       socket.broadcast.to(driver.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+      console.log({"drivers....":driver})
       socket.broadcast.to(result.socketid).emit("newdriverfound", result);  
   });
   socket.on("journeystarted", (data) => {
