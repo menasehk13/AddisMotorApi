@@ -37,7 +37,7 @@ const io = new Server(server, {
 });
 
 let sock;
-io.on("connection", async (socket) => {
+io.on("connection",(socket) => {
   sock = socket;
 
   socket.on("message", (message) => {});
@@ -57,8 +57,8 @@ io.on("connection", async (socket) => {
     // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   });
  let driver = []
-  socket.on("data", async (d) => {
-    const datas = (await JSON.parse(d)) || d;
+  socket.on("data", (d) => {
+    const datas = JSON.parse(d) || d;
     console.log(datas)
     DB.query(userQuery.requestDriver(datas), (err, drivers, fields) => {
       if (err) console.log(err.message);
