@@ -68,25 +68,25 @@ io.on("connection", async (socket) => {
       } else {
         return console.log("No User Found");
       }
-      socket.on("test1",(msg)=>{
-        console.log(msg)
-      })
-      socket.on("rideaccepted", (data) => {
-        const result = JSON.parse(data) || data;
-        console.log(result)
-        const unlucky = { status: "taken" };
-        drivers.splice(drivers.findIndex((item) => item.id === result.driverid),1);
-        socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-        socket.broadcast.to(result.socketid).emit("newdriverfound", result);
-        console.log(drivers)
-      });
+      // socket.on("test1",(msg)=>{
+      //   console.log(msg)
+      // })
+      // socket.on("rideaccepted", (data) => {
+      //   const result = JSON.parse(data) || data;
+      //   console.log(result)
+      //   const unlucky = { status: "taken" };
+      //   drivers.splice(drivers.findIndex((item) => item.id === result.driverid),1);
+      //   socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+      //   socket.broadcast.to(result.socketid).emit("newdriverfound", result);
+      //   console.log(drivers)
+      // });
     });
   });
-  // socket.on("rideaccepted",(data) => {
-  //   const result = JSON.parse(data) || data;
-  //   console.log(result.socketid)
-  //   socket.broadcast.to(result.socketid).emit("newdriverfound", result);   
-  // });
+  socket.on("rideaccepted",(data) => {
+    const result = JSON.parse(data) || data;
+    console.log({"results":result})
+    socket.broadcast.to(result.socketid).emit("newdriverfound", result);   
+  });
   socket.on("journeystarted", (data) => {
     const result = JSON.parse(data) || data;
     console.log(result)
