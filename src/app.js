@@ -65,6 +65,7 @@ io.on("connection", async (socket) => {
       console.log(drivers);
       if (drivers.length > 0) {
         driver=drivers
+        console.log(driver)
         socket.broadcast
           .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
       } else {
@@ -88,9 +89,9 @@ io.on("connection", async (socket) => {
     const result = JSON.parse(data) || data;
         console.log(result)
       const unlucky = { status: "taken" };
+      console.log(driver)
       driver.splice(driver.findIndex((item) => item.id === result.driverid),1);
       socket.broadcast.to(driver.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-      console.log(driver)
       socket.broadcast.to(result.socketid).emit("newdriverfound", result);  
   });
   socket.on("journeystarted", (data) => {
