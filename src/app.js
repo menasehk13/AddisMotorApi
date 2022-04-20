@@ -37,6 +37,7 @@ const io = new Server(server, {
 });
 
 let sock;
+let driver;
 io.on("connection",(socket) => {
   sock = socket;
 
@@ -54,7 +55,7 @@ io.on("connection",(socket) => {
   socket.on("test", (msg) => {
     // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   });
- let driver = []
+
   socket.on("data", (d) => {
     const datas = JSON.parse(d) || d;
     console.log(datas)
