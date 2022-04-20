@@ -40,8 +40,6 @@ let sock;
 io.on("connection",(socket) => {
   sock = socket;
 
-  socket.on("message", (message) => {});
-
   // socket.on("")
   socket.on("dispatchDriver", (data) => {
     console.log(data);
@@ -64,7 +62,7 @@ io.on("connection",(socket) => {
       if (err) console.log(err.message);
       console.log(drivers);
       if (drivers.length > 0) {
-        driver=drivers
+        driver= drivers.splice()
         socket.broadcast
           .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
       } else {
@@ -75,8 +73,7 @@ io.on("connection",(socket) => {
   socket.on("rideaccepted",(data) => {
     const result = JSON.parse(data) || data;
     if(driver !== null){
-      var Drivers = driver.slice()
-      console.log({"drivers":Drivers})
+      console.log({"drivers":driver})
     }else{
       console.log("EMPTY ARRAY")
     }
