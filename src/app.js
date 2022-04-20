@@ -56,7 +56,7 @@ io.on("connection", async (socket) => {
   socket.on("test", (msg) => {
     // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   });
- let  driver = []
+ let driver = []
   socket.on("data", async (d) => {
     const datas = (await JSON.parse(d)) || d;
     console.log(datas)
@@ -65,31 +65,19 @@ io.on("connection", async (socket) => {
       console.log(drivers);
       if (drivers.length > 0) {
         driver=drivers
-        console.log(driver)
         socket.broadcast
           .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
       } else {
         return console.log("No User Found");
       }
-      // socket.on("test1",(msg)=>{
-      //   console.log(msg)
-      // })
-      // socket.on("rideaccepted", (data) => {
-      //   const result = JSON.parse(data) || data;
-      //   console.log(result)
-      //   const unlucky = { status: "taken" };
-      //   drivers.splice(drivers.findIndex((item) => item.id === result.driverid),1);
-      //   socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-      //   socket.broadcast.to(result.socketid).emit("newdriverfound", result);
-      //   console.log(drivers)
-      // });
     });
   });
   socket.on("rideaccepted",(data) => {
     const result = JSON.parse(data) || data;
-        console.log(result)
+      var Drivers = driver.slice()
+
       const unlucky = { status: "taken" };
-      console.log(driver)
+      console.log(Drivers)
       driver.splice(driver.findIndex((item) => item.id === result.driverid),1);
       socket.broadcast.to(driver.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
       socket.broadcast.to(result.socketid).emit("newdriverfound", result);  
