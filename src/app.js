@@ -56,30 +56,31 @@ io.on("connection", async (socket) => {
   socket.on("test", (msg) => {
     // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
   });
-  socket.on("data",(d) =>{
-    const data = JSON.parse(d) || d
+  socket.on("data", async (d) => {
+    const data = (await JSON.parse(d)) || d;
+    console.log(data)
     DB.query(userQuery.requestDriver(data), (err, drivers, fields) => {
-      if(err) console.log(err.message)
-     console.log(drivers)
-      if(drivers.length>0){
-        console.log(drivers)
-        io.to(drivers.map(driver => driver.socketid)).emit("userfound",data)
-      }else{
-        return console.log("No User Found")
+      if (err) console.log(err.message);
+      console.log(drivers);
+      if (drivers.length > 0) {
+        socket.broadcast
+          .to(drivers.map((driver) => driver.socketid))
+          .emit("userfound", data);
+        socket.on("rideaccepted", (data) => {
+          const result = JSON.parse(data) || data;
+          // send it to the drivers who are un lucky
+          const unlucky = { status: "taken" };
+          drivers.splice(
+            drivers.findIndex((item) => item.id === result.driverid),1);
+          socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+          socket.broadcast.to(result.socketid).emit("driverfound", result);
+          console.log(result);
+        });
+      } else {
+        return console.log("No User Found");
       }
-     
-    })
-  })
-      // socket.on("rideaccepted", (data) => {
-      //     const result = JSON.parse(data) || data;
-      //     // send it to the drivers who are un lucky
-      //     const unlucky = { status: "taken" };
-      //     drivers.splice(
-      //       drivers.findIndex((item) => item.id === result.driverid),1);
-      //     socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-      //     socket.broadcast.to(result.socketid).emit("driverfound", result);
-      //     console.log(result);
-      //   });
+    });
+  });
   // socket.on("rideaccepted",(data) => {
   //   const result = JSON.parse(data) || data;
   //   console.log(result.socketid)
