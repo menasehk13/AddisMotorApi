@@ -8,8 +8,8 @@ const router = Router();
 
 router.get("/me", adminController.currentAdmin)
 router.route("/addDriver").post(upload.single("profile"),adminController.addDriverweb)
-router.route("/addDriverDocuments").post(upload.fields([{name: "licencepic", maxCount:1},{name:"insurancepic", maxCount:1},{name:"registration", maxCount:1}]),adminController.addDriverDocuments)
-
+router.route("/addDriverDocuments").post(upload.fields([{name: "licencepic", maxCount:1},{name:"insurancepic", maxCount:1},{name:"registration", maxCount:1},{name:"criminal", maxCount:1}]),adminController.addDriverDocuments)
+router.route("/DocumentList").get(adminController.DocumentList)
 router.route("/").get(adminController.getAdmins);
 router.route("/admin/:email").get(adminController.getAdmin);
 router

@@ -296,8 +296,7 @@ export function addDriverSales(data){
   return `
   INSERT INTO 
 cardetail 
-SET
-
+  SET
 cardetail.productionyear="${data.year}",
 cardetail.model="${data.model}",
 cardetail.color="${data.color}",
@@ -305,21 +304,13 @@ cardetail.licenseplate="${data.licenceplate}"
 ;
 `
 }
-function addNewUser(data,id){
+function addNewUserCar(driverid,id){
 return `
-INSERT INTO 
-driver 
+update 
+driver
 SET
-driver.firstname="${data.firstname}",
-driver.lastname="${data.lastname}",
-driver.email="${data.email}",
-driver.phonenumber="${data.phone}",
-driver.serviceid= 4,
-driver.cardetailid =${id},
-driver.status="pending",
-driver.activeid=1,
-driver.gender="${data.gender}",
-driver.photo="${data.photo}"
+driver.cardetailid=${id}
+WHERE driver.id = ${driverid};
 ;
 `
 }
@@ -331,7 +322,8 @@ function addDriverDocumentSales(id,data) {
   driverdocument.driverlicence="${data.licencepic}",
   driverdocument.Inscurance="${data.insurancepic}",
   driverdocument.driverid = ${id},
-  driverdocument.registration = "${data.registration}";   
+  driverdocument.registration = "${data.registration}"
+  driverdocument.criminalclearance ="${data.criminal};   
     `
 }
 
@@ -398,6 +390,20 @@ JOIN searchradius on searchradius.searchradiusid = carservicerelation.searchradi
 JOIN price on price.priceid = carservicerelation.priceid;
   `
 }
+// view data of Driver
+
+function DriverDocumentList(id){
+  return `
+  SELECT 
+driverdocument.registration,
+driverdocument.Inscurance,
+driverdocument.driverlicence,
+driverdocument.criminalclearance
+from 
+driverdocument 
+WHERE driverdocument.driverid = ${id};
+  `
+}
 
 export default {
   getadmin,
@@ -429,6 +435,7 @@ export default {
   dispatchService,
  addDriverSales,
  addDriverDocumentSales,
- addNewUser,
- ratingReview
+ addNewUserCar,
+ ratingReview,
+ DriverDocumentList
 };

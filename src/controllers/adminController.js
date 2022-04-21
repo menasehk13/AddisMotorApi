@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { staticFilePath } from "../helpers/utils";
 import { json } from 'express/lib/response';
 import {NotificationAll} from '../utils/notification'
+import { NetworkContext } from "twilio/lib/rest/supersim/v1/network";
 
 const DB = connectDB();
 
@@ -39,9 +40,9 @@ const addDriverweb = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.addDriverSales(data),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
       let id = results.insertId
-      DB.query(adminQuery.addNewUser(data,id),(err,results)=>{
+      DB.query(adminQuery.addNewUser(req.query.driverid,id),(err,results)=>{
         if(err) return next(new AppError(err.message,400))
-        res.json({"status":"user registered successfully"})
+        res.json({"status":"Driver Car registered successfully"})
       })
   })
 })
@@ -55,6 +56,7 @@ const addDriverDocuments = catchAsync(async (req, res, next) => {
  data.licencepic= staticFilePath(req.files["licencepic"][0].filename)
 data.insurancepic = staticFilePath(req.files["insurancepic"][0].filename)
 data.registration = staticFilePath(req.files["registration"][0].filename)
+data.criminal = staticFilePath(req.files["criminal"][0].filename)
   DB.query(adminQuery.addDriverDocumentSales(id,data),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
     return res.json({"status":"Driver Successfully Registered"})
@@ -243,9 +245,14 @@ const Rating = catchAsync(async (req,res,next)=>{
     return res.json(results)
   })
 })
+// driver document lists
 
-
-
+const DocumentList = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.DriverDocumentList(req.query.id),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    return res.json(results)
+  })
+})
 export default {
   dashboard,
   getAdmin,
@@ -273,5 +280,6 @@ export default {
   currentAdmin,
   addDriverweb,
   addDriverDocuments,
-  Rating
+  Rating,
+  DocumentList
 };
