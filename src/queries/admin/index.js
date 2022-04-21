@@ -323,8 +323,7 @@ function addDriverDocumentSales(id,data) {
   driverdocument.Inscurance="${data.insurancepic}",
   driverdocument.driverid = ${id},
   driverdocument.registration = "${data.registration}",
-  driverdocument.criminalclearance ="${data.criminal}
-  ;   
+  driverdocument.criminalclearance ="${data.criminal}";   
     `
 }
 
