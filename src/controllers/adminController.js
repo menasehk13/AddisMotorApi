@@ -14,8 +14,9 @@ const DB = connectDB();
 
 // get users
 const currentAdmin = catchAsync(async (req, res, next) => {
-  const id = req.query.id;
-  DB.query(`SELECT * FROM Admin WHERE id=${id} LIMIT 1`, function (err, results, fields) {
+  const {id} = jwt.decode(req.query.token);
+  console.log(id)
+  DB.query(`SELECT * FROM admin WHERE id=${id} LIMIT 1`, function (err, results, fields) {
     if (err) return next(new AppError(err.message, 400));
     return res.json({ user: results });
   });
