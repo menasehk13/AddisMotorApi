@@ -7,13 +7,16 @@ import upload from "../utils/multer";
 const router = Router();
 
 router.get("/me", adminController.currentAdmin)
+router.route("/UpdateProfile").post(upload.single("profile"),adminController.UploadProfilePic)
 router.route("/addDriver").post(adminController.addDriverweb)
+
 router.route("/addDriverDocuments").post(upload.fields([{name: "licencepic", maxCount:1},{name:"insurancepic", maxCount:1},{name:"registration", maxCount:1},{name:"criminal", maxCount:1}]),adminController.addDriverDocuments)
 router.route("/DocumentList").get(adminController.DocumentList)
 router.route("/").get(adminController.getAdmins);
 router.route("/admin/:email").get(adminController.getAdmin);
-router.route("/UploadImage").post(upload.single("profile"),adminController.upload)
-router.route("/dashboard").get(adminController.dashboard);
+router
+  .route("/dashboard")
+  .get(adminController.dashboard);
   router.route("/drivers").get(adminController.getDrivers)
   router.route("/users").get(adminController.getUsers)
   router.route("/service").get(adminController.carServices)

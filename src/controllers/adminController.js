@@ -36,7 +36,6 @@ const getAdmins = catchAsync(async (req, res, next) => {
 const addDriverweb = catchAsync(async (req,res,next)=>{
   const data = req.body
   console.log(req.body);
- data.photo = staticFilePath(req.file.filename)
   DB.query(adminQuery.addDriverSales(data),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
       let id = results.insertId
