@@ -107,6 +107,7 @@ function currencyView(id){
 function history(driverid) {
   return `
   SELECT 
+  history.paymentid,
   booking.arrivinglocation,
   booking.startinglocation,
   paymnet.price,
@@ -119,7 +120,7 @@ function history(driverid) {
   
   From 
    history
-   JOIN user on history.userid = user.id
+   LEFT OUTER JOIN user on history.userid = user.id
    JOIN booking on history.bookingid = booking.bookingid
    JOIN paymnet on history.paymentid = paymnet.paymentid 
    JOIN price on price.priceid = paymnet.priceid
@@ -186,7 +187,7 @@ cardetail.color,
 service.servicetype,
 driverdocument.registration,
 driverdocument.Inscurance,
-driverdocument.criminalclearance,
+driverdocument.criminalclearance
 FROM 
 driver 
 Left outer JOIN cardetail on cardetail.id = driver.cardetailid
