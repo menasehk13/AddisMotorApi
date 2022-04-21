@@ -10,7 +10,8 @@ export  async function Notification(title,message,id){
         contents:{
             'en': message,
         },
-        include_player_ids: [id]
+        include_player_ids: [id],
+        template_id: 'a0cb3093-d5b9-4197-ae04-ccf44f335b2f',
     }
      try {
       await Clients.createNotification(notification);
@@ -28,6 +29,7 @@ export  async function NotificationAll(title,message){
             'en': message,
         },
         included_segments: ["Subscribed Users"],
+        template_id: 'a0cb3093-d5b9-4197-ae04-ccf44f335b2f',
         large_icon: ["https://robohash.org/sedaccusamusdistinctio.png?size=50x50&set=set1"]
     }
      try {

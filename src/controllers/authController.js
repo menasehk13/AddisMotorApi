@@ -202,27 +202,6 @@ const restrictTo = (...roles) => {
   };
 };
 
-const updatePassword = catchAsync(async (req, res, next) => {
-    const {id, type="driver"} = req.query;
-    const {newPassword,} = req.body;
-
-    if(type == "driver") {
-      DB.query(`select password from driver where id=${id} limit=1`, (error, result) => {
-         if(error) return next(new AppError(error.message,403))
-         
-      })
-    }
-
-    let query = `UPDATE 
-      ${type}
-      SET
-      phonenumber = "phonenumber"
-      WHERE id = "driver id";`
-
-    
-    DB.query("select * from ")
-})
-
 export default {
   login,
   verify,

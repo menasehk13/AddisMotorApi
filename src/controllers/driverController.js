@@ -198,7 +198,12 @@ const carDetail = catchAsync(async (req,res,next)=>{
 const checkUserexsist = catchAsync(async (req,res,next)=>{
   DB.query(driverQuery.checkUser(req.query.phonenumber),(err,results)=>{
     if(err) next(new AppError(err.message,400))
-    return res.json({user:results})
+    if(results.length>0){
+      return res.json({user:results})
+    }else{
+      return next(new AppError("No User Registered By This Number?"),400)
+    }
+   
   })
 })
 const updatePassword = catchAsync(async(req,res,next)=>{
