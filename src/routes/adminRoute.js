@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/me", adminController.currentAdmin)
 router.route("/UpdateProfile").post(upload.single("profile"),adminController.UploadProfilePic)
-router.route("/addDriver").post(adminController.addDriverweb)
+router.route("/addDriverCar").post(adminController.addDriverweb)
 
 router.route("/addDriverDocuments").post(upload.fields([{name: "licencepic", maxCount:1},{name:"insurancepic", maxCount:1},{name:"registration", maxCount:1},{name:"criminal", maxCount:1}]),adminController.addDriverDocuments)
 router.route("/DocumentList").get(adminController.DocumentList)

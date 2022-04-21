@@ -38,7 +38,7 @@ const addDriverweb = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.addDriverSales(data),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
       let id = results.insertId
-      DB.query(adminQuery.addNewUser(req.query.driverid,id),(err,results)=>{
+      DB.query(adminQuery.addNewUserCar(req.query.driverid,id),(err,results)=>{
         if(err) return next(new AppError(err.message,400))
         res.json({"status":"Driver Car registered successfully"})
       })
