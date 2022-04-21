@@ -404,7 +404,16 @@ driverdocument
 WHERE driverdocument.driverid = ${id};
   `
 }
-
+// update profile
+function updateProfile(data,id){
+  return `
+  UPDATE 
+  driver
+SET
+driver.photo = "${data.photo}"
+WHERE driver.id= ${id};
+  `
+}
 export default {
   getadmin,
   getadmins,
@@ -437,5 +446,6 @@ export default {
  addDriverDocumentSales,
  addNewUserCar,
  ratingReview,
- DriverDocumentList
+ DriverDocumentList,
+ updateProfile
 };

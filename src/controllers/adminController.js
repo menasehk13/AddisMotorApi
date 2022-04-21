@@ -46,7 +46,14 @@ const addDriverweb = catchAsync(async (req,res,next)=>{
       })
   })
 })
-
+const UploadProfilePic = catchAsync(async (req,res,next)=>{
+ const data = req.body
+ const id = req.query.id
+ data.photo = staticFilePath(req.file.filename)
+ DB.query(adminQuery.updateProfile(data,id),(err,results))
+ if(err) next(new AppError(err.message,400))
+  return res.json("Uploaded Successfuley")
+})
 const addDriverDocuments = catchAsync(async (req, res, next) => {
   const data = req.body
   const id = req.query.id;
@@ -281,5 +288,6 @@ export default {
   addDriverweb,
   addDriverDocuments,
   Rating,
-  DocumentList
+  DocumentList,
+  UploadProfilePic
 };
