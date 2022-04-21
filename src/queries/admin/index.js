@@ -405,12 +405,12 @@ WHERE driverdocument.driverid = ${id};
   `
 }
 // update profile
-function updateProfile(data,id){
+function updateProfile(imageupload,id){
   return `
   UPDATE 
   driver
 SET
-driver.photo = "${data.photo}"
+driver.photo = "${imageupload}"
 WHERE driver.id= ${id};
   `
 }

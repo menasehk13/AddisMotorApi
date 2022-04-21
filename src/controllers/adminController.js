@@ -35,7 +35,6 @@ const getAdmins = catchAsync(async (req, res, next) => {
 //register user from web
 const addDriverweb = catchAsync(async (req,res,next)=>{
   const data = req.body
-  console.log(req.body);
   DB.query(adminQuery.addDriverSales(data),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
       let id = results.insertId
@@ -46,12 +45,13 @@ const addDriverweb = catchAsync(async (req,res,next)=>{
   })
 })
 const UploadProfilePic = catchAsync(async (req,res,next)=>{
- const data = req.body
  const id = req.query.id
- data.photo = staticFilePath(req.file.filename)
- DB.query(adminQuery.updateProfile(data,id),(err,results))
- if(err) next(new AppError(err.message,400))
-  return res.json("Uploaded Successfuley")
+ const imageupload = staticFilePath(req.file.filename)
+ DB.query(adminQuery.updateProfile(imageupload,id),(err,results)=>{
+  if(err) next(new AppError(err.message,400))
+  return res.json("User Image Updated")
+ })
+
 })
 const addDriverDocuments = catchAsync(async (req, res, next) => {
   const data = req.body
