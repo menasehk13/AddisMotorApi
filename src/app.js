@@ -74,8 +74,8 @@ io.on("connection",(socket) => {
       const unlucky = { status: "taken" };
       let drivers = driver
       if(drivers!=null){
-        driver.splice(driver.findIndex((item) => item.id === result.driverid),1);
-        socket.broadcast.to(driver.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+        drivers.splice(drivers.findIndex((item) => item.id === result.driverid),1);
+        socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
         socket.broadcast.to(result.socketid).emit("newdriverfound", result); 
       }else{
         console.log("no drivers near by")
