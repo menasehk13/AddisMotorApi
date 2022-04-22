@@ -28,7 +28,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   secure: true,
   cors: {
-    origin: "https://localhost:3000",
+    origin: "https://admin.addismotortaxi.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
@@ -44,9 +44,7 @@ io.on("connection",(socket) => {
   // socket.on("")
   socket.on("dispatchDriver", (data) => {
     console.log(data);
-    socket.on("rideaccepteddispacth", (data2) => {
-      console.log(data2);
-    });
+
   });
   socket.on("cancel", (msg) => {
     const result = JSON.parse(msg);
@@ -74,9 +72,15 @@ io.on("connection",(socket) => {
   socket.on("rideaccepted", async (data) => {
     const result = await JSON.parse(data) || data;
       const unlucky = { status: "taken" };
-      driver.splice(driver.findIndex((item) => item.id === result.driverid),1);
-      socket.broadcast.to(driver.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
-      socket.broadcast.to(result.socketid).emit("newdriverfound", result);  
+      let drivers = driver
+      if(drivers!=null){
+        driver.splice(driver.findIndex((item) => item.id === result.driverid),1);
+        socket.broadcast.to(driver.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
+        socket.broadcast.to(result.socketid).emit("newdriverfound", result); 
+      }else{
+        console.log("no drivers near by")
+      }
+     
   });
   socket.on("journeystarted", (data) => {
     const result = JSON.parse(data) || data;
