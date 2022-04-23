@@ -101,6 +101,7 @@ export function driverdetail(id) {
   email,
   phonenumber,
   photo,
+  status,
   gender,
   cardetail.productionyear,
   cardetail.model,
