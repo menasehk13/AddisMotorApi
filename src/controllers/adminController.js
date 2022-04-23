@@ -36,6 +36,7 @@ const getAdmins = catchAsync(async (req, res, next) => {
 //register user from web
 const addDriverweb = catchAsync(async (req,res,next)=>{
   const data = req.body
+  console.log(data)
   DB.query(adminQuery.addDriverSales(data),(err,results)=>{
     if(err) return next(new AppError(err.message,400))
       let id = results.insertId
