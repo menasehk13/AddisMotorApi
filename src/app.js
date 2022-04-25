@@ -63,8 +63,7 @@ io.on("connection",(socket) => {
       if (drivers.length > 0) {
         driver= drivers
         const id = drivers.map((drivers)=> drivers.notificationid)
-        console.log("id = " + id)
-         Notification("Rider near You!!!!",`Do you Wish To Accept A Ride Click ME.........`,id);
+         Notification("Rider near You!!!!",`Do you Wish To Accept A Ride Click ME.........`,`${id}`);
         socket.broadcast
           .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
       } else {
