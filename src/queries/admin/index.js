@@ -283,11 +283,17 @@ export function addmarketing() {
 }
 export function complaints() {
   return `
-    SELECT 
-     *
-    FROM 
-     complaints
-    Order By complaints.date ASC ;
+  SELECT 
+  complaints.status,
+  CONCAT(driver.firstname,' ', driver.lastname) as drivername,
+  CONCAT(user.firstname,' ',user.lastname) as Complaint,
+  complaints.content,
+  complaints.date
+ FROM 
+  complaints
+  JOIN user on user.id = complaints.userid
+  JOIN driver on driver.id = complaints.driverid
+ Order By complaints.date ASC ;
     `;
 }
 export function addDriverSales(data){
@@ -309,7 +315,13 @@ driver
 SET
 driver.cardetailid=${id}
 WHERE driver.id = ${driverid};
-;
+
+UPDATE 
+driver 
+SET
+driver.status = "pending"
+WHERE driver.id = ${driverid};
+
 `
 }
 
