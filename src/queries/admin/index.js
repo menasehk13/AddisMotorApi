@@ -284,6 +284,7 @@ export function addmarketing() {
 export function complaints() {
   return `
   SELECT 
+  complaints.id as id,
   complaints.status,
   CONCAT(driver.firstname,' ', driver.lastname) as drivername,
   CONCAT(user.firstname,' ',user.lastname) as Complaint,
