@@ -63,6 +63,7 @@ io.on("connection",(socket) => {
       if (drivers.length > 0) {
         driver= drivers
     Notification("Rider near You!!!!",`Do you Wish To Accept A Ride Click ME.........`,"11675370-b87f-4da5-b582-30cecc0979cb");
+        socket.broadcast
           .to(drivers.map((driver) => driver.socketid)).emit("userfound", datas);
       } else {
         return console.log("No User Found");
