@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userController from "../controllers/userController";
+import user from "../queries/user";
 import upload from "../utils/multer";
 const router = Router();
 
@@ -22,7 +23,7 @@ router.route("/user").get(userController.getUser).patch(userController.updateUse
 router.route("/rating").get(userController.ratingView)
 router.route("/socket").post(userController.socket)
 router.route("/requestdriver").get(userController.requestDriver)
-
+router.route("/addComplients").post(userController.Complients)
 router.route("/:id").patch(
   // authController.protect,
   // authController.restrictTo("admin"),

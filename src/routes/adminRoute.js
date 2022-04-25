@@ -14,9 +14,7 @@ router.route("/addDriverDocuments").post(upload.fields([{name: "licencepic", max
 router.route("/DocumentList").get(adminController.DocumentList)
 router.route("/").get(adminController.getAdmins);
 router.route("/admin/:email").get(adminController.getAdmin);
-router
-  .route("/dashboard")
-  .get(adminController.dashboard);
+router.route("/dashboard").get(adminController.dashboard);
   router.route("/drivers").get(adminController.getDrivers)
   router.route("/users").get(adminController.getUsers)
   router.route("/service").get(adminController.carServices)

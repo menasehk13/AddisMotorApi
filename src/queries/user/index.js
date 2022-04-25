@@ -35,7 +35,13 @@ export function getuser(id) {
             WHERE id = '${id}'
     `;
 }
-
+export function addComplients(){
+  return `
+  INSERT INTO 
+     complaints 
+   SET 
+    ?`
+}
 export function getuserbyphone(number) {
   return `
         SELECT *
@@ -118,6 +124,7 @@ export function requestDriver(data) {
 	lng,
 	socketid,
 	servicetype,
+  notificationid,
 	(6371 * acos(cos(radians(${data.pickLat})) * cos(radians(driver.lat)) * cos(radians(driver.lng) - radians(${data.pickLng})) + sin(radians(${data.pickLat})) * sin(radians(driver.lat)))) AS distance
 FROM
 	driver
@@ -305,5 +312,6 @@ export default {
   Reasons,
   updateSocket,
   updateFirsttime,
-  totaldistancePrice
+  totaldistancePrice,
+  addComplients
 };

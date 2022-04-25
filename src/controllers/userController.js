@@ -25,17 +25,17 @@ const getUser = catchAsync(async (req, res, next) => {
   });
 });
 
-const createUserForm = catchAsync(async (req, res, next) => {
-  res.send(`
-    <form action="${url}/users" method="post" enctype="multipart/form-data">
-    <input type="text" name="firstname">
-    <input type="text" name="lastname">
-    <input type="email" name="email">
-    <input type="file" name="userprofile">
-    <input type="submit" value="Upload">
-    </form>
-`);
-});
+// const createUserForm = catchAsync(async (req, res, next) => {
+//   res.send(`
+//     <form action="${url}/users" method="post" enctype="multipart/form-data">
+//     <input type="text" name="firstname">
+//     <input type="text" name="lastname">
+//     <input type="email" name="email">
+//     <input type="file" name="userprofile">
+//     <input type="submit" value="Upload">
+//     </form>
+// `);
+// });
 
 // create/register user [implemented on authController.js]
 const createUser = catchAsync(async (req, res, next) => {
@@ -182,7 +182,12 @@ const displayDriverLocation = catchAsync(async (req, res, next) => {
   })
   
   })
-
+const Complients = catchAsync(async (req,res,next)=>{
+  DB.query(userQuery.addComplients(),req.body,(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({"status":"Your Complain has been Submited"})
+  })
+})
   const reasons = catchAsync(async (req,res,next)=>{
     DB.query(userQuery.Reasons(),(err,results)=>{
       if(err) return next(new AppError(err.message,400))
@@ -200,7 +205,6 @@ const displayDriverLocation = catchAsync(async (req, res, next) => {
 export default {
   getUsers,
   getUser,
-  createUserForm,
   createUser,
   updateUser,
   nearbyDriver,
@@ -218,5 +222,6 @@ export default {
   socket,
   requestDriver,
   UpdateFirstDrive,
-  totalDistance
+  totalDistance,
+  Complients
 }
