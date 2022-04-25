@@ -284,13 +284,10 @@ export function addmarketing() {
 export function complaints() {
   return `
     SELECT 
-     date,
-     subject,
-     content,
-     status
+     *
     FROM 
      complaints
-    OrderBy date ASC ;
+    Order By complaints.date ASC ;
     `;
 }
 export function addDriverSales(data){

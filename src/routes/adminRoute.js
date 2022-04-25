@@ -43,6 +43,5 @@ router.route("/user/compliants").get(adminController.userComplaints);
 router
   .route("/user/compliants/:id")
   .get(adminController.selectedComplaints)
-  .patch(adminController.updateComplaints);
 
 export default router;
