@@ -50,8 +50,8 @@ io.on("connection",(socket) => {
     const result = JSON.parse(msg);
     io.to(result.socketid).emit("canceled", result);
   });
-  socket.on("test", (msg) => {
-    // io.emit('driver', { someProperty: 'some value', otherProperty: 'other value' }); // This will emit the event to all connected sockets
+  socket.on("reason", (msg) => {
+   console.log(msg)
   });
 
   socket.on("data", (d) => {
