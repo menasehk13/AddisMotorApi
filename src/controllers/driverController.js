@@ -235,9 +235,9 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
         return res.json(results)
        }
        
-       const id = results.map((items)=>items.id)
+       const idUsed = results.map((items)=> items.id)
        const currencyValue= 123123123123
-       console.log(id)
+       console.log(idUsed)
        return res.json({"status":"Fail"})
       //  console.log(results)
       //  DB.query(driverQuery.addCredit(driverid,currencyValue),(err)=>{
