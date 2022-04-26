@@ -225,7 +225,7 @@ const updateNotification = catchAsync(async (req,res,next)=>{
 })
 // buy currency credit
 
-const BuyCredit = catchAsync(async (req,res,next)=>{
+const BuyNewCredit = catchAsync(async (req,res,next)=>{
   const driverid = req.query.driverid
   const currencyid = req.query.currencyvalue
      DB.query(driverQuery.BuyCredit(currencyid),(err,results)=>{
@@ -264,5 +264,5 @@ export default {
   checkUserexsist,
   updatePassword,
   updateNotification,
-  BuyCredit
+  BuyNewCredit
 };
