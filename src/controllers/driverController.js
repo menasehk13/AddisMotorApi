@@ -235,7 +235,7 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
         return res.json(results)
        }
        
-       const id = results.insertId
+       const id = results[0].id
        const currencyValue= 123123123123
        console.log(id)
        return res.json({"status":"Fail"})
