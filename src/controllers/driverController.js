@@ -234,10 +234,11 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
        if(results && results.length>0 ){
         return res.json(results)
        }
-        return res.json({"status":"Fail"})
-      // else if(results &&  results.length < 0) return res.json({"status":"Currency already been Used !!!!!"})
-      //  const id = results.insertId
-      //  const currencyValue= 123123123123
+       
+       const id = results.insertId
+       const currencyValue= 123123123123
+       console.log(id)
+       return res.json({"status":"Fail"})
       //  console.log(results)
       //  DB.query(driverQuery.addCredit(driverid,currencyValue),(err)=>{
       //    if(err) return next(new AppError(err.message,400))
