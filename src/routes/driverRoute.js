@@ -31,5 +31,5 @@ router.route("/driverstatus").get(driverController.driverstatus)
 router.route("/checkuser").get(driverController.checkUserexsist)
 router.route("/newpassword").post(driverController.updatePassword)
 router.route("/notifaction").post(driverController.updateNotification)
-router.route("/buyCredit").post(driver.BuyNewCredit)
+router.route("/buyCredit").post(driverController.BuyNewCredit)
 export default router;
