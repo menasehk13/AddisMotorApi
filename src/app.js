@@ -40,7 +40,6 @@ let sock;
 let driver;
 io.on("connection",(socket) => {
   sock = socket;
-
   // socket.on("")
   socket.on("dispatchDriver", (data) => {
     console.log(data);
@@ -48,12 +47,10 @@ io.on("connection",(socket) => {
   });
   socket.on("cancel", (msg) => {
     const result = JSON.parse(msg);
+    console.log(result)
     io.to(result.socketid).emit("canceled", result);
   });
-  socket.on("reason", (msg) => {
-   console.log(msg)
-  });
-
+  
   socket.on("data", (d) => {
     const datas = JSON.parse(d) || d;
     console.log(datas)
