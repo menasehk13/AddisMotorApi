@@ -238,9 +238,11 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
             if(err) return next(new AppError(error.message,400))
               DB.query(driverQuery.updateCurrenceyValue(idUsed),(errors,result)=>{
                 if(errors) return res.json({"status":"Fail"})
-                 return res.json({"Status":"Card Filled"})
+                 return res.json({"status":"Card Filled"})
               })
           })
+       }else{
+         return res.json({"status":"Fail"})
        }
      
        
