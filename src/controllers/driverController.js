@@ -230,13 +230,11 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
   const currencyid = req.query.currencyvalue
      DB.query(driverQuery.BuyCredit(currencyid),(err,results)=>{
        if(err) return next(new AppError(err.message,400))
-       console.log(results)
        if(results && results.length>0 ){
-        const idUsed = results[0].id
-        console.log(idUsed)
         return res.json(results[0].id)
        }
-       
+       const idUsed = results[0].id
+       console.log(idUsed)
        
       //  const currencyValue= 123123123123
      
