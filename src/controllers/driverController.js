@@ -232,7 +232,7 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
        if(err) return next(new AppError(err.message,400))
        console.log(results)
        if(results && results.length>0 ){
-        return res.json(results)
+        return res.json(results[0].id)
        }
        
        const idUsed = results.map((items)=> items.id)
