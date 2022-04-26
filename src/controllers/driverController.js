@@ -223,6 +223,26 @@ const updateNotification = catchAsync(async (req,res,next)=>{
     return res.json({"status":"updatedNotification"})
   })
 })
+// buy currency credit
+
+const BuyCredit = catchAsync(async (req,res,next)=>{
+  const driverid = req.query.driverid
+  const currencyid = req.query.currencyvalue
+     DB.query(driverQuery.BuyCredit(currencyid),(err,results)=>{
+       if(err) return next(new AppError(err.message,400))
+      else if(results === []) return res.json({"status":"Currency already been Used !!!!!"})
+       const id = results.insertId
+       const currencyValue= results[0].currencyValue
+       DB.query(driverQuery.addCredit(driverid,currencyValue),(err,results)=>{
+         if(err) return next(new AppError(err.message,400))
+         DB.query(driverQuery.updateCurrenceyValue(id),(err,results)=>{
+          if(err) return next(new AppError(err.message,400))
+        })
+         return res.json({"Status":`Your Currency has been Recharged Successfully`})
+         
+       })
+     })
+})
 export default {
   getDrivers,
   getDriver,
@@ -243,5 +263,6 @@ export default {
   driverstatus,
   checkUserexsist,
   updatePassword,
-  updateNotification
+  updateNotification,
+  BuyCredit
 };

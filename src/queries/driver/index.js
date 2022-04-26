@@ -270,7 +270,37 @@ WHERE
 driver.id = ${id};
   `
 }
-
+function BuyCredit(currency){
+  return `
+  SELECT
+	*
+FROM
+	currencyrecharge
+WHERE
+	currencyrecharge.currencyid = '${currency}'
+	AND isused = 0;
+  `
+}
+function addCredit(id,currencyvalue){
+  return `
+  UPDATE
+	driver
+SET
+	driver.currency = currency + ${currencyvalue}
+WHERE 
+driver.id = ${id};`
+}
+function updateCurrenceyValue(currencyid){
+  return `
+  UPDATE
+currencyrecharge
+  SET 
+isused = 1
+  WHERE 
+currencyrecharge.id = ${currencyid}
+;
+  `
+}
 export default {
   getdriver,
   getdrivers,
@@ -293,5 +323,8 @@ export default {
   currencyView,
   checkUser,
   updatePassword,
-  updateNotification
+  updateNotification,
+  BuyCredit,
+  addCredit,
+  updateCurrenceyValue
 };
