@@ -238,27 +238,12 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
             if(err) return next(new AppError(error.message,400))
               DB.query(driverQuery.updateCurrenceyValue(idUsed),(errors,result)=>{
                 if(errors) return res.json({"status":"Fail"})
-                 return res.json({"status":"Card Filled"})
+                 return res.json({"status":"Ok"})
               })
           })
        }else{
          return res.json({"status":"Fail"})
        }
-     
-       
-      //  const currencyValue= 123123123123
-     
-       
-      //  console.log(results)
-      //  DB.query(driverQuery.addCredit(driverid,currencyValue),(err)=>{
-      //    if(err) return next(new AppError(err.message,400))
-      //     DB.query(driverQuery.updateCurrenceyValue(id),(err)=>{
-      //     if(err) return next(new AppError(err.message,400))
-      //     return res.json({"Status":`Your Currency has been Recharged Successfully`})
-         
-      //   })
-       
-      //  })
      })
 })
 export default {
