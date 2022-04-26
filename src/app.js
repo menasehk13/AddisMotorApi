@@ -46,11 +46,13 @@ io.on("connection",(socket) => {
 
   });
   socket.on("cancel", (msg) => {
+
     const result = JSON.parse(msg);
     console.log(result)
-    io.to(result.socketid).emit("canceled", result);
+    socket.broadcast.to(result.driversocket).emit("canceled", result);
+
   });
-  
+
   socket.on("data", (d) => {
     const datas = JSON.parse(d) || d;
     console.log(datas)
