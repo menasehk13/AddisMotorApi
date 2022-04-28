@@ -126,7 +126,7 @@ const verify = catchAsync(async (req, res, next) => {
         if(user) {
           return res.json({
             message: `${type} verified successfully`,
-            status:`${type} Already Registered`,
+            status:`Already Registered`,
             user
           })
         }else{
