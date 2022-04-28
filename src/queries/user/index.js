@@ -161,7 +161,7 @@ export function history(userid) {
    JOIN booking on history.bookingid = booking.bookingid
    JOIN paymnet on history.paymentid = paymnet.paymentid
    JOIN service on driver.serviceid = service.serviceid 
-   WHERE history.userid = 75
+   WHERE history.userid = ${userid}
    ORDER by paymnet.date DESC  ;   
 `;
 }
