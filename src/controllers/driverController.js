@@ -256,7 +256,7 @@ const BankCredit = catchAsync(async (req,res,next)=>{
      DB.query(driverQuery.getdriver(),(err,results)=>{
       let notificationid = results.notificationid
       console.log(notificationid)
-      Notification("CREDIT UPDATE...",`You Currency Have been Recharged Through Abyssinya Bank. you have added ${credit} to Your Addis Motor Account`,notificationid)
+      Notification("CREDIT UPDATE...",`You Currency Have been Recharged Through Abyssinya Bank. you have added ${credit} to Your Addis Motor Driver Account`,notificationid)
       res.json({"Status":"Updated Your Currency "})
      })
    
