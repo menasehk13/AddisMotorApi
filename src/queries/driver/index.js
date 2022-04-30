@@ -306,7 +306,7 @@ export function CurrencyUpdate(credit,id){
   UPDATE
   driver
   SET
-  driver.currency = ${credit}
+  driver.currency = driver.currency + ${credit}
   WHERE driver.id = ${id};
   `
 }
