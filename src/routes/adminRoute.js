@@ -44,4 +44,6 @@ router
   .route("/user/compliants/:id")
   .get(adminController.selectedComplaints)
 
+router.route("/updateStatus").post(adminController.updateStatus)  
+
 export default router;

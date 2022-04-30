@@ -6,6 +6,7 @@ import AppError from "../helpers/appError";
 import { io, sock } from "../app";
 import { staticFilePath } from "../helpers/utils";
 import { json } from "express/lib/response"
+import { Notification } from '../utils/notification.js'
 
 const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
@@ -246,6 +247,20 @@ const BuyNewCredit = catchAsync(async (req,res,next)=>{
        }
      })
 })
+//
+const BankCredit = catchAsync(async (req,res,next)=>{
+  const credit = req.query.credit
+  const id = req.query.id
+  DB.query(driverQuery.CurrencyUpdate(credit,id),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+     DB.query(driverQuery.getdriver(),(err,results)=>{
+      let notificationid = results[0].notificationid
+      Notification("CREDIT UPDATE...",`You Currency Have been Recharged Through Abyssinya Bank. you have added ${credit} to Your Addis Motor Account`,notificationid)
+      res.json({"Status":"Updated Your Currency "})
+     })
+   
+  })
+})
 export default {
   getDrivers,
   getDriver,
@@ -267,5 +282,6 @@ export default {
   checkUserexsist,
   updatePassword,
   updateNotification,
-  BuyNewCredit
+  BuyNewCredit,
+  BankCredit
 };

@@ -301,6 +301,16 @@ currencyrecharge.id = ${currencyid}
 ;
   `
 }
+export function CurrencyUpdate(credit,id){
+  return `
+  UPDATE
+  driver
+  SET
+  driver.currency = ${credit}
+  WHERE driver.id = ${id};
+  `
+}
+
 export default {
   getdriver,
   getdrivers,
@@ -326,5 +336,6 @@ export default {
   updateNotification,
   BuyCredit,
   addCredit,
-  updateCurrenceyValue
+  updateCurrenceyValue,
+  CurrencyUpdate
 };

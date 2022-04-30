@@ -315,7 +315,6 @@ update
 driver
 SET
 driver.cardetailid=${id}
-driver.status = "pending"
 WHERE driver.id = ${driverid};
 `
 }
@@ -328,7 +327,13 @@ function addDriverDocumentSales(id,data) {
   driverdocument.Inscurance="${data.insurancepic}",
   driverdocument.driverid = ${id},
   driverdocument.registration = "${data.registration}",
-  driverdocument.criminalclearance ="${data.criminal}";   
+  driverdocument.criminalclearance ="${data.criminal}"; 
+  
+  UPDATE 
+    driver 
+SET
+    driver.status = "pending"
+WHERE driver.id = ${id};  
     `
 }
 
@@ -419,6 +424,18 @@ driver.photo = "${imageupload}"
 WHERE driver.id= ${id};
   `
 }
+//
+export function UpdateDriverStatus(id){
+  return `
+    UPDATE
+    driver
+    SET
+    driver.status="approved"
+    WHERE driver.id = ${id};
+  `
+}
+//
+
 export default {
   getadmin,
   getadmins,
@@ -452,5 +469,6 @@ export default {
  addNewUserCar,
  ratingReview,
  DriverDocumentList,
- updateProfile
+ updateProfile,
+ UpdateDriverStatus,
 };

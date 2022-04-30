@@ -1,6 +1,7 @@
 import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
 import adminQuery, { addDriverSales } from "../queries/admin";
+import driverQuery from "../queries/driver"
 import AppError from "../helpers/appError";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -260,6 +261,18 @@ const DocumentList = catchAsync(async (req,res,next)=>{
     return res.json(results)
   })
 })
+// updatestatus 
+const updateStatus = catchAsync(async(req,res,next)=>{
+  DB.query(adminQuery.UpdateDriverStatus(req.query.id),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+     DB.query(driverQuery.getdriver(req.query.id),(err,drivers)=>{
+      let notificationId = drivers[0].notificationid
+        Notification("GREAT NEWS !!!!! ","Your Documents Has Been Approved You can Start Earning More ",notificationId)
+        return res.json({"Status":"driver info Updated"})
+     })
+  })
+})
+
 export default {
   dashboard,
   getAdmin,
@@ -289,5 +302,6 @@ export default {
   addDriverDocuments,
   Rating,
   DocumentList,
-  UploadProfilePic
+  UploadProfilePic,
+  updateStatus
 };
