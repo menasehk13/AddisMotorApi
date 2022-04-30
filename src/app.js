@@ -25,7 +25,15 @@ app.use(express.urlencoded({ extended: false }));
 
 const server = http.createServer(app);
 
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: 'https://admin.addismotortaxi.com/Dispatch',
+    methods: ['GET', 'POST'],
+    allowedHeaders:["my-custom-header"],
+    credentials:true
+  },
+  allowEIO3: true
+});
 
 let sock;
 let driver;
