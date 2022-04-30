@@ -290,6 +290,18 @@ function Reasons(){
 FROM
 	reason;`
 }
+function updateNotification(id,notificationid){
+  return `
+  UPDATE
+  user
+  SET
+  user.notificationid= "${notificationid}"
+  WHERE
+  driver.id = ${id};
+`
+}
+
+
 export default {
   adduser,
   edituser,
@@ -313,5 +325,6 @@ export default {
   updateSocket,
   updateFirsttime,
   totaldistancePrice,
-  addComplients
+  addComplients,
+  updateNotification
 };

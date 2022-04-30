@@ -201,7 +201,14 @@ const Complients = catchAsync(async (req,res,next)=>{
     })
   })
 // delete user
-
+const updateNotification = catchAsync(async (req,res,next)=>{
+  const id = req.query.id
+  const notificationid = req.query.notificationid
+  DB.query(userQuery.updateNotification(id,notificationid),(err,results)=>{
+    if(err) return next(new AppError(err.message,400))
+    return res.json({"status":"updatedNotification"})
+  })
+})
 export default {
   getUsers,
   getUser,
@@ -223,5 +230,6 @@ export default {
   requestDriver,
   UpdateFirstDrive,
   totalDistance,
-  Complients
+  Complients,
+  updateNotification
 }

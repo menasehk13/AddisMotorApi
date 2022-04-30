@@ -24,6 +24,7 @@ router.route("/rating").get(userController.ratingView)
 router.route("/socket").post(userController.socket)
 router.route("/requestdriver").get(userController.requestDriver)
 router.route("/addComplients").post(userController.Complients)
+router.route("/notification").post(userController.updateNotification)
 router.route("/:id").patch(
   // authController.protect,
   // authController.restrictTo("admin"),
