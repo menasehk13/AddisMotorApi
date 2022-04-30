@@ -297,7 +297,7 @@ function updateNotification(id,notificationid){
   SET
   user.notificationid= "${notificationid}"
   WHERE
-  driver.id = ${id};
+  user.id = ${id};
 `
 }
 
