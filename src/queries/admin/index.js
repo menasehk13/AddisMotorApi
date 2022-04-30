@@ -315,10 +315,8 @@ update
 driver
 SET
 driver.cardetailid=${id}
+driver.status = "pending" 
 WHERE driver.id = ${driverid};
-
-
-
 `
 }
 
@@ -332,11 +330,8 @@ function addDriverDocumentSales(id,data) {
   driverdocument.registration = "${data.registration}",
   driverdocument.criminalclearance ="${data.criminal}"; 
   
-  UPDATE 
-    driver 
-SET
-    driver.status = "pending"
-WHERE driver.id = ${id};  
+  
+
     `
 }
 
