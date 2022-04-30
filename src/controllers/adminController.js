@@ -4,6 +4,7 @@ import adminQuery, { addDriverSales } from "../queries/admin";
 import driverQuery from "../queries/driver"
 import AppError from "../helpers/appError";
 import jwt from "jsonwebtoken";
+import { Notification } from '../utils/notification.js'
 import bcrypt from "bcryptjs";
 import { staticFilePath } from "../helpers/utils";
 import { json } from 'express/lib/response';
@@ -262,11 +263,12 @@ const DocumentList = catchAsync(async (req,res,next)=>{
   })
 })
 // updatestatus 
-const updateStatus = catchAsync(async(req,res,next)=>{
+const updatestatus = catchAsync(async(req,res,next)=>{
   DB.query(adminQuery.UpdateDriverStatus(req.query.id),(err,results)=>{
     if(err) next(new AppError(err.message,400))
      DB.query(driverQuery.getdriver(req.query.id),(err,drivers)=>{
       let notificationId = drivers[0].notificationid
+      // changes for commit 
         Notification("GREAT NEWS !!!!! ","Your Documents Has Been Approved You can Start Earning More ",notificationId)
         return res.json({"Status":"driver info Updated"})
      })
@@ -303,5 +305,5 @@ export default {
   Rating,
   DocumentList,
   UploadProfilePic,
-  updateStatus
+  updatestatus
 };
