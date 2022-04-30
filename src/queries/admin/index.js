@@ -314,7 +314,7 @@ return `
 update 
 driver
 SET
-driver.cardetailid=${id}
+driver.cardetailid=${id},
 driver.status = "pending" 
 WHERE driver.id = ${driverid};
 `
