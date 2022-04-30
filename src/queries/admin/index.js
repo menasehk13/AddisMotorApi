@@ -315,14 +315,8 @@ update
 driver
 SET
 driver.cardetailid=${id}
-WHERE driver.id = ${driverid};
-
-UPDATE 
-driver 
-SET
 driver.status = "pending"
 WHERE driver.id = ${driverid};
-
 `
 }
 
