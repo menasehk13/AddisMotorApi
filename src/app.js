@@ -27,8 +27,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
+    origin: 'https://admin.addismotortaxi.com',
+    methods: ['GET', 'POST'],
+    allowedHeaders:["my-custom-header"],
+    credential:true
   },
   allowEIO3: true
 });
