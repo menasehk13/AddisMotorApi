@@ -28,7 +28,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin:'https://admin.addismotortaxi.com'
-  }
+  },
+  pingInterval: 1000 * 60 * 5,
+  pingTimeout: 1000 * 60 * 3
 });
 
 let sock;
