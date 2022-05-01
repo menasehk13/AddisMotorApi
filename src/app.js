@@ -33,7 +33,8 @@ const io = new Server(server, {
   },
   pingInterval: 1000 * 60 * 5,
   pingTimeout: 1000 * 60 * 10,
-  allowEIO3: true 
+  allowEIO3: true ,
+  transports: ['websocket','polling']
 });
 
 let sock;
