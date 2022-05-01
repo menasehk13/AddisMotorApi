@@ -279,14 +279,15 @@ const updatestatus = catchAsync(async(req,res,next)=>{
 const DispatchToDriver = catchAsync(async (req,res,next)=>{
   const id =req.query.id
   console.log(req.body)
-  DB.query(driverQuery.getdriver(id),(err,results)=>{
-    if(err) next(new AppError(err.message,404))
-      const socketid = results[0].socketid
-      const notificationId = results[0].notificationid
-      Notification("Driver From Dispatch","driver near you Needs A Ride",notificationId)
-      SocketModulet.to(socketid).emit("dispatchDriver",req.body)
-      res.json({"status":"Send to Driver"})
-  })
+  res.json(res.body)
+  // DB.query(driverQuery.getdriver(id),(err,results)=>{
+  //   if(err) next(new AppError(err.message,404))
+  //     const socketid = results[0].socketid
+  //     const notificationId = results[0].notificationid
+  //     Notification("Driver From Dispatch","driver near you Needs A Ride",notificationId)
+  //     SocketModulet.to(socketid).emit("dispatchDriver",req.body)
+  //     res.json({"status":"Send to Driver"})
+  // })
 })
 
 export default {
