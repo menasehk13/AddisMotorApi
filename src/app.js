@@ -32,7 +32,8 @@ const io = new Server(server, {
     credentials:true
   },
   pingInterval: 1000 * 60 * 5,
-  pingTimeout: 1000 * 60 * 10
+  pingTimeout: 1000 * 60 * 10,
+  allowEIO3: true 
 });
 
 let sock;
