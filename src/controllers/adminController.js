@@ -3,6 +3,7 @@ import connectDB from "../helpers/connection";
 import adminQuery, { addDriverSales } from "../queries/admin";
 import driverQuery from "../queries/driver"
 import AppError from "../helpers/appError";
+import {SocketModulet} from '../app'
 import jwt from "jsonwebtoken";
 import { Notification } from '../utils/notification.js'
 import bcrypt from "bcryptjs";
@@ -275,6 +276,19 @@ const updatestatus = catchAsync(async(req,res,next)=>{
   })
 })
 
+const DispatchToDriver = catchAsync(async (req,res,next)=>{
+  const data = req.body
+  const id =req.query.id
+  DB.query(driverQuery.getdriver(id),(err,results)=>{
+    if(err) next(new AppError(err.message,404))
+      const socketid = results[0].socketid
+      const notificationId = results[0].notificationid
+      Notification("Driver From Dispatch","driver near you Needs A Ride",notificationId)
+      SocketModulet.to(socketid).emit("dispatchDriver",data)
+      res.json({"status":"Send to Driver"})
+  })
+})
+
 export default {
   dashboard,
   getAdmin,
@@ -305,5 +319,6 @@ export default {
   Rating,
   DocumentList,
   UploadProfilePic,
-  updatestatus
+  updatestatus,
+  DispatchToDriver
 };
