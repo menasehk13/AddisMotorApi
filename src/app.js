@@ -27,10 +27,11 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin:'https://admin.addismotortaxi.com'
+    origin:'https://admin.addismotortaxi.com',
+    methods: ["GET", "POST"]
   },
   pingInterval: 1000 * 60 * 5,
-  pingTimeout: 1000 * 60 * 3
+  pingTimeout: 1000 * 60 * 10
 });
 
 let sock;
