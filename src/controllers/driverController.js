@@ -2,16 +2,22 @@ import { DB } from "../helpers/connection";
 import driverQuery from "../queries/driver";
 import { catchAsync } from "../middlewares/error";
 import bcrypt from "bcryptjs";
+import {SocketModulet} from '../app'
 import AppError from "../helpers/appError";
 import { io, sock } from "../app";
 import { staticFilePath } from "../helpers/utils";
 import { json } from "express/lib/response"
 import { Notification } from '../utils/notification.js'
-
+const test = catchAsync(async function (req, res, next) {
+  SocketModulet.emit("dispatchDriver","hello")
+  res.json({
+  "status":"Complete"
+  })
+})
 const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
     if (err) return next(new AppError(err.message, 400));
-
+  
     return res.json(drivers);
   });
 });
@@ -283,5 +289,6 @@ export default {
   updatePassword,
   updateNotification,
   BuyNewCredit,
-  BankCredit
+  BankCredit,
+  test
 };

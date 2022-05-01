@@ -24,28 +24,28 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 
 const server = http.createServer(app);
-
-const io = new Server(server, {
-  cors: {
-    origin:'https://admin.addismotortaxi.com',
-    methods: ["GET", "POST"],
-    credentials:true
-  },
-  pingInterval: 1000 * 60 * 5,
-  pingTimeout: 1000 * 60 * 10,
-  allowEIO3: true ,
-  transports: ['polling']
-});
+var options = {
+  allowUpgrades: true,
+  transports: [ 'polling', 'websocket' ],
+  pingTimeout: 9000,
+  pingInterval: 3000,
+  cookie: 'mycookie',
+  httpCompression: true,
+  cors: '*:*',
+  allowEIO3: true
+};
+const io = new Server(server,options);
 
 let sock;
 let driver;
-io.on("connection",(socket) => {
+
+io.sockets.on("connection",(socket) => {
   sock = socket;
   // socket.on("")
   socket.on("dispatchDriver", (data) => {
     console.log(data);
-
   });
+
   socket.on("cancel", (msg) => {
 
     const result = JSON.parse(msg);
@@ -102,15 +102,20 @@ io.on("connection",(socket) => {
 
   socket.on("disconnect", (reason) => {});
 });
-
 export { io, sock };
+
+app.get("/", (req, res) => {
+  
+  Notification("THIS IS IT!","HOW ARE YOU DOING","a3e04666-8b8a-4d06-bf81-52d53e392adc")
+  res.send("API>>>> CONNECTED>:");
+});
 
 connectDB().connect(function (err) {
   if (err) return console.log(err, err.message);
   console.log("db connected 🔥🔥🔥");
 });
 
-// process.env.NODE_ENV = "development";
+ //process.env.NODE_ENV = "development";
 process.env.NODE_ENV = "production";
 
 process.on("unhandledRejection", (err) => {
@@ -147,7 +152,7 @@ console.log(apiprefix);
 
 // all routes
 routes(app, apiprefix);
-
+export const SocketModulet = io
 server.listen(PORT, () => {
   console.log("Listening on port " + PORT || 5000);
 });
