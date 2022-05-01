@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 import upload from "../utils/multer";
 
 const router = Router();
-router.route('/dispatchdriver').get(upload.any(),adminController.DispatchToDriver)
+router.route('/dispatchdriver').post(upload.any(),adminController.DispatchToDriver)
 router.get("/me", adminController.currentAdmin)
 router.route("/UpdateProfile").post(upload.single("profile"),adminController.UploadProfilePic)
 router.route("/addDriverCar").post(adminController.addDriverweb)
