@@ -9,9 +9,7 @@ import { staticFilePath } from "../helpers/utils";
 import { json } from "express/lib/response"
 import { Notification } from '../utils/notification.js'
 const test = catchAsync(async function (req, res, next) {
-  const hello = {
-    "status":"hello"
-  }
+  const hello = {"desLat":9.01984,"desLng":38.76339,"socketid":"4KSU8EL411E5mbBpAAAr","payment":"cash","pickLat":9.01984,"pickLng":38.76339,"serviceId":1,"userid":1}
   SocketModulet.emit("dispatchDriver",hello)
   SocketModulet.on("dispatchDriver",(msg)=>{
     console.log(msg)
