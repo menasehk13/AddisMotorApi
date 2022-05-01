@@ -10,9 +10,10 @@ import { json } from "express/lib/response"
 import { Notification } from '../utils/notification.js'
 const test = catchAsync(async function (req, res, next) {
   SocketModulet.emit("dispatchDriver","hello")
-  res.json({
-  "status":"Complete"
+  SocketModulet.on("dispatchDriver",(msg)=>{
+    console.log(msg)
   })
+  res.json({"msg":"test"})
 })
 const getDrivers = catchAsync(async function (req, res, next) {
   DB.query(driverQuery.getdrivers(), function (err, drivers, fields) {
