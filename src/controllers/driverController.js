@@ -148,6 +148,7 @@ const payment = catchAsync(async (req,res,next)=>{
 })
 
 const addhistory = catchAsync ( async (req,res,next)=>{
+  console.log(req.body)
   DB.query(driverQuery.addHistory(),req.body,(err,results)=>{
     if(err) return next(new AppError(err.message,400))
     return res.json({status: "success"})
