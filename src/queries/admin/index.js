@@ -338,7 +338,15 @@ function addDriverDocumentSales(id,data) {
 function dispatchService(data){
   return `
   SELECT
-	*,
+  driver.id as driverid,
+  driver.firstname,
+  driver.lastname,
+  driver.status,
+  driver.gender,
+  driver.phonenumber,
+  driver.photo,
+  driver.lat,
+  driver.lng,
   cardetail.licenseplate,
 	cardetail.model,
 	cardetail.color,
