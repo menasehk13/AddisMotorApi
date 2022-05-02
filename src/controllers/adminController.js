@@ -278,6 +278,7 @@ const updatestatus = catchAsync(async(req,res,next)=>{
 
 const DispatchToDriver = catchAsync(async (req,res,next)=>{
   const id =req.query.id
+  console.log(id)
   console.log(req.body)
   DB.query(driverQuery.getdriver(id),(err,results)=>{
     if(err) next(new AppError(err.message,404))
