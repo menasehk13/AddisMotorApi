@@ -24,10 +24,11 @@ router.route("/dashboard").get(adminController.dashboard);
   router.route("/driver/order/detail").get(adminController.driverOrderDetail)
   router.route("/driver/order/review").get(adminController.Rating)
 router.route("/driver/:id").get(adminController.driverDocument);
-
+router.route("/accounting/user").get(adminController.accountingUser)
 
 router.route("/dashboard/activedrivers").get(adminController.activeDriver)
 router.route("/dashboard/inservice").get(adminController.activeDriver)
+router.route("/dashboard/icons").get(adminController.dashboardIcons)
 router.route("/accounting").get(adminController.accounting);
 router.route("/accounting/drivers").get(adminController.accountingDrivers);
 router.route("/accounting/riders").get(adminController.accountingRiders);

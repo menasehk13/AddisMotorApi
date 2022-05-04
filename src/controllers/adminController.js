@@ -289,7 +289,20 @@ const DispatchToDriver = catchAsync(async (req,res,next)=>{
       res.json({"status":"Send to Driver"})
   })
 })
-
+// accounting user data
+const accountingUser = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.accountinguser(),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    res.json(results)
+  })
+})
+// dashboard count
+const dashboardIcons = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.dashboardIcons(),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    res.json(results)
+  })
+})
 export default {
   dashboard,
   getAdmin,
@@ -321,5 +334,7 @@ export default {
   DocumentList,
   UploadProfilePic,
   updatestatus,
-  DispatchToDriver
+  DispatchToDriver,
+  accountingUser,
+  dashboardIcons
 };
