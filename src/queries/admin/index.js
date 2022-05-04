@@ -476,6 +476,15 @@ driver;
   `
 }
 
+function dispatchFromDriver(){
+  return `
+  SELECT 
+*
+from booking
+where 
+booking.socketid = "dispatch from admin";`
+}
+
 export default {
   getadmin,
   getadmins,
@@ -512,5 +521,6 @@ export default {
  updateProfile,
  UpdateDriverStatus,
  accountinguser,
- dashboardIcons
+ dashboardIcons,
+ dispatchFromDriver
 };

@@ -46,5 +46,5 @@ router
   .get(adminController.selectedComplaints)
 
 router.route("/updateStatus").post(adminController.updatestatus)  
-
+router.route("/dispatch/history").get(adminController.DispatchFromDriver)
 export default router;

@@ -303,6 +303,13 @@ const dashboardIcons = catchAsync(async (req,res,next)=>{
     res.json(results)
   })
 })
+// send dispatch
+const DispatchFromDriver = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.dispatchFromDriver(),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    res.jsom(results)
+  })
+}) 
 export default {
   dashboard,
   getAdmin,
@@ -336,5 +343,6 @@ export default {
   updatestatus,
   DispatchToDriver,
   accountingUser,
-  dashboardIcons
+  dashboardIcons,
+  DispatchFromDriver
 };
