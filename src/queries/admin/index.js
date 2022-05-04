@@ -469,14 +469,10 @@ distinct(
         count(*)
     from
         driver
-) drivers,(
-    SELECT
-        COUNT(*) complaints
-) complaints
+) drivers
 from
 user,
-driver,
-complaints;
+driver;
   `
 }
 
