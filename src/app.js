@@ -64,8 +64,7 @@ io.sockets.on("connection",(socket) => {
       if (drivers.length > 0) {
         driver= drivers
         const id = drivers.map((drivers)=> drivers.notificationid)
-      let idsend = [];
-      idsend.push(id)
+      let idsend = [id];
       console.log(idsend)
         Notification("Rider near You!!!!",`Do you Wish To Accept A Ride Click ME.........`,idsend);
         socket.broadcast
