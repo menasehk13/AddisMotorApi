@@ -227,6 +227,19 @@ GROUP BY Month
 ORDER BY FIELD(MONTH, 'January', 'February', 'March','April','May','June','July','Augest','September','October' 'December');
     `;
 }
+
+export function accountinguser(){
+  return `
+  SELECT
+	MONTHNAME(user.date) AS Month,
+	count(user.id) as  users
+FROM
+	user
+GROUP BY Month
+ORDER BY FIELD(MONTH, 'January', 'February', 'March','April','May','June','July','Augest','September','October' 'December');
+  `
+}
+
 export function accountingdrivers() {
   return `
     SELECT *
@@ -440,7 +453,37 @@ export function UpdateDriverStatus(id){
     WHERE driver.id = ${id};
   `
 }
-//
+// count dashboard
+export function dashboardIcons(){
+  return `
+  
+select
+distinct(
+    select
+        count(*)
+    from
+        user
+) users,
+(
+    select
+        count(*)
+    from
+        driver
+) drivers
+from
+user,
+driver;
+  `
+}
+
+function dispatchFromDriver(){
+  return `
+  SELECT 
+*
+from booking
+where 
+booking.socketid = "dispatch from admin";`
+}
 
 export default {
   getadmin,
@@ -477,4 +520,7 @@ export default {
  DriverDocumentList,
  updateProfile,
  UpdateDriverStatus,
+ accountinguser,
+ dashboardIcons,
+ dispatchFromDriver
 };
