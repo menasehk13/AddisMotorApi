@@ -64,7 +64,6 @@ io.sockets.on("connection",(socket) => {
       if (drivers.length > 0) {
         driver= drivers
         const id = drivers.map((drivers)=> drivers.notificationid)
-      let idsend = [id];
       console.log(id)
         Notification("Rider near You!!!!",`Do you Wish To Accept A Ride Click ME.........`,id);
         socket.broadcast
@@ -82,6 +81,7 @@ io.sockets.on("connection",(socket) => {
         drivers.splice(drivers.findIndex((item) => item.id === result.driverid),1);
         socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
         socket.broadcast.to(result.socketid).emit("newdriverfound", result); 
+        console.log(result)
       }else{
         console.log("no drivers near by")
       }
