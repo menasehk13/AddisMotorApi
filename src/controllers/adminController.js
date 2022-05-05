@@ -201,11 +201,14 @@ const marketing = catchAsync(async (req, res, next) => {
 });
 // add coupun
 const marketingCoupon = catchAsync(async (req, res, next) => {
-
+const title= req.body.title
+const discription=req.body.description
   DB.query(adminQuery.addmarketing(),req.body, (err, results) => {
     if (err) return next(new AppError(err.message, 400));
     console.log(req.body)
-    NotificationAll(req.body.title,req.body.description)
+   NotificationAll(title,discription)
+   NotificationAll("CHECK","TESTING APP")
+    //NotificationAll(req.body.title,req.body.description)
     return res.json(results);
   });
 });
