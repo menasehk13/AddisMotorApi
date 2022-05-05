@@ -12,7 +12,7 @@ router
   .post(upload.single("driverprofile"), driverController.addDriver);
 
 router.route("/driver").get(driverController.getDriver);
-
+// updates new
 router.route("/test").get(driverController.test)
 router.route("/status/:driverid").get(driverController.displayStatus);
 router.route("/booking").post(driverController.bookingData);
