@@ -75,13 +75,13 @@ io.sockets.on("connection",(socket) => {
   });
   socket.on("rideaccepted", async (data) => {
     const result = await JSON.parse(data) || data;
+    console.log(result)
       const unlucky = { status: "taken" };
       let drivers = driver
       if(drivers!=null){
         drivers.splice(drivers.findIndex((item) => item.id === result.driverid),1);
         socket.broadcast.to(drivers.map((driver) => driver.socketid)).emit("alreadytaken", unlucky);
         socket.broadcast.to(result.socketid).emit("newdriverfound", result); 
-        console.log(result)
       }else{
         console.log("no drivers near by")
       }
