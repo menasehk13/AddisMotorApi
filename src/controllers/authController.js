@@ -153,7 +153,9 @@ function resendPhoneVerification(phonenumber, next,res) {
   .services(TWILIO_SERVICE_ID)
   .verifications
   .create({ to: "+251" + phonenumber , channel: 'sms'})
-  .then(data =>  res.json({"status":data.status}))
+  .then((data) =>{ 
+    console.log(data.status)
+    res.json({"status":data.status})})
   .catch(er => {
     console.log(er)
     next(new AppError(er.message, 400))})
