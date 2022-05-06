@@ -30,6 +30,21 @@ export function addadmin() {
     ;
     `;
 }
+export function viewAdmin(){
+  return `
+    select 
+      *
+    from
+    admin;
+  `
+}
+export function deleteAdmin(id){
+  return `
+  DELETE from admin
+  WHERE
+  admin.id = ${id};
+  `
+}
 export function dashboard(limit) {
   return `
     SELECT *
@@ -522,5 +537,7 @@ export default {
  UpdateDriverStatus,
  accountinguser,
  dashboardIcons,
- dispatchFromDriver
+ dispatchFromDriver,
+ viewAdmin,
+ deleteAdmin
 };

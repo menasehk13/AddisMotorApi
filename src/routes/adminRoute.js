@@ -47,4 +47,6 @@ router
 
 router.route("/updateStatus").post(adminController.updatestatus)  
 router.route("/dispatch/history").get(adminController.DispatchFromDriver)
+router.route("/viewadmin").get(adminController.viewadmins)
+router.route("/deleteadmin").get(adminController.deleteadmin)
 export default router;

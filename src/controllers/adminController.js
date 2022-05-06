@@ -309,9 +309,23 @@ const dashboardIcons = catchAsync(async (req,res,next)=>{
 const DispatchFromDriver = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.dispatchFromDriver(),(err,results)=>{
     if(err) next(new AppError(err.message,400))
-    res.jsom(results)
+    res.json(results)
   })
 }) 
+// view all admins
+const viewadmins = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.viewAdmin(),(err,results)=>{
+    if(err) next(new AppError(err.message,400))
+    res.json(results)
+  })
+})
+// delete admin
+const deleteadmin = catchAsync(async (req,res,next)=>{
+  DB.query(adminQuery.deleteAdmin(req.query.id),(err,results)=>{
+    if(err) next (new AppError(err.message,400))
+    res.json({"status":"Deleted Account"})
+  })
+})
 export default {
   dashboard,
   getAdmin,
@@ -346,5 +360,7 @@ export default {
   DispatchToDriver,
   accountingUser,
   dashboardIcons,
-  DispatchFromDriver
+  DispatchFromDriver,
+  viewadmins,
+  deleteadmin
 };
