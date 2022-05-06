@@ -108,7 +108,6 @@ function sendPhoneVerification(phonenumber, next) {
 
 const resendVerification = catchAsync(async (req, res , next) => {
   const {phonenumber} = req.query;
-
   sendPhoneVerification(phonenumber, next)
 })
 
@@ -146,8 +145,19 @@ const verify = catchAsync(async (req, res, next) => {
 
 })
 const rsendCode = catchAsync(async (req,res,next)=>{
-  sendPhoneVerification(req.query.phonenumber,next,res)
+  resendPhoneVerification(req.query.phonenumber,next,res)
 })
+function resendPhoneVerification(phonenumber, next,res) {
+  twillioClient
+  .verify
+  .services(TWILIO_SERVICE_ID)
+  .verifications
+  .create({ to: "+251" + phonenumber , channel: 'sms'})
+  .then(data =>  res.json({"status":data.status}))
+  .catch(er => {
+    console.log(er)
+    next(new AppError(er.message, 400))})
+}
 const protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
   let token;
