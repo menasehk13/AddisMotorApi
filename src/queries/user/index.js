@@ -152,7 +152,7 @@ export function history(userid) {
   booking.startinglocation,
   paymnet.price,
   paymnet.distance,
-  paymnet.date,
+  DATE_FORMAT(paymnet.date,"%M %D %Y %h:%i ") as date,
   paymnet.driverid,
   service.servicetype
   From 

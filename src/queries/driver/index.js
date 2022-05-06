@@ -112,7 +112,7 @@ function history(driverid) {
   booking.startinglocation,
   paymnet.price,
   paymnet.distance,
-  paymnet.date,
+  DATE_FORMAT(paymnet.date,"%M %D %Y %h:%i ") as date,
   price.bookingfee,
   price.tax * paymnet.price as tax, 
   booking.bookingid,
