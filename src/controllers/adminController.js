@@ -286,7 +286,10 @@ const DispatchToDriver = catchAsync(async (req,res,next)=>{
     if(err) next(new AppError(err.message,404))
       const socketid = results[0].socketid
       const notificationId = results[0].notificationid
-      Notification("Driver From Dispatch","driver near you Needs A Ride",notificationId)
+      let notifiy=[]
+      notifiy.push(`${notificationId}`)
+      console.log(notifiy)
+      Notification("Driver From Dispatch","driver near you Needs A Ride",notifiy)
       SocketModulet.to(socketid).emit("dispatchDriver",req.body)
       res.json({"status":"Send to Driver"})
   })
