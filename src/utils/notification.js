@@ -10,7 +10,7 @@ export  async function Notification(title,message,id){
         contents:{
             'en': message,
         },
-        include_player_ids:  [ 'ccc7a35b-c64f-4fee-a86c-3ed29f987acc' ],
+        include_player_ids:  [ id ],
         template_id: 'a0cb3093-d5b9-4197-ae04-ccf44f335b2f',
     }
      try {
