@@ -494,10 +494,13 @@ driver;
 function dispatchFromDriver(){
   return `
   SELECT 
-  *
-  from booking
-  where 
-  booking.phonenumber IS NOT NULL;`
+*,
+driver.firstname,
+driver.phonenumber
+from booking
+LEFT JOIN driver on driver.id = booking.driverid
+where 
+booking.phonenumber IS NOT NULL;;`
 }
 
 export default {
