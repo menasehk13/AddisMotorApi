@@ -494,10 +494,10 @@ driver;
 function dispatchFromDriver(){
   return `
   SELECT 
-*
-from booking
-where 
-booking.socketid = "dispatch from admin";`
+  *
+  from booking
+  where 
+  booking.phonenumber IS NOT NULL;`
 }
 
 export default {
