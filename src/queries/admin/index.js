@@ -357,10 +357,7 @@ function addDriverDocumentSales(id,data) {
   driverdocument.driverid = ${id},
   driverdocument.registration = "${data.registration}",
   driverdocument.criminalclearance ="${data.criminal}"; 
-  
-  
-
-    `
+  `
 }
 
 function dispatchService(data){
@@ -387,6 +384,7 @@ FROM
 WHERE
 	service.servicetype   = "${data.service}"
 	AND driver.status = "approved"
+  AND currency > 0
 HAVING
 	distance < 10
 ORDER BY

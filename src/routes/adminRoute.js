@@ -49,4 +49,7 @@ router.route("/updateStatus").post(adminController.updatestatus)
 router.route("/dispatch/history").get(adminController.DispatchFromDriver)
 router.route("/viewadmin").get(adminController.viewadmins)
 router.route("/deleteadmin").get(adminController.deleteadmin)
+router.route("/marketing/driver").post(adminController.sendNotificationToDriver)
+router.route("/marketing/user").post(adminController.sendNotificationToUser)
+router.route('/sendNotification').post(upload.any(),adminController.sendSingleNotification)
 export default router;

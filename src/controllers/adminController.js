@@ -1,6 +1,7 @@
 import { catchAsync } from "../middlewares/error";
 import connectDB from "../helpers/connection";
 import adminQuery, { addDriverSales } from "../queries/admin";
+import userQuery from "../queries/user"
 import driverQuery from "../queries/driver"
 import AppError from "../helpers/appError";
 import {SocketModulet} from '../app'
@@ -289,7 +290,7 @@ const DispatchToDriver = catchAsync(async (req,res,next)=>{
       let notifiy=[]
       notifiy.push(`${notificationId}`)
       console.log(notifiy)
-      Notification("Driver From Dispatch","driver near you Needs A Ride",notifiy)
+      Notification("Driver From Dispatch","Custumer near you Needs A Ride",notifiy)
       SocketModulet.to(socketid).emit("dispatchDriver",req.body)
       res.json({"status":"Send to Driver"})
   })
@@ -308,7 +309,7 @@ const dashboardIcons = catchAsync(async (req,res,next)=>{
     res.json(results)
   })
 })
-// send dispatch
+// send dispatch 
 const DispatchFromDriver = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.dispatchFromDriver(),(err,results)=>{
     if(err) next(new AppError(err.message,400))
@@ -329,6 +330,49 @@ const deleteadmin = catchAsync(async (req,res,next)=>{
     res.json({"status":"Deleted Account"})
   })
 })
+
+// send notification to users
+const sendNotificationToUser= catchAsync(async (req,res,next)=>{
+const {title,discription}= req.body
+DB.query(userQuery.getusers(),(err,results)=>{
+  if(err) next (new AppError(err.message,400))
+  const notificationId = results[0].notificationid
+      let notifiy=[]
+      notifiy.push(`${notificationId}`)
+      //console.log(notifiy)
+      Notification(title,discription,notifiy)
+      res.json({"status":"Send to Driver"})
+})
+});
+
+// send notification to Drivers
+const sendNotificationToDriver = catchAsync(async (req,res,next)=>{
+  const {title,discription}= req.body
+  DB.query(driverQuery.getdrivers(),(err,results)=>{
+    if(err) next (new AppError(err.message,400))
+    const notificationId = results[0].notificationid
+        let notifiy=[]
+        notifiy.push(`${notificationId}`)
+        //console.log(notifiy)
+        Notification(title,discription,notifiy)
+        res.json({"status":"Send to Driver"})
+  });
+});
+
+// send notificationtoSingleDriver
+const sendSingleNotification = catchAsync(async (req,res,next)=>{
+  const {title,discription}= req.body
+  const id = req.query
+  DB.query(driverQuery.getdriver(id),(err,results)=>{
+    let notificationId = drivers[0].notificationid
+    // changes for commit 
+      Notification(title,discription,notificationId)
+      return res.json({"Status":"driver info Updated"})
+  })
+})
+// const add credit to driver via admin panel
+
+
 export default {
   dashboard,
   getAdmin,
@@ -365,5 +409,8 @@ export default {
   dashboardIcons,
   DispatchFromDriver,
   viewadmins,
-  deleteadmin
+  deleteadmin,
+  sendNotificationToUser,
+  sendNotificationToDriver,
+  sendSingleNotification
 };

@@ -12,7 +12,8 @@ function getdrivers() {
   lat,
   lng,
   activeid,
-  service.servicetype 
+  service.servicetype,
+  notificationid
   FROM
    driver
    JOIN service on driver.serviceid = service.serviceid
