@@ -13,7 +13,7 @@ console.log(getids)
         contents:{
             'en': message,
         },
-        include_player_ids:   getids,
+        include_player_ids:  getids,
         template_id: 'a0cb3093-d5b9-4197-ae04-ccf44f335b2f',
     }
     
@@ -23,7 +23,24 @@ console.log(getids)
         new AppError(e.message, 404);
     }
 }
-
+export async function NotificationSingle(title,message,id){
+    const notification = {
+        headings:{
+        'en':title
+        },
+        contents:{
+            'en': message,
+        },
+        include_player_ids: [id],
+        template_id: 'a0cb3093-d5b9-4197-ae04-ccf44f335b2f',
+    }
+    
+     try {
+      await Clients.createNotification(notification);
+    } catch (e) {
+        new AppError(e.message, 404);
+    }
+}
 export  async function NotificationAll(title,message){
     const notification = {
         headings:{

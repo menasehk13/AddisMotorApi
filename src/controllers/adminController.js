@@ -6,7 +6,7 @@ import driverQuery from "../queries/driver"
 import AppError from "../helpers/appError";
 import {SocketModulet} from '../app'
 import jwt from "jsonwebtoken";
-import { Notification } from '../utils/notification.js'
+import { Notification,NotificationSingle } from '../utils/notification.js'
 import bcrypt from "bcryptjs";
 import { staticFilePath } from "../helpers/utils";
 import { json } from 'express/lib/response';
@@ -381,7 +381,7 @@ const AddCredit = catchAsync(async (req,res,next)=>{
       let notificationId = result[0].notificationid
       console.log(notificationId)
       // changes for commit 
-        Notification("Addis Motor Taxi",`You have Recharged your Account, Your Current Account Balance is ${ammount}`,notificationId)
+        NotificationSingle("Addis Motor Taxi",`You have Recharged your Account, Your Current Account Balance is ${ammount}`,notificationId)
         return res.json({"Status":"driver info Updated"})
     })
   })
