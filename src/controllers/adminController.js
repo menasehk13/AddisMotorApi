@@ -262,7 +262,7 @@ const Rating = catchAsync(async (req,res,next)=>{
 
 const DocumentList = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.DriverDocumentList(req.query.id),(err,results)=>{
-    if(err) next(new AppError(err.message,400))
+    if(err) return next(new AppError(err.message,400))
     return res.json(results)
   })
 })
@@ -292,7 +292,7 @@ const DispatchToDriver = catchAsync(async (req,res,next)=>{
       console.log(notifiy)
       Notification("Driver From Dispatch","Custumer near you Needs A Ride",notifiy)
       SocketModulet.to(socketid).emit("dispatchDriver",req.body)
-      res.json({"status":"Send to Driver"})
+    return  res.json({"status":"Send to Driver"})
   })
 })
 // accounting user data
@@ -327,7 +327,7 @@ const viewadmins = catchAsync(async (req,res,next)=>{
 const deleteadmin = catchAsync(async (req,res,next)=>{
   DB.query(adminQuery.deleteAdmin(req.query.id),(err,results)=>{
     if(err) next (new AppError(err.message,400))
-    res.json({"status":"Deleted Account"})
+  return  res.json({"status":"Deleted Account"})
   })
 })
 
@@ -364,7 +364,7 @@ const sendSingleNotification = catchAsync(async (req,res,next)=>{
   const {title,discription}= req.body
   const id = req.query
   DB.query(driverQuery.getdriver(id),(err,results)=>{
-    let notificationId = drivers[0].notificationid
+    let notificationId = results[0].notificationid
     // changes for commit 
       Notification(title,discription,notificationId)
       return res.json({"Status":"driver info Updated"})
@@ -372,6 +372,19 @@ const sendSingleNotification = catchAsync(async (req,res,next)=>{
 })
 // const add credit to driver via admin panel
 
+const AddCredit = catchAsync(async (req,res,next)=>{
+  const {ammount,id} = req.query
+  DB.query(adminQuery.addCreditToDriver(id,ammount),(err,results)=>{
+    if(err) return next(new AppError(err,400))
+    DB.query(driverQuery.getdriver(id),(errs,result)=>{
+      if(err) return next(new AppError(errs,400))
+      let notificationId = result[0].notificationid
+      // changes for commit 
+        Notification("Addis Motor Taxi",`You have Recharged your Account, Your Current Account Balance is ${ammount}`,notificationId)
+        return res.json({"Status":"driver info Updated"})
+    })
+  })
+})
 
 export default {
   dashboard,
@@ -412,5 +425,6 @@ export default {
   deleteadmin,
   sendNotificationToUser,
   sendNotificationToDriver,
-  sendSingleNotification
+  sendSingleNotification,
+  AddCredit
 };

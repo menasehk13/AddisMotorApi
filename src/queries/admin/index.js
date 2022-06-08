@@ -501,6 +501,16 @@ where
 booking.phonenumber IS NOT NULL;;`
 }
 
+function addCreditToDriver(id,ammount){
+ 
+  return`
+    UPDATE 
+    driver
+    SET
+    driver.currency = driver.currency + ${ammount}
+    WHERE id = ${id};
+  `
+}
 export default {
   getadmin,
   getadmins,
@@ -540,5 +550,6 @@ export default {
  dashboardIcons,
  dispatchFromDriver,
  viewAdmin,
- deleteAdmin
+ deleteAdmin,
+ addCreditToDriver
 };
