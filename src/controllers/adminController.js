@@ -379,9 +379,10 @@ const AddCredit = catchAsync(async (req,res,next)=>{
     DB.query(driverQuery.getdriver(id),(errs,result)=>{
       if(err) return next(new AppError(errs,400))
       let notificationId = result[0].notificationid
+      let recharedAmmountbe = result[0].currency
       console.log(notificationId)
       // changes for commit 
-        NotificationSingle("Addis Motor Taxi",`You have Recharged your Account, Your Current Account Balance is ${ammount}`,notificationId)
+        NotificationSingle("Addis Motor Taxi",`You have Recharged your Account, Your Current Account Balance is ${recharedAmmountbe}`,notificationId)
         return res.json({"Status":"driver info Updated"})
     })
   })

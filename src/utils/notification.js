@@ -24,7 +24,7 @@ console.log(getids)
     }
 }
 export async function NotificationSingle(title,message,id){
-    console.log(id)
+    
     const notification = {
         headings:{
         'en':title
