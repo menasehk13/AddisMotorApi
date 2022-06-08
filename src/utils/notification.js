@@ -24,6 +24,7 @@ console.log(getids)
     }
 }
 export async function NotificationSingle(title,message,id){
+    console.log(id)
     const notification = {
         headings:{
         'en':title
@@ -31,7 +32,7 @@ export async function NotificationSingle(title,message,id){
         contents:{
             'en': message,
         },
-        include_player_ids: [id],
+        include_player_ids: [`${id}`],
         template_id: 'a0cb3093-d5b9-4197-ae04-ccf44f335b2f',
     }
     
