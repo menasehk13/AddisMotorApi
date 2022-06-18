@@ -366,7 +366,7 @@ const sendSingleNotification = catchAsync(async (req,res,next)=>{
   DB.query(driverQuery.getdriver(id),(err,results)=>{
     let notificationId = results[0].notificationid
     // changes for commit 
-      Notification(title,discription,notificationId)
+      NotificationSingle(title,discription,notificationId)
       return res.json({"Status":"driver info Updated"})
   })
 })
