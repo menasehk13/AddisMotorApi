@@ -6,14 +6,15 @@ export function adduser() {
      `;
 }
 
-export function edituser(data) {
+export function edituser(id) {
   return `
     UPDATE
         user
     SET
-        ?
+       ?
+        
     WHERE
-       id= ?;
+       id=${id};
     `
 }
 
