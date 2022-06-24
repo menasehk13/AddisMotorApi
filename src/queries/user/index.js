@@ -11,7 +11,7 @@ export function edituser(id,data) {
     UPDATE
         user
     SET
-       photo=${data.photo}
+       photo=${data.userprofile}
         
     WHERE
        id=${id};

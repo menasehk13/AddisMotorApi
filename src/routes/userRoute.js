@@ -20,7 +20,7 @@ router
   router.route("/reasons").get(userController.reasons)
 router.route("/cancelService").post(userController.cancelService)
 router.get("/service",userController.Service)
-router.route("/user").get(userController.getUser).patch(upload.single("photo"),userController.updateUser);
+router.route("/user").get(userController.getUser).patch(upload.single("userprofile"),userController.updateUser);
 router.route("/rating").get(userController.ratingView)
 router.route("/socket").post(userController.socket)
 router.route("/requestdriver").get(userController.requestDriver)
