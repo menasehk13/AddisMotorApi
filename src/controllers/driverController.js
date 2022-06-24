@@ -52,7 +52,7 @@ const addDriver = catchAsync(async (req, res, next) => {
 
   if(data.photo) data.photo = staticFilePath(req.file.filename)
   else return next(new AppError("Please upload your profile picture"))
-
+  
   DB.query(driverQuery.add_driver(), data, function (err, result) {
     if (err) return next(new AppError(err.message, 400));
 

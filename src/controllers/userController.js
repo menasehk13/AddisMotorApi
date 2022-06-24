@@ -93,7 +93,7 @@ const updateUser = catchAsync(async (req, res, next) => {
     userQuery.edituser(req.query.id,data),
     (err, results) => {
       if (err) return next(new AppError(err.message, 400));
-      return res.json({ message: "Success", user: results });
+      return res.json({ message: "Success", file:req.file});
     }
   );
 });
