@@ -14,6 +14,7 @@ export default function connectDB() {
     user: DB_USER,
     password: DB_PWD,
     database: DB_NAME,
+    multipleStatements:true
   });
 
   return db;

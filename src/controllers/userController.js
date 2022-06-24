@@ -106,7 +106,6 @@ const nearbyDriver = catchAsync(async (req, res, next) => {
 });
 // Driver Information
 const driverinfo=catchAsync(async(req,res,next)=>{
-  
   DB.query(userQuery.driverInfo(req.query.id),(err,results)=>{
     if(err){
       return next(new AppError(err.message,400))

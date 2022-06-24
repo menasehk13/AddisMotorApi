@@ -13,7 +13,7 @@ export function edituser(data) {
     SET
         ?
     WHERE
-       id=${data.id};
+       id= ?;
     `
 }
 
