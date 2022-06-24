@@ -6,12 +6,12 @@ export function adduser() {
      `;
 }
 
-export function edituser(id) {
+export function edituser(id,data) {
   return `
     UPDATE
         user
     SET
-       ?
+       photo=${data.photo}
         
     WHERE
        id=${id};
