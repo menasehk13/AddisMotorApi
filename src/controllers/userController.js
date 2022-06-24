@@ -96,6 +96,13 @@ const updateUser = catchAsync(async (req, res, next) => {
     }
   );
 });
+// get drivers 
+const drivers = catchAsync(async (req,res,next)=>{
+    DB.query(userQuery.getDrivers(),(err,results)=>{
+      if(err) return next(new AppError(err.message,400))
+      return res.json(results)
+    })
+})
 
 // nearby driver -> NOT DONE
 const nearbyDriver = catchAsync(async (req, res, next) => {
@@ -213,6 +220,7 @@ const updateNotification = catchAsync(async (req,res,next)=>{
 export default {
   getUsers,
   getUser,
+  drivers,
   createUser,
   updateUser,
   nearbyDriver,

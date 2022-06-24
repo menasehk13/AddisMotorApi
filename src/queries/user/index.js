@@ -5,6 +5,19 @@ export function adduser() {
      SET ?
      `;
 }
+export function getDrivers(){
+  return `
+  SELECT 
+  *
+  FROM
+  driver
+  WHERE
+  driver.lat is not null and driver.lng is not null 
+  and driver.activeid = 1
+  ;
+
+  `
+}
 
 export function edituser(id) {
   return `
@@ -304,6 +317,7 @@ export default {
   adduser,
   edituser,
   getusers,
+  getDrivers,
   getuser,
   getuserbyphone,
   requestDriver,

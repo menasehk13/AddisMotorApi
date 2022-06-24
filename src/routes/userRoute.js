@@ -11,6 +11,7 @@ router
   .route("/")
   .get(userController.getUsers)
   .post(upload.single("userprofile"), userController.createUser);
+  router.route("/drivers").get(userController.drivers)
   router.route("/totalprice").get(userController.totalDistance)
   router.route("/updatefirsttime").post(userController.UpdateFirstDrive)
   router.route("/history").get(userController.historyView)
