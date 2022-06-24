@@ -89,8 +89,9 @@ const updateUser = catchAsync(async (req, res, next) => {
   const data = req.body;
 
   if(data.photo) data.photo = staticFilePath(req.file.filename);
+  
   DB.query(
-    userQuery.edituser(req.query.id),req.body,
+    userQuery.edituser(req.query.id),data,
     (err, results) => {
       if (err) return next(new AppError(err.message, 400));
       return res.json({ message: "Success", user: results });
