@@ -11,9 +11,7 @@ export function edituser(data) {
     UPDATE
         user
     SET
-        firstname='${data.firstname}',
-        lastname='${data.lastname}',
-        email='${data.email}'
+        ?
     WHERE
        id=${data.id};
     `
