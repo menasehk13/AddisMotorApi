@@ -87,9 +87,9 @@ const rating = catchAsync(async (req,res,next)=>{
 // update user
 const updateUser = catchAsync(async (req, res, next) => {
   const data = req.body;
-  if(data.userprofile) data.userprofile = staticFilePath(req.file.filename);
+  data.userprofile = staticFilePath(req.file.filename);
   DB.query(
-    userQuery.edituser(req.query.id,data),
+    userQuery.edituser(req.query.id),data,
     (err, results) => {
       if (err) return next(new AppError(err.message, 400));
       return res.json({ message: "Success", file:data.userprofile});
