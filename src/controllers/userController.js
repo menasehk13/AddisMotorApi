@@ -88,7 +88,7 @@ const rating = catchAsync(async (req,res,next)=>{
 const updateUser = catchAsync(async (req, res, next) => {
   const data = req.body;
 
-  if(data.userprofile) data.userprofile = staticFilePath(req.file.filename);
+  if(data.photo) data.photo = staticFilePath(req.file.filename);
   DB.query(
     userQuery.edituser(req.query.id),req.body,
     (err, results) => {
